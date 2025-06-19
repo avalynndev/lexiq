@@ -358,138 +358,200 @@ export default function ExplorePage() {
                 Recent
               </TabsTrigger>
             </TabsList>
-          </Tabs>
 
-          {/* Advanced Filters */}
-          <div className="flex flex-wrap gap-4 mb-6">
-            <Select value={selectedModel} onValueChange={setSelectedModel}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="AI Model" />
-              </SelectTrigger>
-              <SelectContent>
-                {models.map((model) => (
-                  <SelectItem key={model} value={model}>{model}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            {/* Advanced Filters */}
+            <div className="flex flex-wrap gap-4 mb-6 mt-6">
+              <Select value={selectedModel} onValueChange={setSelectedModel}>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="AI Model" />
+                </SelectTrigger>
+                <SelectContent>
+                  {models.map((model) => (
+                    <SelectItem key={model} value={model}>{model}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
 
-            <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Category" />
-              </SelectTrigger>
-              <SelectContent>
-                {categories.map((category) => (
-                  <SelectItem key={category} value={category}>{category}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+              <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Category" />
+                </SelectTrigger>
+                <SelectContent>
+                  {categories.map((category) => (
+                    <SelectItem key={category} value={category}>{category}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
 
-            <Select value={selectedDifficulty} onValueChange={setSelectedDifficulty}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Difficulty" />
-              </SelectTrigger>
-              <SelectContent>
-                {difficulties.map((difficulty) => (
-                  <SelectItem key={difficulty} value={difficulty}>{difficulty}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+              <Select value={selectedDifficulty} onValueChange={setSelectedDifficulty}>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Difficulty" />
+                </SelectTrigger>
+                <SelectContent>
+                  {difficulties.map((difficulty) => (
+                    <SelectItem key={difficulty} value={difficulty}>{difficulty}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
 
-            <Select value={selectedUseCase} onValueChange={setSelectedUseCase}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Use Case" />
-              </SelectTrigger>
-              <SelectContent>
-                {useCases.map((useCase) => (
-                  <SelectItem key={useCase} value={useCase}>{useCase}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+              <Select value={selectedUseCase} onValueChange={setSelectedUseCase}>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Use Case" />
+                </SelectTrigger>
+                <SelectContent>
+                  {useCases.map((useCase) => (
+                    <SelectItem key={useCase} value={useCase}>{useCase}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
 
-            <Button variant="outline" onClick={clearFilters}>
-              Clear Filters
-            </Button>
-          </div>
+              <Button variant="outline" onClick={clearFilters}>
+                Clear Filters
+              </Button>
+            </div>
 
-          {/* Sort and View Options */}
-          <div className="flex justify-between items-center">
-            <div className="flex items-center gap-4">
-              <div className="flex gap-2">
-                {sortOptions.map((option) => {
-                  const IconComponent = option.icon;
-                  return (
-                    <Button
-                      key={option.value}
-                      variant={selectedSort === option.value ? "default" : "outline"}
-                      size="sm"
-                      onClick={() => setSelectedSort(option.value)}
-                      className="flex items-center gap-2"
-                    >
-                      <IconComponent className="h-4 w-4" />
-                      {option.label}
+            {/* Sort and View Options */}
+            <div className="flex justify-between items-center">
+              <div className="flex items-center gap-4">
+                <div className="flex gap-2">
+                  {sortOptions.map((option) => {
+                    const IconComponent = option.icon;
+                    return (
+                      <Button
+                        key={option.value}
+                        variant={selectedSort === option.value ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => setSelectedSort(option.value)}
+                        className="flex items-center gap-2"
+                      >
+                        <IconComponent className="h-4 w-4" />
+                        {option.label}
+                      </Button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-muted-foreground">
+                  {sortedPrompts.length} prompts
+                </span>
+                <div className="flex border rounded-lg">
+                  <Button
+                    variant={viewMode === 'grid' ? 'default' : 'ghost'}
+                    size="sm"
+                    onClick={() => setViewMode('grid')}
+                    className="rounded-r-none"
+                  >
+                    <Grid3X3 className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant={viewMode === 'list' ? 'default' : 'ghost'}
+                    size="sm"
+                    onClick={() => setViewMode('list')}
+                    className="rounded-l-none"
+                  >
+                    <List className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+            </div>
+
+            {/* Results */}
+            <TabsContent value="all" className="mt-6">
+              {sortedPrompts.length === 0 ? (
+                <div className="text-center py-16">
+                  <div className="text-6xl mb-4">🔍</div>
+                  <h3 className="text-xl font-semibold mb-2">No prompts found</h3>
+                  <p className="text-muted-foreground mb-4">
+                    Try adjusting your filters or search terms
+                  </p>
+                  <Button onClick={clearFilters}>Clear all filters</Button>
+                </div>
+              ) : (
+                <>
+                  <div className={viewMode === 'grid' 
+                    ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" 
+                    : "space-y-4"
+                  }>
+                    {sortedPrompts.map((prompt) => (
+                      <PromptCard key={prompt.id} prompt={prompt} />
+                    ))}
+                  </div>
+
+                  {/* Load More */}
+                  <div className="text-center mt-12">
+                    <Button variant="outline" size="lg" className="hover:bg-accent">
+                      Load More Prompts
                     </Button>
-                  );
-                })}
-              </div>
-            </div>
+                  </div>
+                </>
+              )}
+            </TabsContent>
 
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-muted-foreground">
-                {sortedPrompts.length} prompts
-              </span>
-              <div className="flex border rounded-lg">
-                <Button
-                  variant={viewMode === 'grid' ? 'default' : 'ghost'}
-                  size="sm"
-                  onClick={() => setViewMode('grid')}
-                  className="rounded-r-none"
-                >
-                  <Grid3X3 className="h-4 w-4" />
-                </Button>
-                <Button
-                  variant={viewMode === 'list' ? 'default' : 'ghost'}
-                  size="sm"
-                  onClick={() => setViewMode('list')}
-                  className="rounded-l-none"
-                >
-                  <List className="h-4 w-4" />
-                </Button>
-              </div>
-            </div>
-          </div>
+            <TabsContent value="trending" className="mt-6">
+              {sortedPrompts.length === 0 ? (
+                <div className="text-center py-16">
+                  <div className="text-6xl mb-4">🔥</div>
+                  <h3 className="text-xl font-semibold mb-2">No trending prompts found</h3>
+                  <p className="text-muted-foreground mb-4">
+                    Try adjusting your filters or search terms
+                  </p>
+                  <Button onClick={clearFilters}>Clear all filters</Button>
+                </div>
+              ) : (
+                <>
+                  <div className={viewMode === 'grid' 
+                    ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" 
+                    : "space-y-4"
+                  }>
+                    {sortedPrompts.map((prompt) => (
+                      <PromptCard key={prompt.id} prompt={prompt} />
+                    ))}
+                  </div>
+
+                  {/* Load More */}
+                  <div className="text-center mt-12">
+                    <Button variant="outline" size="lg" className="hover:bg-accent">
+                      Load More Prompts
+                    </Button>
+                  </div>
+                </>
+              )}
+            </TabsContent>
+
+            <TabsContent value="recent" className="mt-6">
+              {sortedPrompts.length === 0 ? (
+                <div className="text-center py-16">
+                  <div className="text-6xl mb-4">⏰</div>
+                  <h3 className="text-xl font-semibold mb-2">No recent prompts found</h3>
+                  <p className="text-muted-foreground mb-4">
+                    Try adjusting your filters or search terms
+                  </p>
+                  <Button onClick={clearFilters}>Clear all filters</Button>
+                </div>
+              ) : (
+                <>
+                  <div className={viewMode === 'grid' 
+                    ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" 
+                    : "space-y-4"
+                  }>
+                    {sortedPrompts.map((prompt) => (
+                      <PromptCard key={prompt.id} prompt={prompt} />
+                    ))}
+                  </div>
+
+                  {/* Load More */}
+                  <div className="text-center mt-12">
+                    <Button variant="outline" size="lg" className="hover:bg-accent">
+                      Load More Prompts
+                    </Button>
+                  </div>
+                </>
+              )}
+            </TabsContent>
+          </Tabs>
         </div>
-
-        {/* Results */}
-        <TabsContent value={activeTab} className="mt-0">
-          {sortedPrompts.length === 0 ? (
-            <div className="text-center py-16">
-              <div className="text-6xl mb-4">🔍</div>
-              <h3 className="text-xl font-semibold mb-2">No prompts found</h3>
-              <p className="text-muted-foreground mb-4">
-                Try adjusting your filters or search terms
-              </p>
-              <Button onClick={clearFilters}>Clear all filters</Button>
-            </div>
-          ) : (
-            <>
-              <div className={viewMode === 'grid' 
-                ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" 
-                : "space-y-4"
-              }>
-                {sortedPrompts.map((prompt) => (
-                  <PromptCard key={prompt.id} prompt={prompt} />
-                ))}
-              </div>
-
-              {/* Load More */}
-              <div className="text-center mt-12">
-                <Button variant="outline" size="lg" className="hover:bg-accent">
-                  Load More Prompts
-                </Button>
-              </div>
-            </>
-          )}
-        </TabsContent>
       </div>
     </div>
   );
