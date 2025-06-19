@@ -2,7 +2,6 @@ import LexiqLogo from '@/components/logo';
 import Link from "next/link";
 import { GithubStars } from "./github-stars";
 import { SocialLinks } from "./social-links";
-import { StatusWidget } from "./status-widget";
 
 export function Footer() {
   return (
@@ -17,9 +16,10 @@ export function Footer() {
             <span className="sr-only">Lexiq</span>
           </Link>
 
-          <span className="font-normal md:text-2xl text-right">
-            Discover. Fork. Remix AI prompts.
-          </span>
+          <div className="flex items-center gap-6">
+            <GithubStars />
+            <SocialLinks />
+          </div>
         </div>
 
         <div className="flex flex-col md:flex-row w-full">
@@ -102,14 +102,9 @@ export function Footer() {
 
           <div className="md:w-6/12 flex mt-8 md:mt-0 md:justify-end">
             <div className="flex md:items-end flex-col">
-              <div className="flex items-start md:items-center flex-col md:flex-row space-y-6 md:space-y-0 mb-8">
-                <GithubStars />
-                <SocialLinks />
-              </div>
-
-              <div className="md:mr-0 mt-auto mr-auto">
-                <StatusWidget />
-              </div>
+              <span className="font-normal md:text-2xl text-right">
+                Discover. Fork. Remix AI prompts.
+              </span>
             </div>
           </div>
         </div>
