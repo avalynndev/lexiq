@@ -1,5 +1,4 @@
 import LexiqLogo from '@/components/logo';
-import { SubscribeInput } from '@/components/subscribe-input';
 import Link from "next/link";
 import { GithubStars } from "./github-stars";
 import { SocialLinks } from "./social-links";
@@ -108,9 +107,6 @@ export function Footer() {
                 <SocialLinks />
               </div>
 
-              <div className="mb-8">
-                <SubscribeInput />
-              </div>
               <div className="md:mr-0 mt-auto mr-auto">
                 <StatusWidget />
               </div>

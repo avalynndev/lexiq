@@ -1,13 +1,22 @@
-import './globals.css';
-import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
-import { ThemeProvider } from '@/components/theme-provider';
-
-const inter = Inter({ subsets: ['latin'] });
+import "@/styles/globals.css";
+import type { Metadata } from "next";
+import { ThemeProvider } from "@/components/theme-provider";
+import Navbar from "@/components/navbar";
+import { Footer } from "@/components/footer";
+import { GeistMono } from "geist/font/mono";
+import { GeistSans } from "geist/font/sans";
 
 export const metadata: Metadata = {
-  title: 'Lexiq - Tweak. Fork. Remix your AI prompts',
-  description: 'Discover the best prompts for every AI model, remix them, and evolve your own collection.',
+  title: "Lexiq - Tweak. Fork. Remix your AI prompts",
+  description:
+    "Discover the best prompts for every AI model, remix them, and evolve your own collection.",
+};
+
+export const viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)" },
+    { media: "(prefers-color-scheme: dark)" },
+  ],
 };
 
 export default function RootLayout({
@@ -16,15 +25,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className={`${inter.className} bg-background antialiased`}>
+    <html lang="en" suppressHydrationWarning>
+      <body
+        className={`${GeistSans.variable} ${GeistMono.variable} bg-background antialiased overflow-x-hidden font-sans text-foreground`}
+      >
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <Navbar />
+          <main className="container mx-auto px-4 overflow-hidden md:overflow-visible">
+            {children}
+          </main>
+          <Footer />
         </ThemeProvider>
       </body>
     </html>

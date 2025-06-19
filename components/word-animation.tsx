@@ -1,40 +1,60 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useState } from "react";
 
 const words = [
-  'freelancers',
-  'consultants', 
-  'agencies',
-  'startups',
-  'creators',
-  'developers'
+  "Freelancers",
+  "Agencies",
+  "Consultants",
+  "Everyone",
+  "Entrepreneurs",
+  "Founders",
 ];
 
-export function WordAnimation() {
-  const [currentWordIndex, setCurrentWordIndex] = useState(0);
-  const [isVisible, setIsVisible] = useState(true);
+function useWordCycle(words: string[], interval: number) {
+  const [index, setIndex] = useState(0);
+  const [isInitial, setIsInitial] = useState(true);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setIsVisible(false);
-      
-      setTimeout(() => {
-        setCurrentWordIndex((prev) => (prev + 1) % words.length);
-        setIsVisible(true);
-      }, 150);
-    }, 2000);
+    if (isInitial) {
+      setIndex(Math.floor(Math.random() * words.length));
+      setIsInitial(false);
+      return;
+    }
 
-    return () => clearInterval(interval);
-  }, []);
+    const timer = setInterval(() => {
+      setIndex((current) => (current + 1) % words.length);
+    }, interval);
+    return () => clearInterval(timer);
+  }, [words, interval, isInitial]);
+
+  return words[index];
+}
+
+export function WordAnimation() {
+  const word = useWordCycle(words, 2100);
 
   return (
-    <span 
-      className={`transition-opacity duration-150 ${
-        isVisible ? 'opacity-100' : 'opacity-0'
-      }`}
-    >
-      {words[currentWordIndex]}
-    </span>
+    <AnimatePresence mode="wait">
+      <motion.div key={word} className="text-primary inline-block">
+        {word?.split("").map((char, index) => (
+          <motion.span
+            key={`${word}-${char}-${index.toString()}`}
+            initial={{ y: 10, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -10, opacity: 0 }}
+            transition={{
+              duration: 0.15,
+              delay: index * 0.015,
+              ease: "easeOut",
+            }}
+            style={{ display: "inline-block", whiteSpace: "pre" }}
+          >
+            {char}
+          </motion.span>
+        ))}
+      </motion.div>
+    </AnimatePresence>
   );
 }

@@ -29,28 +29,24 @@ export function Hero() {
         </Link>
 
         <h2 className="mt-6 md:mt-10 max-w-[580px] text-[#878787] leading-tight text-[24px] md:text-[36px] font-medium">
-          AI Prompt discovery, Forking, Remixing, Version control & your own Collection made for <WordAnimation />
+          Discover, remix, and evolve the best AI prompts — with forks,
+          versions, and your own personal prompt workspace built for{" "}
+          <WordAnimation />
         </h2>
 
         <div className="mt-8 md:mt-10">
           <div className="flex items-center space-x-4">
-            <Link
-              href="/contact"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <Link href="/signup" target="_blank" rel="noopener noreferrer">
               <Button
                 variant="outline"
                 className="border-transparent h-11 px-6 dark:bg-[#1D1D1D] bg-[#F2F1EF]"
               >
-                Talk to founders
+                Sign up
               </Button>
             </Link>
 
             <Link href="/explore">
-              <Button className="h-11 px-5 bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700">
-                Start exploring
-              </Button>
+              <Button className="h-11 px-5">Start exploring</Button>
             </Link>
           </div>
         </div>
