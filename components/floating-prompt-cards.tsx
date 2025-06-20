@@ -74,7 +74,7 @@ export function FloatingPromptCards() {
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);
 
   return (
-    <div className="relative w-full h-[400px] md:h-[450px] overflow-hidden">
+    <div className="relative w-full h-[400px] lg:h-[500px] overflow-hidden">
       {sampleCards.map((card, index) => (
         <motion.div
           key={card.id}
@@ -95,9 +95,11 @@ export function FloatingPromptCards() {
             ease: "easeOut"
           }}
           style={{
-            // Staggered positioning: left, center-right, left again
-            left: index === 0 ? '5%' : index === 1 ? '35%' : '10%',
-            top: index === 0 ? '10%' : index === 1 ? '5%' : '55%',
+            // For large screens: spread cards across the right side
+            // For small screens: stack them more compactly
+            left: index === 0 ? '10%' : index === 1 ? '50%' : '20%',
+            top: index === 0 ? '5%' : index === 1 ? '15%' : '60%',
+            transform: index === 1 ? 'translateX(-50%)' : 'translateX(0)',
             zIndex: index === 1 ? 30 : 20
           }}
           whileHover={{ 
@@ -119,12 +121,12 @@ export function FloatingPromptCards() {
               ease: "easeInOut"
             }}
           >
-            <Card className={`w-64 md:w-72 h-52 md:h-56 overflow-hidden transition-all duration-300 ${
+            <Card className={`w-64 lg:w-72 h-52 lg:h-56 overflow-hidden transition-all duration-300 ${
               hoveredCard === card.id 
                 ? 'shadow-2xl shadow-purple-500/20 border-purple-300/50' 
                 : 'shadow-xl border-border/50'
             } backdrop-blur-sm bg-card/90`}>
-              <CardContent className="p-4 md:p-5 h-full flex flex-col">
+              <CardContent className="p-4 lg:p-5 h-full flex flex-col">
                 {/* Header */}
                 <div className="flex items-start justify-between mb-2">
                   <div className="flex items-center gap-2">
@@ -140,12 +142,12 @@ export function FloatingPromptCards() {
                 </div>
 
                 {/* Title */}
-                <h3 className="font-semibold text-sm md:text-base mb-2 line-clamp-1">
+                <h3 className="font-semibold text-sm lg:text-base mb-2 line-clamp-1">
                   {card.title}
                 </h3>
 
                 {/* Description */}
-                <p className="text-xs md:text-sm text-muted-foreground mb-3 line-clamp-2 flex-1">
+                <p className="text-xs lg:text-sm text-muted-foreground mb-3 line-clamp-2 flex-1">
                   {card.description}
                 </p>
 
