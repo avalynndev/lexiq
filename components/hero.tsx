@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { HeroImage } from "./hero-image";
+import { FloatingPromptCards } from "./floating-prompt-cards";
 import { Metrics } from "./metrics";
 import { WordAnimation } from "./word-animation";
 
@@ -56,7 +56,7 @@ export function Hero() {
         </p>
       </div>
 
-      <HeroImage />
+      <FloatingPromptCards />
       <Metrics />
     </section>
   );
