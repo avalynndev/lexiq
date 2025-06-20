@@ -28,7 +28,7 @@ const sampleCards = [
     stars: 892,
     views: 2103,
     forks: 156,
-    tags: ["code-review", "optimization", "debugging"],
+    tags: ["review", "optimization", "debugging"],
     gradient: "from-blue-500 to-cyan-500"
   },
   {
