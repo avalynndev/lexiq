@@ -204,7 +204,7 @@ export function FloatingPromptCards() {
 
       {/* Large screen positioning styles */}
       <style jsx>{`
-        @media (minWidth:: 1024px) {
+        @media (minWidth: 1024px) {
           .absolute:nth-child(1) {
             left: 10% !important;
             transform: translateX(0) !important;
