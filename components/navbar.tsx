@@ -109,7 +109,7 @@ export default function Navbar() {
           </div>
 
           {/* Right Side */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center ">
             {/* Social Buttons */}
             <div className="flex items-center gap-2">
               <Button
