@@ -74,7 +74,7 @@ export function FloatingPromptCards() {
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);
 
   return (
-    <div className="relative w-full h-[450px] lg:h-[500px] overflow-hidden">
+    <div className="relative w-full h-[450px] lg:h-[500px] overflow-hidden flex justify-center lg:justify-start">
       {sampleCards.map((card, index) => (
         <motion.div
           key={card.id}
@@ -95,13 +95,22 @@ export function FloatingPromptCards() {
             ease: "easeOut"
           }}
           style={{
-            // For large screens: spread cards across the right side
-            // For small screens: stack them more compactly
-            left: index === 0 ? '10%' : index === 1 ? '50%' : '20%',
+            // Mobile: center the cards with proper spacing
+            // Large screens: spread cards across the right side
+            left: index === 0 ? 
+              'calc(50% - 180px)' : // Mobile: left card
+              index === 1 ? 
+                'calc(50% - 90px)' : // Mobile: center card
+                'calc(50% + 0px)', // Mobile: right card
             top: index === 0 ? '5%' : index === 1 ? '15%' : '50%',
-            transform: index === 1 ? 'translateX(-50%)' : 'translateX(0)',
-            zIndex: index === 1 ? 30 : 20
+            zIndex: index === 1 ? 30 : 20,
+            // Override for large screens
+            '@media (min-width: 1024px)': {
+              left: index === 0 ? '10%' : index === 1 ? '50%' : '20%',
+              transform: index === 1 ? 'translateX(-50%)' : 'translateX(0)',
+            }
           }}
+          className="lg:!left-auto lg:!transform-none"
           whileHover={{ 
             scale: 1.05,
             rotate: 0,
@@ -121,7 +130,7 @@ export function FloatingPromptCards() {
               ease: "easeInOut"
             }}
           >
-            <Card className={`w-64 lg:w-72 h-52 lg:h-56 overflow-hidden transition-all duration-300 ${
+            <Card className={`w-56 lg:w-72 h-48 lg:h-56 overflow-hidden transition-all duration-300 ${
               hoveredCard === card.id 
                 ? 'shadow-2xl shadow-purple-500/20 border-purple-300/50' 
                 : 'shadow-xl border-border/50'
@@ -151,7 +160,7 @@ export function FloatingPromptCards() {
                   {card.description}
                 </p>
 
-                {/* Tags */}
+                {/* Tags - Hidden on mobile for space */}
                 <div className="lg:flex flex-wrap gap-1 mb-3 hidden">
                   {card.tags.slice(0, 3).map((tag, tagIndex) => (
                     <span 
@@ -192,6 +201,24 @@ export function FloatingPromptCards() {
         <div className="absolute top-1/3 right-1/4 w-40 h-40 bg-blue-500/10 rounded-full blur-3xl" />
         <div className="absolute bottom-1/3 left-1/3 w-36 h-36 bg-green-500/10 rounded-full blur-3xl" />
       </div>
+
+      {/* Large screen positioning styles */}
+      <style jsx>{`
+        @media (min-width: 1024px) {
+          .absolute:nth-child(1) {
+            left: 10% !important;
+            transform: translateX(0) !important;
+          }
+          .absolute:nth-child(2) {
+            left: 50% !important;
+            transform: translateX(-50%) !important;
+          }
+          .absolute:nth-child(3) {
+            left: 20% !important;
+            transform: translateX(0) !important;
+          }
+        }
+      `}</style>
     </div>
   );
 }

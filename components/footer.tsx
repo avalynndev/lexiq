@@ -8,7 +8,7 @@ export function Footer() {
     <footer className="border-t-[1px] border-border px-4 md:px-6 pt-10 md:pt-16 bg-[#fff] dark:bg-[#0C0C0C] overflow-hidden md:max-h-[820px]">
       <div className="container mx-auto">
         <div className="flex justify-between items-center border-border border-b-[1px] pb-10 md:pb-16 mb-12">
-          <Link href="/" className="scale-50 -ml-[52px] md:ml-0 md:scale-100">
+          <Link href="/" className="scale-75 -ml-[20px] md:ml-0 md:scale-100">
             <div className="flex items-center gap-3">
               <LexiqLogo className="h-12 w-12" />
               <span className="text-2xl font-bold">Lexiq</span>
@@ -110,7 +110,7 @@ export function Footer() {
         </div>
       </div>
 
-      <h5 className="dark:text-[#161616] text-[#F4F4F3] text-[500px] leading-none text-center pointer-events-none">
+      <h5 className="dark:text-[#161616] text-[#F4F4F3] text-[200px] md:text-[500px] leading-none text-center pointer-events-none">
         lexiq
       </h5>
     </footer>
