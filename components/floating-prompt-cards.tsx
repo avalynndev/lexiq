@@ -105,7 +105,7 @@ export function FloatingPromptCards() {
             top: index === 0 ? '5%' : index === 1 ? '15%' : '50%',
             zIndex: index === 1 ? 30 : 20,
             // Override for large screens
-            '@media (minWidth:: 1024px)': {
+            '@media (minWidth: 1024px)': {
               left: index === 0 ? '10%' : index === 1 ? '50%' : '20%',
               transform: index === 1 ? 'translateX(-50%)' : 'translateX(0)',
             }
