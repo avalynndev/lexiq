@@ -179,14 +179,6 @@ export function FloatingPromptCards() {
                       <span>{card.forks}</span>
                     </div>
                   </div>
-                  <motion.div
-                    className={`text-xs font-medium bg-gradient-to-r ${card.gradient} bg-clip-text text-transparent`}
-                    animate={{
-                      opacity: hoveredCard === card.id ? 1 : 0.7
-                    }}
-                  >
-                    View Prompt
-                  </motion.div>
                 </div>
               </CardContent>
             </Card>
