@@ -73,9 +73,6 @@ export default function Navbar() {
                     >
                       Sign In
                     </Button>
-                    <Button className="w-full bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700">
-                      Get Started
-                    </Button>
                   </div>
                 </div>
               </SheetContent>
