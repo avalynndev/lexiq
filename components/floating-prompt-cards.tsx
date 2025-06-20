@@ -98,7 +98,7 @@ export function FloatingPromptCards() {
             // For large screens: spread cards across the right side
             // For small screens: stack them more compactly
             left: index === 0 ? '10%' : index === 1 ? '50%' : '20%',
-            top: index === 0 ? '5%' : index === 1 ? '15%' : '60%',
+            top: index === 0 ? '5%' : index === 1 ? '15%' : '40%',
             transform: index === 1 ? 'translateX(-50%)' : 'translateX(0)',
             zIndex: index === 1 ? 30 : 20
           }}
