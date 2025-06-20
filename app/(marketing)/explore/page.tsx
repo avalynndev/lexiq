@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Search, Filter, TrendingUp, Clock, Star, Grid3X3, List, Sparkles, Zap, Users, BookOpen } from 'lucide-react';
+import { Spotlight } from '@/components/ui/spotlight';
 
 // Extended sample data for the explore page
 const allPrompts = [
@@ -272,18 +273,19 @@ export default function ExplorePage() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Hero Section */}
-      <section className="pt-24 pb-12 bg-gradient-to-b from-muted/50 to-background">
+    <div className="min-h-screen">
+      <Spotlight />
+      <section className="pt-24 pb-12 ">
         <div className="container mx-auto px-4">
           <div className="text-center max-w-4xl mx-auto">
             <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-foreground to-muted-foreground bg-clip-text text-transparent">
               Explore AI Prompts
             </h1>
             <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-              Discover thousands of AI prompts created by our community. Find the perfect prompt for your next project.
+              Discover thousands of AI prompts created by our community. Find
+              the perfect prompt for your next project.
             </p>
-            
+
             {/* Search Bar */}
             <div className="relative max-w-2xl mx-auto mb-8">
               <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
@@ -299,7 +301,9 @@ export default function ExplorePage() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto">
               <div className="text-center">
                 <div className="text-2xl font-bold text-primary">15,200+</div>
-                <div className="text-sm text-muted-foreground">Total Prompts</div>
+                <div className="text-sm text-muted-foreground">
+                  Total Prompts
+                </div>
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-primary">50+</div>
@@ -307,7 +311,9 @@ export default function ExplorePage() {
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-primary">800+</div>
-                <div className="text-sm text-muted-foreground">Contributors</div>
+                <div className="text-sm text-muted-foreground">
+                  Contributors
+                </div>
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-primary">25+</div>
@@ -326,14 +332,23 @@ export default function ExplorePage() {
             {featuredCollections.map((collection, index) => {
               const IconComponent = collection.icon;
               return (
-                <Card key={index} className="cursor-pointer hover:shadow-lg transition-all group">
+                <Card
+                  key={index}
+                  className="cursor-pointer hover:shadow-lg transition-all group"
+                >
                   <CardContent className="p-6">
-                    <div className={`w-12 h-12 rounded-lg ${collection.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
+                    <div
+                      className={`w-12 h-12 rounded-lg bg-gradient-to-br ${collection.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}
+                    >
                       <IconComponent className="h-6 w-6 text-white" />
                     </div>
                     <h3 className="font-semibold mb-2">{collection.title}</h3>
-                    <p className="text-sm text-muted-foreground mb-3">{collection.description}</p>
-                    <div className="text-xs text-muted-foreground">{collection.count} prompts</div>
+                    <p className="text-sm text-muted-foreground mb-3">
+                      {collection.description}
+                    </p>
+                    <div className="text-xs text-muted-foreground">
+                      {collection.count} prompts
+                    </div>
                   </CardContent>
                 </Card>
               );
@@ -367,40 +382,57 @@ export default function ExplorePage() {
                 </SelectTrigger>
                 <SelectContent>
                   {models.map((model) => (
-                    <SelectItem key={model} value={model}>{model}</SelectItem>
+                    <SelectItem key={model} value={model}>
+                      {model}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
 
-              <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+              <Select
+                value={selectedCategory}
+                onValueChange={setSelectedCategory}
+              >
                 <SelectTrigger className="w-[180px]">
                   <SelectValue placeholder="Category" />
                 </SelectTrigger>
                 <SelectContent>
                   {categories.map((category) => (
-                    <SelectItem key={category} value={category}>{category}</SelectItem>
+                    <SelectItem key={category} value={category}>
+                      {category}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
 
-              <Select value={selectedDifficulty} onValueChange={setSelectedDifficulty}>
+              <Select
+                value={selectedDifficulty}
+                onValueChange={setSelectedDifficulty}
+              >
                 <SelectTrigger className="w-[180px]">
                   <SelectValue placeholder="Difficulty" />
                 </SelectTrigger>
                 <SelectContent>
                   {difficulties.map((difficulty) => (
-                    <SelectItem key={difficulty} value={difficulty}>{difficulty}</SelectItem>
+                    <SelectItem key={difficulty} value={difficulty}>
+                      {difficulty}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
 
-              <Select value={selectedUseCase} onValueChange={setSelectedUseCase}>
+              <Select
+                value={selectedUseCase}
+                onValueChange={setSelectedUseCase}
+              >
                 <SelectTrigger className="w-[180px]">
                   <SelectValue placeholder="Use Case" />
                 </SelectTrigger>
                 <SelectContent>
                   {useCases.map((useCase) => (
-                    <SelectItem key={useCase} value={useCase}>{useCase}</SelectItem>
+                    <SelectItem key={useCase} value={useCase}>
+                      {useCase}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -419,7 +451,9 @@ export default function ExplorePage() {
                     return (
                       <Button
                         key={option.value}
-                        variant={selectedSort === option.value ? "default" : "outline"}
+                        variant={
+                          selectedSort === option.value ? "default" : "outline"
+                        }
                         size="sm"
                         onClick={() => setSelectedSort(option.value)}
                         className="flex items-center gap-2"
@@ -438,17 +472,17 @@ export default function ExplorePage() {
                 </span>
                 <div className="flex border rounded-lg">
                   <Button
-                    variant={viewMode === 'grid' ? 'default' : 'ghost'}
+                    variant={viewMode === "grid" ? "default" : "ghost"}
                     size="sm"
-                    onClick={() => setViewMode('grid')}
+                    onClick={() => setViewMode("grid")}
                     className="rounded-r-none"
                   >
                     <Grid3X3 className="h-4 w-4" />
                   </Button>
                   <Button
-                    variant={viewMode === 'list' ? 'default' : 'ghost'}
+                    variant={viewMode === "list" ? "default" : "ghost"}
                     size="sm"
-                    onClick={() => setViewMode('list')}
+                    onClick={() => setViewMode("list")}
                     className="rounded-l-none"
                   >
                     <List className="h-4 w-4" />
@@ -462,7 +496,9 @@ export default function ExplorePage() {
               {sortedPrompts.length === 0 ? (
                 <div className="text-center py-16">
                   <div className="text-6xl mb-4">🔍</div>
-                  <h3 className="text-xl font-semibold mb-2">No prompts found</h3>
+                  <h3 className="text-xl font-semibold mb-2">
+                    No prompts found
+                  </h3>
                   <p className="text-muted-foreground mb-4">
                     Try adjusting your filters or search terms
                   </p>
@@ -470,10 +506,13 @@ export default function ExplorePage() {
                 </div>
               ) : (
                 <>
-                  <div className={viewMode === 'grid' 
-                    ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" 
-                    : "space-y-4"
-                  }>
+                  <div
+                    className={
+                      viewMode === "grid"
+                        ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+                        : "space-y-4"
+                    }
+                  >
                     {sortedPrompts.map((prompt) => (
                       <PromptCard key={prompt.id} prompt={prompt} />
                     ))}
@@ -481,7 +520,11 @@ export default function ExplorePage() {
 
                   {/* Load More */}
                   <div className="text-center mt-12">
-                    <Button variant="outline" size="lg" className="hover:bg-accent">
+                    <Button
+                      variant="outline"
+                      size="lg"
+                      className="hover:bg-accent"
+                    >
                       Load More Prompts
                     </Button>
                   </div>
@@ -493,7 +536,9 @@ export default function ExplorePage() {
               {sortedPrompts.length === 0 ? (
                 <div className="text-center py-16">
                   <div className="text-6xl mb-4">🔥</div>
-                  <h3 className="text-xl font-semibold mb-2">No trending prompts found</h3>
+                  <h3 className="text-xl font-semibold mb-2">
+                    No trending prompts found
+                  </h3>
                   <p className="text-muted-foreground mb-4">
                     Try adjusting your filters or search terms
                   </p>
@@ -501,10 +546,13 @@ export default function ExplorePage() {
                 </div>
               ) : (
                 <>
-                  <div className={viewMode === 'grid' 
-                    ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" 
-                    : "space-y-4"
-                  }>
+                  <div
+                    className={
+                      viewMode === "grid"
+                        ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+                        : "space-y-4"
+                    }
+                  >
                     {sortedPrompts.map((prompt) => (
                       <PromptCard key={prompt.id} prompt={prompt} />
                     ))}
@@ -512,7 +560,11 @@ export default function ExplorePage() {
 
                   {/* Load More */}
                   <div className="text-center mt-12">
-                    <Button variant="outline" size="lg" className="hover:bg-accent">
+                    <Button
+                      variant="outline"
+                      size="lg"
+                      className="hover:bg-accent"
+                    >
                       Load More Prompts
                     </Button>
                   </div>
@@ -524,7 +576,9 @@ export default function ExplorePage() {
               {sortedPrompts.length === 0 ? (
                 <div className="text-center py-16">
                   <div className="text-6xl mb-4">⏰</div>
-                  <h3 className="text-xl font-semibold mb-2">No recent prompts found</h3>
+                  <h3 className="text-xl font-semibold mb-2">
+                    No recent prompts found
+                  </h3>
                   <p className="text-muted-foreground mb-4">
                     Try adjusting your filters or search terms
                   </p>
@@ -532,10 +586,13 @@ export default function ExplorePage() {
                 </div>
               ) : (
                 <>
-                  <div className={viewMode === 'grid' 
-                    ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" 
-                    : "space-y-4"
-                  }>
+                  <div
+                    className={
+                      viewMode === "grid"
+                        ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+                        : "space-y-4"
+                    }
+                  >
                     {sortedPrompts.map((prompt) => (
                       <PromptCard key={prompt.id} prompt={prompt} />
                     ))}
@@ -543,7 +600,11 @@ export default function ExplorePage() {
 
                   {/* Load More */}
                   <div className="text-center mt-12">
-                    <Button variant="outline" size="lg" className="hover:bg-accent">
+                    <Button
+                      variant="outline"
+                      size="lg"
+                      className="hover:bg-accent"
+                    >
                       Load More Prompts
                     </Button>
                   </div>

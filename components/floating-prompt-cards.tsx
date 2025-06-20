@@ -206,11 +206,13 @@ export function FloatingPromptCards() {
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);
 
   return (
-    <div className="relative w-full h-[450px] lg:h-[500px] md:overflow-hidden flex justify-center lg:justify-start">
+    <div className="relative w-full h-[450px] lg:h-[500px] md:overflow-hidden">
       {sampleCards.map((card, index) => (
         <motion.div
           key={card.id}
-          className={`absolute ${index === 1 ? "block lg:hidden xl:block" : ""}`}
+          className={`absolute ${
+            index === 1 ? "block lg:hidden xl:block" : ""
+          }`}
           initial={{
             opacity: 0,
             y: 50,
@@ -227,20 +229,12 @@ export function FloatingPromptCards() {
             ease: "easeOut",
           }}
           style={{
-            // Mobile positioning (centered)
-            left: index === 0 
-              ? "calc(50% - 180px)" 
-              : index === 1 
-              ? "calc(50% - 90px)" 
-              : "calc(50% + 0px)",
+            // For large screens: spread cards across the right side
+            // For small screens: stack them more compactly
+            left: index === 0 ? "10%" : index === 1 ? "50%" : "20%",
             top: index === 0 ? "5%" : index === 1 ? "15%" : "50%",
-            transform: index === 1 ? "translateX(-50%)" : "translateX(-50%)",
+            transform: index === 1 ? "translateX(-55%)" : "translateX()",
             zIndex: index === 1 ? 30 : 20,
-            // Large screen override
-            ...(typeof window !== 'undefined' && window.innerWidth >= 1024 ? {
-              left: index === 0 ? "10%" : index === 1 ? "50%" : "20%",
-              transform: index === 1 ? "translateX(-55%)" : "translateX(0)",
-            } : {})
           }}
           whileHover={{
             scale: 1.05,
@@ -262,7 +256,7 @@ export function FloatingPromptCards() {
             }}
           >
             <Card
-              className={`w-56 lg:w-72 h-48 lg:h-56 overflow-hidden transition-all duration-300 ${
+              className={`w-64 lg:w-72 h-52 lg:h-56 overflow-hidden transition-all duration-300 ${
                 hoveredCard === card.id
                   ? "shadow-2xl shadow-purple-500/20 border-purple-300/50"
                   : "shadow-xl border-border/50"
