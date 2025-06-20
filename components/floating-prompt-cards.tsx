@@ -152,7 +152,7 @@ export function FloatingPromptCards() {
                 </p>
 
                 {/* Tags */}
-                <div className="flex flex-wrap gap-1 mb-3">
+                <div className="md:flex flex-wrap gap-1 mb-3 hidden">
                   {card.tags.slice(0, 3).map((tag, tagIndex) => (
                     <span 
                       key={tagIndex}
