@@ -74,7 +74,7 @@ export function FloatingPromptCards() {
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);
 
   return (
-    <div className="relative w-full h-[500px] overflow-hidden">
+    <div className="relative w-full h-[400px] md:h-[450px] overflow-hidden">
       {sampleCards.map((card, index) => (
         <motion.div
           key={card.id}
@@ -82,13 +82,11 @@ export function FloatingPromptCards() {
           initial={{ 
             opacity: 0, 
             y: 50,
-            x: index === 0 ? -60 : index === 1 ? 20 : 100,
             rotate: index === 0 ? -8 : index === 1 ? 0 : 8
           }}
           animate={{ 
             opacity: 1, 
             y: 0,
-            x: index === 0 ? -40 : index === 1 ? 40 : 120,
             rotate: index === 0 ? -6 : index === 1 ? 0 : 6
           }}
           transition={{ 
@@ -97,8 +95,9 @@ export function FloatingPromptCards() {
             ease: "easeOut"
           }}
           style={{
-            left: index === 0 ? '5%' : index === 1 ? '25%' : '45%',
-            top: index === 0 ? '15%' : index === 1 ? '5%' : '20%',
+            // Staggered positioning: left, center-right, left again
+            left: index === 0 ? '5%' : index === 1 ? '35%' : '10%',
+            top: index === 0 ? '10%' : index === 1 ? '5%' : '55%',
             zIndex: index === 1 ? 30 : 20
           }}
           whileHover={{ 
@@ -120,14 +119,14 @@ export function FloatingPromptCards() {
               ease: "easeInOut"
             }}
           >
-            <Card className={`w-72 h-56 overflow-hidden transition-all duration-300 ${
+            <Card className={`w-64 md:w-72 h-52 md:h-56 overflow-hidden transition-all duration-300 ${
               hoveredCard === card.id 
                 ? 'shadow-2xl shadow-purple-500/20 border-purple-300/50' 
                 : 'shadow-xl border-border/50'
             } backdrop-blur-sm bg-card/90`}>
-              <CardContent className="p-5 h-full flex flex-col">
+              <CardContent className="p-4 md:p-5 h-full flex flex-col">
                 {/* Header */}
-                <div className="flex items-start justify-between mb-3">
+                <div className="flex items-start justify-between mb-2">
                   <div className="flex items-center gap-2">
                     <div className={`w-3 h-3 rounded-full bg-gradient-to-r ${card.gradient}`} />
                     <Badge variant="outline" className="text-xs">
@@ -141,12 +140,12 @@ export function FloatingPromptCards() {
                 </div>
 
                 {/* Title */}
-                <h3 className="font-semibold text-base mb-2 line-clamp-1">
+                <h3 className="font-semibold text-sm md:text-base mb-2 line-clamp-1">
                   {card.title}
                 </h3>
 
                 {/* Description */}
-                <p className="text-sm text-muted-foreground mb-3 line-clamp-2 flex-1">
+                <p className="text-xs md:text-sm text-muted-foreground mb-3 line-clamp-2 flex-1">
                   {card.description}
                 </p>
 
