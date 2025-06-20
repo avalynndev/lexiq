@@ -31,7 +31,7 @@ export default function Navbar() {
   ];
 
   return (
-    <header className="sticky top-0 z-50 -mb-4 px-4 pb-4">
+    <header className="sticky top-0 z-50 -mb-4 pb-4">
       <nav className="fade-bottom bg-background/95 fixed top-0 z-50 h-16 w-full backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="max-w-container-lg mx-auto flex h-full items-center justify-between px-4 md:gap-2">
           {/* Left Side */}
