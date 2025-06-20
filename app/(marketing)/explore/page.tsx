@@ -7,8 +7,8 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Search, Filter, TrendingUp, Clock, Star, Grid3X3, List, Sparkles, Zap, Users, BookOpen } from 'lucide-react';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { Search, Filter, TrendingUp, Clock, Star, Grid3X3, List, Sparkles, Zap, Users, BookOpen, X } from 'lucide-react';
 import { Spotlight } from '@/components/ui/spotlight';
 
 // Extended sample data for the explore page
@@ -185,37 +185,6 @@ const sortOptions = [
   { label: 'Most Forked', value: 'forks', icon: Users },
 ];
 
-const featuredCollections = [
-  {
-    title: 'Trending This Week',
-    description: 'The hottest prompts gaining traction',
-    icon: TrendingUp,
-    count: 12,
-    color: 'from-orange-500 to-red-500'
-  },
-  {
-    title: 'Editor\'s Choice',
-    description: 'Hand-picked by our team',
-    icon: Sparkles,
-    count: 8,
-    color: 'from-purple-500 to-pink-500'
-  },
-  {
-    title: 'Most Forked',
-    description: 'Community favorites',
-    icon: Users,
-    count: 15,
-    color: 'from-blue-500 to-cyan-500'
-  },
-  {
-    title: 'New & Notable',
-    description: 'Fresh prompts worth exploring',
-    icon: Zap,
-    count: 6,
-    color: 'from-green-500 to-emerald-500'
-  }
-];
-
 export default function ExplorePage() {
   const [selectedModel, setSelectedModel] = useState('All Models');
   const [selectedCategory, setSelectedCategory] = useState('All Categories');
@@ -225,6 +194,7 @@ export default function ExplorePage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [activeTab, setActiveTab] = useState('all');
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   const filteredPrompts = allPrompts.filter(prompt => {
     const modelMatch = selectedModel === 'All Models' || 
@@ -272,10 +242,16 @@ export default function ExplorePage() {
     setSearchQuery('');
   };
 
+  const hasActiveFilters = selectedModel !== 'All Models' || 
+    selectedCategory !== 'All Categories' || 
+    selectedDifficulty !== 'All Levels' || 
+    selectedUseCase !== 'All Use Cases' || 
+    searchQuery !== '';
+
   return (
     <div className="min-h-screen">
       <Spotlight />
-      <section className="pt-24 pb-12 ">
+      <section className="pt-24 pb-12">
         <div className="container mx-auto px-4">
           <div className="text-center max-w-4xl mx-auto">
             <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-foreground to-muted-foreground bg-clip-text text-transparent">
@@ -296,322 +272,243 @@ export default function ExplorePage() {
                 className="pl-12 h-14 text-lg bg-card/50 backdrop-blur-sm border-border/50"
               />
             </div>
-
-            {/* Quick Stats */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto">
-              <div className="text-center">
-                <div className="text-2xl font-bold text-primary">15,200+</div>
-                <div className="text-sm text-muted-foreground">
-                  Total Prompts
-                </div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-primary">50+</div>
-                <div className="text-sm text-muted-foreground">AI Models</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-primary">800+</div>
-                <div className="text-sm text-muted-foreground">
-                  Contributors
-                </div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-primary">25+</div>
-                <div className="text-sm text-muted-foreground">Categories</div>
-              </div>
-            </div>
           </div>
         </div>
       </section>
 
       <div className="container mx-auto px-4 pb-16">
-        {/* Featured Collections */}
-        <section className="mb-12">
-          <h2 className="text-2xl font-bold mb-6">Featured Collections</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {featuredCollections.map((collection, index) => {
-              const IconComponent = collection.icon;
-              return (
-                <Card
-                  key={index}
-                  className="cursor-pointer hover:shadow-lg transition-all group"
-                >
-                  <CardContent className="p-6">
-                    <div
-                      className={`w-12 h-12 rounded-lg bg-gradient-to-br ${collection.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}
-                    >
-                      <IconComponent className="h-6 w-6 text-white" />
-                    </div>
-                    <h3 className="font-semibold mb-2">{collection.title}</h3>
-                    <p className="text-sm text-muted-foreground mb-3">
-                      {collection.description}
-                    </p>
-                    <div className="text-xs text-muted-foreground">
-                      {collection.count} prompts
-                    </div>
-                  </CardContent>
-                </Card>
-              );
-            })}
-          </div>
-        </section>
-
-        {/* Filters and Tabs */}
+        {/* Main Controls */}
         <div className="mb-8">
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-6">
-            <TabsList className="grid w-full grid-cols-3 lg:w-auto lg:grid-cols-3">
-              <TabsTrigger value="all" className="flex items-center gap-2">
-                <BookOpen className="h-4 w-4" />
-                All Prompts
-              </TabsTrigger>
-              <TabsTrigger value="trending" className="flex items-center gap-2">
-                <TrendingUp className="h-4 w-4" />
-                Trending
-              </TabsTrigger>
-              <TabsTrigger value="recent" className="flex items-center gap-2">
-                <Clock className="h-4 w-4" />
-                Recent
-              </TabsTrigger>
-            </TabsList>
+          {/* Tabs and Filter Button */}
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+            <Tabs value={activeTab} onValueChange={setActiveTab}>
+              <TabsList className="grid w-full grid-cols-3 sm:w-auto sm:grid-cols-3">
+                <TabsTrigger value="all" className="flex items-center gap-2">
+                  <BookOpen className="h-4 w-4" />
+                  All Prompts
+                </TabsTrigger>
+                <TabsTrigger value="trending" className="flex items-center gap-2">
+                  <TrendingUp className="h-4 w-4" />
+                  Trending
+                </TabsTrigger>
+                <TabsTrigger value="recent" className="flex items-center gap-2">
+                  <Clock className="h-4 w-4" />
+                  Recent
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
 
-            {/* Advanced Filters */}
-            <div className="flex flex-wrap gap-4 mb-6 mt-6">
-              <Select value={selectedModel} onValueChange={setSelectedModel}>
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="AI Model" />
-                </SelectTrigger>
-                <SelectContent>
-                  {models.map((model) => (
-                    <SelectItem key={model} value={model}>
-                      {model}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+            <div className="flex items-center gap-3">
+              {/* Active Filters Indicator */}
+              {hasActiveFilters && (
+                <Badge variant="secondary" className="hidden sm:flex">
+                  {Object.values({
+                    model: selectedModel !== 'All Models',
+                    category: selectedCategory !== 'All Categories',
+                    difficulty: selectedDifficulty !== 'All Levels',
+                    useCase: selectedUseCase !== 'All Use Cases',
+                    search: searchQuery !== ''
+                  }).filter(Boolean).length} filters active
+                </Badge>
+              )}
 
-              <Select
-                value={selectedCategory}
-                onValueChange={setSelectedCategory}
+              {/* Filter Sheet */}
+              <Sheet open={isFilterOpen} onOpenChange={setIsFilterOpen}>
+                <SheetTrigger asChild>
+                  <Button variant="outline" className="flex items-center gap-2">
+                    <Filter className="h-4 w-4" />
+                    Filters
+                    {hasActiveFilters && (
+                      <Badge variant="secondary" className="ml-1 h-5 w-5 rounded-full p-0 text-xs">
+                        {Object.values({
+                          model: selectedModel !== 'All Models',
+                          category: selectedCategory !== 'All Categories',
+                          difficulty: selectedDifficulty !== 'All Levels',
+                          useCase: selectedUseCase !== 'All Use Cases',
+                          search: searchQuery !== ''
+                        }).filter(Boolean).length}
+                      </Badge>
+                    )}
+                  </Button>
+                </SheetTrigger>
+                <SheetContent className="w-[400px] sm:w-[540px]">
+                  <SheetHeader>
+                    <SheetTitle>Filter Prompts</SheetTitle>
+                  </SheetHeader>
+                  
+                  <div className="mt-6 space-y-6">
+                    {/* AI Model Filter */}
+                    <div>
+                      <label className="text-sm font-medium mb-3 block">AI Model</label>
+                      <Select value={selectedModel} onValueChange={setSelectedModel}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select AI Model" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {models.map((model) => (
+                            <SelectItem key={model} value={model}>
+                              {model}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    {/* Category Filter */}
+                    <div>
+                      <label className="text-sm font-medium mb-3 block">Category</label>
+                      <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select Category" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {categories.map((category) => (
+                            <SelectItem key={category} value={category}>
+                              {category}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    {/* Difficulty Filter */}
+                    <div>
+                      <label className="text-sm font-medium mb-3 block">Difficulty Level</label>
+                      <Select value={selectedDifficulty} onValueChange={setSelectedDifficulty}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select Difficulty" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {difficulties.map((difficulty) => (
+                            <SelectItem key={difficulty} value={difficulty}>
+                              {difficulty}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    {/* Use Case Filter */}
+                    <div>
+                      <label className="text-sm font-medium mb-3 block">Use Case</label>
+                      <Select value={selectedUseCase} onValueChange={setSelectedUseCase}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select Use Case" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {useCases.map((useCase) => (
+                            <SelectItem key={useCase} value={useCase}>
+                              {useCase}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    {/* Sort Options */}
+                    <div>
+                      <label className="text-sm font-medium mb-3 block">Sort By</label>
+                      <div className="grid grid-cols-2 gap-2">
+                        {sortOptions.map((option) => {
+                          const IconComponent = option.icon;
+                          return (
+                            <Button
+                              key={option.value}
+                              variant={selectedSort === option.value ? "default" : "outline"}
+                              size="sm"
+                              onClick={() => setSelectedSort(option.value)}
+                              className="flex items-center gap-2 justify-start"
+                            >
+                              <IconComponent className="h-4 w-4" />
+                              {option.label}
+                            </Button>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    {/* Clear Filters */}
+                    {hasActiveFilters && (
+                      <Button 
+                        variant="outline" 
+                        onClick={clearFilters}
+                        className="w-full"
+                      >
+                        Clear All Filters
+                      </Button>
+                    )}
+                  </div>
+                </SheetContent>
+              </Sheet>
+            </div>
+          </div>
+
+          {/* Results Count */}
+          <div className="flex justify-between items-center">
+            <span className="text-sm text-muted-foreground">
+              {sortedPrompts.length} prompts found
+            </span>
+            
+            <div className="flex border rounded-lg">
+              <Button
+                variant={viewMode === "grid" ? "default" : "ghost"}
+                size="sm"
+                onClick={() => setViewMode("grid")}
+                className="rounded-r-none"
               >
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Category" />
-                </SelectTrigger>
-                <SelectContent>
-                  {categories.map((category) => (
-                    <SelectItem key={category} value={category}>
-                      {category}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-
-              <Select
-                value={selectedDifficulty}
-                onValueChange={setSelectedDifficulty}
+                <Grid3X3 className="h-4 w-4" />
+              </Button>
+              <Button
+                variant={viewMode === "list" ? "default" : "ghost"}
+                size="sm"
+                onClick={() => setViewMode("list")}
+                className="rounded-l-none"
               >
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Difficulty" />
-                </SelectTrigger>
-                <SelectContent>
-                  {difficulties.map((difficulty) => (
-                    <SelectItem key={difficulty} value={difficulty}>
-                      {difficulty}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-
-              <Select
-                value={selectedUseCase}
-                onValueChange={setSelectedUseCase}
-              >
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Use Case" />
-                </SelectTrigger>
-                <SelectContent>
-                  {useCases.map((useCase) => (
-                    <SelectItem key={useCase} value={useCase}>
-                      {useCase}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-
-              <Button variant="outline" onClick={clearFilters}>
-                Clear Filters
+                <List className="h-4 w-4" />
               </Button>
             </div>
+          </div>
 
-            {/* Sort and View Options */}
-            <div className="flex justify-between items-center">
-              <div className="flex items-center gap-4">
-                <div className="flex gap-2">
-                  {sortOptions.map((option) => {
-                    const IconComponent = option.icon;
-                    return (
-                      <Button
-                        key={option.value}
-                        variant={
-                          selectedSort === option.value ? "default" : "outline"
-                        }
-                        size="sm"
-                        onClick={() => setSelectedSort(option.value)}
-                        className="flex items-center gap-2"
-                      >
-                        <IconComponent className="h-4 w-4" />
-                        {option.label}
-                      </Button>
-                    );
-                  })}
-                </div>
+          {/* Results */}
+          <div className="mt-6">
+            {sortedPrompts.length === 0 ? (
+              <div className="text-center py-16">
+                <div className="text-6xl mb-4">🔍</div>
+                <h3 className="text-xl font-semibold mb-2">
+                  No prompts found
+                </h3>
+                <p className="text-muted-foreground mb-4">
+                  Try adjusting your filters or search terms
+                </p>
+                <Button onClick={clearFilters}>Clear all filters</Button>
               </div>
+            ) : (
+              <>
+                <div
+                  className={
+                    viewMode === "grid"
+                      ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+                      : "space-y-4"
+                  }
+                >
+                  {sortedPrompts.map((prompt) => (
+                    <PromptCard key={prompt.id} prompt={prompt} />
+                  ))}
+                </div>
 
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-muted-foreground">
-                  {sortedPrompts.length} prompts
-                </span>
-                <div className="flex border rounded-lg">
+                {/* Load More */}
+                <div className="text-center mt-12">
                   <Button
-                    variant={viewMode === "grid" ? "default" : "ghost"}
-                    size="sm"
-                    onClick={() => setViewMode("grid")}
-                    className="rounded-r-none"
+                    variant="outline"
+                    size="lg"
+                    className="hover:bg-accent"
                   >
-                    <Grid3X3 className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant={viewMode === "list" ? "default" : "ghost"}
-                    size="sm"
-                    onClick={() => setViewMode("list")}
-                    className="rounded-l-none"
-                  >
-                    <List className="h-4 w-4" />
+                    Load More Prompts
                   </Button>
                 </div>
-              </div>
-            </div>
-
-            {/* Results */}
-            <TabsContent value="all" className="mt-6">
-              {sortedPrompts.length === 0 ? (
-                <div className="text-center py-16">
-                  <div className="text-6xl mb-4">🔍</div>
-                  <h3 className="text-xl font-semibold mb-2">
-                    No prompts found
-                  </h3>
-                  <p className="text-muted-foreground mb-4">
-                    Try adjusting your filters or search terms
-                  </p>
-                  <Button onClick={clearFilters}>Clear all filters</Button>
-                </div>
-              ) : (
-                <>
-                  <div
-                    className={
-                      viewMode === "grid"
-                        ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-                        : "space-y-4"
-                    }
-                  >
-                    {sortedPrompts.map((prompt) => (
-                      <PromptCard key={prompt.id} prompt={prompt} />
-                    ))}
-                  </div>
-
-                  {/* Load More */}
-                  <div className="text-center mt-12">
-                    <Button
-                      variant="outline"
-                      size="lg"
-                      className="hover:bg-accent"
-                    >
-                      Load More Prompts
-                    </Button>
-                  </div>
-                </>
-              )}
-            </TabsContent>
-
-            <TabsContent value="trending" className="mt-6">
-              {sortedPrompts.length === 0 ? (
-                <div className="text-center py-16">
-                  <div className="text-6xl mb-4">🔥</div>
-                  <h3 className="text-xl font-semibold mb-2">
-                    No trending prompts found
-                  </h3>
-                  <p className="text-muted-foreground mb-4">
-                    Try adjusting your filters or search terms
-                  </p>
-                  <Button onClick={clearFilters}>Clear all filters</Button>
-                </div>
-              ) : (
-                <>
-                  <div
-                    className={
-                      viewMode === "grid"
-                        ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-                        : "space-y-4"
-                    }
-                  >
-                    {sortedPrompts.map((prompt) => (
-                      <PromptCard key={prompt.id} prompt={prompt} />
-                    ))}
-                  </div>
-
-                  {/* Load More */}
-                  <div className="text-center mt-12">
-                    <Button
-                      variant="outline"
-                      size="lg"
-                      className="hover:bg-accent"
-                    >
-                      Load More Prompts
-                    </Button>
-                  </div>
-                </>
-              )}
-            </TabsContent>
-
-            <TabsContent value="recent" className="mt-6">
-              {sortedPrompts.length === 0 ? (
-                <div className="text-center py-16">
-                  <div className="text-6xl mb-4">⏰</div>
-                  <h3 className="text-xl font-semibold mb-2">
-                    No recent prompts found
-                  </h3>
-                  <p className="text-muted-foreground mb-4">
-                    Try adjusting your filters or search terms
-                  </p>
-                  <Button onClick={clearFilters}>Clear all filters</Button>
-                </div>
-              ) : (
-                <>
-                  <div
-                    className={
-                      viewMode === "grid"
-                        ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-                        : "space-y-4"
-                    }
-                  >
-                    {sortedPrompts.map((prompt) => (
-                      <PromptCard key={prompt.id} prompt={prompt} />
-                    ))}
-                  </div>
-
-                  {/* Load More */}
-                  <div className="text-center mt-12">
-                    <Button
-                      variant="outline"
-                      size="lg"
-                      className="hover:bg-accent"
-                    >
-                      Load More Prompts
-                    </Button>
-                  </div>
-                </>
-              )}
-            </TabsContent>
-          </Tabs>
+              </>
+            )}
+          </div>
         </div>
       </div>
     </div>
