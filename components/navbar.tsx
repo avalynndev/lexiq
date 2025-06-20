@@ -12,10 +12,10 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   const navItems = [
-    { label: "Docs", href: "/docs" },
     { label: "Explore", href: "/explore" },
-    { label: "Categories", href: "/categories" },
     { label: "Trending", href: "/trending" },
+    { label: "Docs", href: "/docs" },
+    { label: "Categories", href: "/categories" },
     { label: "Pricing", href: "/pricing" },
   ];
 

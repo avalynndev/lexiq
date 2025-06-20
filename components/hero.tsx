@@ -58,7 +58,7 @@ export function Hero() {
           </p>
 
           {/* Floating cards - shown below text on small screens */}
-          <div className="mt-12 lg:hidden">
+          <div className="mt-12 pr-20 lg:hidden justify-center items-center">
             <FloatingPromptCards />
           </div>
         </div>

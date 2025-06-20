@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Star } from 'lucide-react';
 
 export function GithubStars() {
-  const [stars, setStars] = useState(1247);
+  const [stars, setStars] = useState(234);
   const [isStarred, setIsStarred] = useState(false);
 
   const handleStar = () => {

@@ -27,7 +27,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${GeistSans.variable} ${GeistMono.variable} bg-background antialiased overflow-x-hidden font-sans text-foreground`}
+        className={`${GeistSans.variable} ${GeistMono.variable} bg-background antialiased font-sans text-foreground`}
       >
         <ThemeProvider
           attribute="class"
@@ -35,11 +35,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <Navbar />
-          <main className="container mx-auto px-4 overflow-hidden md:overflow-visible">
             {children}
-          </main>
-          <Footer />
         </ThemeProvider>
       </body>
     </html>
