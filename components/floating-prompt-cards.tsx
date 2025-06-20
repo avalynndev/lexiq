@@ -74,7 +74,7 @@ export function FloatingPromptCards() {
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);
 
   return (
-    <div className="relative w-full h-[400px] lg:h-[550px] overflow-hidden">
+    <div className="relative w-full h-[400px] lg:h-[570px] overflow-hidden">
       {sampleCards.map((card, index) => (
         <motion.div
           key={card.id}
