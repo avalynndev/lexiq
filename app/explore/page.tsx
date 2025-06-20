@@ -329,7 +329,7 @@ export default function ExplorePage() {
                 <Card key={index} className="cursor-pointer hover:shadow-lg transition-all group">
                   <CardContent className="p-6">
                     <div className={`w-12 h-12 rounded-lg ${collection.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
-                      <IconComponent className="h-6 w-6 text-white rounded-lg" />
+                      <IconComponent className="h-6 w-6 text-white" />
                     </div>
                     <h3 className="font-semibold mb-2">{collection.title}</h3>
                     <p className="text-sm text-muted-foreground mb-3">{collection.description}</p>
