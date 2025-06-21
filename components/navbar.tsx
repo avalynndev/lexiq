@@ -32,7 +32,7 @@ export default function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 -mb-4 pb-4">
-      <nav className="fade-bottom bg-background/95 fixed top-0 z-50 h-16 w-full backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <nav className="fade-bottom bg-background/95 fixed top-0 z-50 h-16 w-full backdrop-blur-sm supports-backdrop-filter:bg-background/60">
         <div className="max-w-container-lg mx-auto flex h-full items-center justify-between px-4 md:gap-2">
           {/* Left Side */}
           <div className="flex items-center gap-3">
@@ -118,7 +118,7 @@ export default function Navbar() {
                 <a
                   href="https://github.com/lexiq"
                   aria-label="GitHub"
-                  className="hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  className="hover:text-foreground focus:outline-hidden focus-visible:ring-2 focus-visible:ring-ring"
                 >
                   <Github className="h-5 w-5" />
                 </a>
@@ -132,7 +132,7 @@ export default function Navbar() {
                 <a
                   href="https://twitter.com/lexiq"
                   aria-label="Twitter"
-                  className="hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-full"
+                  className="hover:text-foreground focus:outline-hidden focus-visible:ring-2 focus-visible:ring-ring rounded-full"
                 >
                   <Twitter className="h-5 w-5" />
                 </a>

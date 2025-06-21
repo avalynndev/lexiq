@@ -20,8 +20,8 @@ export function Mockup({ children, type = "responsive", className }: MockupProps
         "relative overflow-hidden",
         {
           "aspect-video": type === "responsive",
-          "aspect-[4/3]": type === "desktop",
-          "aspect-[9/16]": type === "mobile",
+          "aspect-4/3": type === "desktop",
+          "aspect-9/16": type === "mobile",
         },
         className
       )}
@@ -44,7 +44,7 @@ export function MockupFrame({ children, size = "medium", className }: MockupFram
         className
       )}
     >
-      <div className="relative rounded-xl border border-border/50 bg-background/50 backdrop-blur-sm p-2">
+      <div className="relative rounded-xl border border-border/50 bg-background/50 backdrop-blur-xs p-2">
         {children}
       </div>
     </div>

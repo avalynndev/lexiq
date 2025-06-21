@@ -225,7 +225,7 @@ export function PromptCard({ prompt }: PromptCardProps) {
                 </h3>
               </div>
               {(prompt.isRecent || prompt.isTrending) && (
-                <div className="inline-flex items-center border px-2.5 py-0.5 font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 text-foreground mr-1 rounded-full text-[10px]">
+                <div className="inline-flex items-center border px-2.5 py-0.5 font-semibold transition-colors focus:outline-hidden focus:ring-2 focus:ring-ring focus:ring-offset-2 text-foreground mr-1 rounded-full text-[10px]">
                   {prompt.isTrending ? "Trending" : "New"}
                 </div>
               )}
@@ -239,7 +239,7 @@ export function PromptCard({ prompt }: PromptCardProps) {
               {tags.slice(0, 3).map((tag, index) => (
                 <div
                   key={index}
-                  className="text-xs text-muted-foreground bg-muted/50 rounded-full px-2 py-1 shadow-sm"
+                  className="text-xs text-muted-foreground bg-muted/50 rounded-full px-2 py-1 shadow-xs"
                 >
                   {tag}
                 </div>

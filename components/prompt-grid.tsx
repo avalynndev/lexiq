@@ -9,97 +9,128 @@ import { Search, Filter, TrendingUp, Clock, Star } from 'lucide-react';
 
 const samplePrompts = [
   {
-    id: '1',
-    title: 'Creative Writing Assistant',
-    description: 'A comprehensive prompt for generating creative stories, novels, and screenplay content with character development guidance.',
-    author: { name: 'Sarah Chen', avatar: 'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?w=100' },
-    model: 'GPT-4',
-    category: 'Writing',
+    id: "1",
+    title: "Creative Writing Assistant",
+    description:
+      "A comprehensive prompt for generating creative stories, novels, and screenplay content with character development guidance.",
+    author: {
+      username: "Sarah Chen",
+      avatar:
+        "https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?w=100",
+    },
+    model: "GPT-4",
+    category: "Writing",
     stars: 1247,
     forks: 89,
     views: 3421,
-    lastUpdated: '2 days ago',
+    lastUpdated: "2 days ago",
     isTrending: true,
-    tags: ['gpt-4', 'writing', 'creative', 'storytelling'],
-    solves: 'Generate compelling creative content with structured character development',
-    models: ['GPT-4', 'Claude'],
+    tags: ["gpt-4", "writing", "creative", "storytelling"],
+    solves:
+      "Generate compelling creative content with structured character development",
+    models: ["GPT-4", "Claude"],
   },
   {
-    id: '2',
-    title: 'Code Review & Optimization',
-    description: 'Detailed prompt for analyzing code quality, suggesting improvements, and identifying potential bugs across multiple languages.',
-    author: { name: 'Alex Kumar', avatar: 'https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?w=100' },
-    model: 'Claude',
-    category: 'Development',
+    id: "2",
+    title: "Code Review & Optimization",
+    description:
+      "Detailed prompt for analyzing code quality, suggesting improvements, and identifying potential bugs across multiple languages.",
+    author: {
+      username: "Alex Kumar",
+      avatar:
+        "https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?w=100",
+    },
+    model: "Claude",
+    category: "Development",
     stars: 892,
     forks: 156,
     views: 2103,
-    lastUpdated: '1 hour ago',
+    lastUpdated: "1 hour ago",
     isRecent: true,
-    tags: ['claude', 'development', 'code-review', 'optimization'],
-    solves: 'Automated code analysis and improvement suggestions',
-    models: ['Claude', 'GPT-4', 'Gemini'],
+    tags: ["claude", "development", "code-review", "optimization"],
+    solves: "Automated code analysis and improvement suggestions",
+    models: ["Claude", "GPT-4", "Gemini"],
   },
   {
-    id: '3',
-    title: 'Data Analysis Wizard',
-    description: 'Advanced prompt for interpreting datasets, creating visualizations, and generating actionable business insights.',
-    author: { name: 'Maria Rodriguez', avatar: 'https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?w=100' },
-    model: 'Gemini',
-    category: 'Analytics',
+    id: "3",
+    title: "Data Analysis Wizard",
+    description:
+      "Advanced prompt for interpreting datasets, creating visualizations, and generating actionable business insights.",
+    author: {
+      username: "Maria Rodriguez",
+      avatar:
+        "https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?w=100",
+    },
+    model: "Gemini",
+    category: "Analytics",
     stars: 567,
     forks: 43,
     views: 1876,
-    lastUpdated: '3 days ago',
-    tags: ['gemini', 'analytics', 'data-science', 'visualization'],
-    solves: 'Transform raw data into actionable business insights',
-    models: ['Gemini', 'GPT-4'],
+    lastUpdated: "3 days ago",
+    tags: ["gemini", "analytics", "data-science", "visualization"],
+    solves: "Transform raw data into actionable business insights",
+    models: ["Gemini", "GPT-4"],
   },
   {
-    id: '4',
-    title: 'SEO Content Generator',
-    description: 'Optimize your content for search engines with this comprehensive SEO-focused writing prompt.',
-    author: { name: 'David Park', avatar: 'https://images.pexels.com/photos/1043471/pexels-photo-1043471.jpeg?w=100' },
-    model: 'GPT-4',
-    category: 'Marketing',
+    id: "4",
+    title: "SEO Content Generator",
+    description:
+      "Optimize your content for search engines with this comprehensive SEO-focused writing prompt.",
+    author: {
+      username: "David Park",
+      avatar:
+        "https://images.pexels.com/photos/1043471/pexels-photo-1043471.jpeg?w=100",
+    },
+    model: "GPT-4",
+    category: "Marketing",
     stars: 743,
     forks: 67,
     views: 2234,
-    lastUpdated: '5 days ago',
+    lastUpdated: "5 days ago",
     isTrending: true,
-    tags: ['gpt-4', 'marketing', 'seo', 'content'],
-    solves: 'Create search-optimized content that ranks and converts',
-    models: ['GPT-4'],
+    tags: ["gpt-4", "marketing", "seo", "content"],
+    solves: "Create search-optimized content that ranks and converts",
+    models: ["GPT-4"],
   },
   {
-    id: '5',
-    title: 'Educational Lesson Planner',
-    description: 'Create engaging lesson plans and educational content tailored to different learning styles and age groups.',
-    author: { name: 'Lisa Thompson', avatar: 'https://images.pexels.com/photos/1181686/pexels-photo-1181686.jpeg?w=100' },
-    model: 'Claude',
-    category: 'Education',
+    id: "5",
+    title: "Educational Lesson Planner",
+    description:
+      "Create engaging lesson plans and educational content tailored to different learning styles and age groups.",
+    author: {
+      username: "Lisa Thompson",
+      avatar:
+        "https://images.pexels.com/photos/1181686/pexels-photo-1181686.jpeg?w=100",
+    },
+    model: "Claude",
+    category: "Education",
     stars: 423,
     forks: 28,
     views: 1432,
-    lastUpdated: '1 week ago',
-    tags: ['claude', 'education', 'lesson-planning', 'teaching'],
-    solves: 'Design effective educational content for diverse learners',
-    models: ['Claude', 'GPT-4'],
+    lastUpdated: "1 week ago",
+    tags: ["claude", "education", "lesson-planning", "teaching"],
+    solves: "Design effective educational content for diverse learners",
+    models: ["Claude", "GPT-4"],
   },
   {
-    id: '6',
-    title: 'Product Description Master',
-    description: 'Generate compelling product descriptions that convert visitors into customers with psychological triggers.',
-    author: { name: 'James Wilson', avatar: 'https://images.pexels.com/photos/1681010/pexels-photo-1681010.jpeg?w=100' },
-    model: 'Llama',
-    category: 'E-commerce',
+    id: "6",
+    title: "Product Description Master",
+    description:
+      "Generate compelling product descriptions that convert visitors into customers with psychological triggers.",
+    author: {
+      username: "James Wilson",
+      avatar:
+        "https://images.pexels.com/photos/1681010/pexels-photo-1681010.jpeg?w=100",
+    },
+    model: "Llama",
+    category: "E-commerce",
     stars: 856,
     forks: 94,
     views: 2876,
-    lastUpdated: '4 days ago',
-    tags: ['llama', 'e-commerce', 'copywriting', 'conversion'],
-    solves: 'Write product descriptions that drive sales and engagement',
-    models: ['Llama', 'GPT-4', 'Claude'],
+    lastUpdated: "4 days ago",
+    tags: ["llama", "e-commerce", "copywriting", "conversion"],
+    solves: "Write product descriptions that drive sales and engagement",
+    models: ["Llama", "GPT-4", "Claude"],
   },
 ];
 
@@ -151,7 +182,7 @@ export function PromptGrid() {
               placeholder="Search prompts..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 bg-card/50 backdrop-blur-sm border-border/50"
+              className="pl-10 bg-card/50 backdrop-blur-xs border-border/50"
             />
           </div>
 
@@ -165,7 +196,7 @@ export function PromptGrid() {
                   variant={selectedModel === model ? "default" : "outline"}
                   className={`cursor-pointer transition-all ${
                     selectedModel === model 
-                      ? 'bg-purple-500 hover:bg-purple-600' 
+                      ? '' 
                       : 'hover:bg-accent'
                   }`}
                   onClick={() => setSelectedModel(model)}
@@ -183,7 +214,7 @@ export function PromptGrid() {
                   variant={selectedCategory === category ? "default" : "outline"}
                   className={`cursor-pointer transition-all ${
                     selectedCategory === category 
-                      ? 'bg-blue-500 hover:bg-blue-600' 
+                      ? '' 
                       : 'hover:bg-accent'
                   }`}
                   onClick={() => setSelectedCategory(category)}
@@ -204,7 +235,6 @@ export function PromptGrid() {
                   variant={selectedSort === option.value ? "default" : "outline"}
                   size="sm"
                   onClick={() => setSelectedSort(option.value)}
-                  className={selectedSort === option.value ? 'bg-gradient-to-r from-purple-500 to-blue-600' : ''}
                 >
                   <IconComponent className="h-4 w-4 mr-2" />
                   {option.label}
