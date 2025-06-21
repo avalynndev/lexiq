@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@daveyplate/better-auth-ui": "^2.0.8",
     "@hookform/resolvers": "^5.1.1",
     "@neondatabase/serverless": "^1.0.1",
     "@next/swc-wasm-nodejs": "15.3.4",
@@ -79,6 +80,7 @@
     "zod": "^3.25.67"
   },
   "devDependencies": {
-    "drizzle-kit": "^0.31.1"
+    "drizzle-kit": "^0.31.1",
+    "tw-animate-css": "^1.3.4"
   }
 }

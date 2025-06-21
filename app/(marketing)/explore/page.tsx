@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { PromptCard } from "@/components/prompt-card";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import {
@@ -117,7 +117,7 @@ export default function ExplorePage() {
       prompt.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
       (prompt.tags &&
         prompt.tags.some((tag) =>
-          tag.toLowerCase().includes(searchQuery.toLowerCase()),
+          tag.toLowerCase().includes(searchQuery.toLowerCase())
         ));
 
     // Tab filtering
@@ -309,7 +309,7 @@ export default function ExplorePage() {
                         value={selectedModel}
                         onValueChange={setSelectedModel}
                       >
-                        <SelectTrigger>
+                        <SelectTrigger className="w-full min-w-[220px]">
                           <SelectValue placeholder="Select AI Model" />
                         </SelectTrigger>
                         <SelectContent>
@@ -331,7 +331,7 @@ export default function ExplorePage() {
                         value={selectedCategory}
                         onValueChange={setSelectedCategory}
                       >
-                        <SelectTrigger>
+                        <SelectTrigger className="w-full min-w-[220px]">
                           <SelectValue placeholder="Select Category" />
                         </SelectTrigger>
                         <SelectContent>
@@ -353,7 +353,7 @@ export default function ExplorePage() {
                         value={selectedDifficulty}
                         onValueChange={setSelectedDifficulty}
                       >
-                        <SelectTrigger>
+                        <SelectTrigger className="w-full min-w-[220px]">
                           <SelectValue placeholder="Select Difficulty" />
                         </SelectTrigger>
                         <SelectContent>
@@ -375,7 +375,7 @@ export default function ExplorePage() {
                         value={selectedUseCase}
                         onValueChange={setSelectedUseCase}
                       >
-                        <SelectTrigger>
+                        <SelectTrigger className="w-full min-w-[220px]">
                           <SelectValue placeholder="Select Use Case" />
                         </SelectTrigger>
                         <SelectContent>
@@ -397,20 +397,23 @@ export default function ExplorePage() {
                         {sortOptions.map((option) => {
                           const IconComponent = option.icon;
                           return (
-                            <Button
-                              key={option.value}
-                              variant={
-                                selectedSort === option.value
-                                  ? "default"
-                                  : "outline"
-                              }
-                              size="sm"
+                            <div
+                              className={buttonVariants({
+                                variant:
+                                  selectedSort === option.value
+                                    ? "default"
+                                    : "outline",
+                                className:
+                                  "flex items-center gap-2 justify-start w-full cursor-pointer",
+                              })}
                               onClick={() => setSelectedSort(option.value)}
-                              className="flex items-center gap-2 justify-start"
+                              tabIndex={0}
+                              role="button"
+                              key={option.value}
                             >
                               <IconComponent className="h-4 w-4" />
                               {option.label}
-                            </Button>
+                            </div>
                           );
                         })}
                       </div>

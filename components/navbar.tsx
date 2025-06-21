@@ -7,6 +7,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import LexiqLogo from "@/components/logo";
 import Link from "next/link";
+import { UserButton } from "@daveyplate/better-auth-ui";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -144,9 +145,7 @@ export default function Navbar() {
 
             {/* Auth Buttons (Hidden on mobile) */}
             <div className="hidden md:flex items-center">
-              <Button variant="ghost" size="sm" className="rounded-xl">
-                Sign In
-              </Button>
+              <UserButton size="icon"/>
             </div>
           </div>
         </div>
