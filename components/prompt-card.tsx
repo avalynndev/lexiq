@@ -254,7 +254,7 @@ export function PromptCard({ prompt }: PromptCardProps) {
           
           <div className="mt-4 flex items-center justify-between gap-4 border-t border-t-border/50 py-4 px-6 group-hover:bg-muted/50">
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
-              <span>@avalynndev</span>
+              <span>{prompt.username}</span>
             </div>
             <div className="flex items-center gap-1.5">
               {/* AI Model Icons */}
