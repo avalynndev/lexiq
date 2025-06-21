@@ -44,7 +44,7 @@ const allPrompts = [
     description:
       "A comprehensive prompt for generating creative stories, novels, and screenplay content with character development guidance.",
     author: {
-      name: "Sarah Chen",
+      username: "Sarah Chen",
       avatar:
         "https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?w=100",
     },
@@ -68,7 +68,7 @@ const allPrompts = [
     description:
       "Detailed prompt for analyzing code quality, suggesting improvements, and identifying potential bugs across multiple languages.",
     author: {
-      name: "Alex Kumar",
+      username: "Alex Kumar",
       avatar:
         "https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?w=100",
     },
@@ -91,7 +91,7 @@ const allPrompts = [
     description:
       "Advanced prompt for interpreting datasets, creating visualizations, and generating actionable business insights.",
     author: {
-      name: "Maria Rodriguez",
+      username: "Maria Rodriguez",
       avatar:
         "https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?w=100",
     },
@@ -113,7 +113,7 @@ const allPrompts = [
     description:
       "Optimize your content for search engines with this comprehensive SEO-focused writing prompt.",
     author: {
-      name: "David Park",
+      username: "David Park",
       avatar:
         "https://images.pexels.com/photos/1043471/pexels-photo-1043471.jpeg?w=100",
     },
@@ -136,7 +136,7 @@ const allPrompts = [
     description:
       "Create engaging lesson plans and educational content tailored to different learning styles and age groups.",
     author: {
-      name: "Lisa Thompson",
+      username: "Lisa Thompson",
       avatar:
         "https://images.pexels.com/photos/1181686/pexels-photo-1181686.jpeg?w=100",
     },
@@ -158,7 +158,7 @@ const allPrompts = [
     description:
       "Generate compelling product descriptions that convert visitors into customers with psychological triggers.",
     author: {
-      name: "James Wilson",
+      username: "James Wilson",
       avatar:
         "https://images.pexels.com/photos/1681010/pexels-photo-1681010.jpeg?w=100",
     },
@@ -180,7 +180,7 @@ const allPrompts = [
     description:
       "Comprehensive prompt for reviewing contracts, identifying key clauses, and suggesting modifications.",
     author: {
-      name: "Jennifer Adams",
+      username: "Jennifer Adams",
       avatar:
         "https://images.pexels.com/photos/1181424/pexels-photo-1181424.jpeg?w=100",
     },
@@ -204,7 +204,7 @@ const allPrompts = [
     description:
       "Generate engaging social media posts, captions, and hashtags for multiple platforms.",
     author: {
-      name: "Emma Foster",
+      username: "Emma Foster",
       avatar:
         "https://images.pexels.com/photos/1130626/pexels-photo-1130626.jpeg?w=100",
     },
@@ -226,7 +226,7 @@ const allPrompts = [
     description:
       "Comprehensive prompt for academic research, citation formatting, and thesis development.",
     author: {
-      name: "Dr. Michael Brown",
+      username: "Dr. Michael Brown",
       avatar:
         "https://images.pexels.com/photos/1043473/pexels-photo-1043473.jpeg?w=100",
     },
@@ -374,7 +374,7 @@ export default function ExplorePage() {
     searchQuery !== "";
 
   return (
-    <div className="min-h-screen overflow-x-hidden">
+    <div className="min-h-screen">
       <Spotlight />
       <section className="pt-24 pb-12">
         <div className="container mx-auto px-4">

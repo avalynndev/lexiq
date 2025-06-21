@@ -1,11 +1,11 @@
 "use client";
 
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent } from '@/components/ui/card';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Star, GitFork, Eye, Clock, Zap } from 'lucide-react';
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Star, GitFork, Eye, Clock, Zap } from "lucide-react";
 
 interface PromptCardProps {
   prompt: {
@@ -13,7 +13,7 @@ interface PromptCardProps {
     title: string;
     description: string;
     author: {
-      name: string;
+      username: string;
       avatar: string;
     };
     model: string;
@@ -158,20 +158,20 @@ export function PromptCard({ prompt }: PromptCardProps) {
 
   const handleStar = () => {
     setIsStarred(!isStarred);
-    setStarCount(prev => isStarred ? prev - 1 : prev + 1);
+    setStarCount((prev) => (isStarred ? prev - 1 : prev + 1));
   };
 
   const getModelIcon = (model: string) => {
     switch (model.toLowerCase()) {
-      case 'gpt-4':
-      case 'openai':
+      case "gpt-4":
+      case "openai":
         return <OpenAILogo className="h-4 w-4" />;
-      case 'claude':
+      case "claude":
         return <ClaudeLogo className="h-4 w-4" />;
-      case 'gemini':
+      case "gemini":
         return <GeminiLogo className="h-4 w-4" />;
-      case 'llama':
-      case 'meta':
+      case "llama":
+      case "meta":
         return <MetaIconOutline className="h-4 w-4" />;
       default:
         return (
@@ -195,23 +195,23 @@ export function PromptCard({ prompt }: PromptCardProps) {
 
   const getModelTitle = (model: string) => {
     switch (model.toLowerCase()) {
-      case 'gpt-4':
-        return 'GPT-4';
-      case 'claude':
-        return 'Claude';
-      case 'gemini':
-        return 'Gemini';
-      case 'llama':
-      case 'meta':
-        return 'Llama';
+      case "gpt-4":
+        return "GPT-4";
+      case "claude":
+        return "Claude";
+      case "gemini":
+        return "Gemini";
+      case "llama":
+      case "meta":
+        return "Llama";
       default:
-        return 'AI';
+        return "AI";
     }
   };
 
   // Get all supported models, defaulting to the main model if models array not provided
   const supportedModels = prompt.models || [prompt.model];
-  const tags = prompt.tags || [prompt.category.toLowerCase(), 'ai'];
+  const tags = prompt.tags || [prompt.category.toLowerCase(), "ai"];
 
   return (
     <a href={`/prompt/${prompt.id}`} className="group block">
@@ -220,22 +220,24 @@ export function PromptCard({ prompt }: PromptCardProps) {
           <div className="flex-1 px-6">
             <div className="flex items-start justify-between">
               <div className="flex items-center gap-1">
-                <h3 className="font-semibold tracking-tight text-lg">{prompt.title}</h3>
+                <h3 className="font-semibold tracking-tight text-lg">
+                  {prompt.title}
+                </h3>
               </div>
               {(prompt.isRecent || prompt.isTrending) && (
                 <div className="inline-flex items-center border px-2.5 py-0.5 font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 text-foreground mr-1 rounded-full text-[10px]">
-                  {prompt.isTrending ? 'Trending' : 'New'}
+                  {prompt.isTrending ? "Trending" : "New"}
                 </div>
               )}
             </div>
-            
+
             <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">
               {prompt.description}
             </p>
-            
+
             <div className="mt-4 flex flex-wrap gap-1.5">
               {tags.slice(0, 3).map((tag, index) => (
-                <div 
+                <div
                   key={index}
                   className="text-xs text-muted-foreground bg-muted/50 rounded-full px-2 py-1 shadow-sm"
                 >
@@ -243,7 +245,7 @@ export function PromptCard({ prompt }: PromptCardProps) {
                 </div>
               ))}
             </div>
-            
+
             {prompt.solves && (
               <div className="mt-3 text-xs text-muted-foreground">
                 <strong>Solves: </strong>
@@ -251,17 +253,17 @@ export function PromptCard({ prompt }: PromptCardProps) {
               </div>
             )}
           </div>
-          
+
           <div className="mt-4 flex items-center justify-between gap-4 border-t border-t-border/50 py-4 px-6 group-hover:bg-muted/50">
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
-              <span>{prompt.username}</span>
+              <span>{prompt.author.username}</span>
             </div>
             <div className="flex items-center gap-1.5">
               {/* AI Model Icons */}
               {supportedModels.slice(0, 4).map((model, index) => (
-                <span 
+                <span
                   key={index}
-                  className="text-muted-foreground transition-colors group-hover:text-foreground" 
+                  className="text-muted-foreground transition-colors group-hover:text-foreground"
                   title={getModelTitle(model)}
                 >
                   {getModelIcon(model)}
