@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { PromptCard } from "@/components/prompt-card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -35,215 +35,7 @@ import {
   X,
 } from "lucide-react";
 import { Spotlight } from "@/components/ui/spotlight";
-
-// Extended sample data for the explore page
-const allPrompts = [
-  {
-    id: "1",
-    title: "Creative Writing Assistant",
-    description:
-      "A comprehensive prompt for generating creative stories, novels, and screenplay content with character development guidance.",
-    author: {
-      username: "Sarah Chen",
-      avatar:
-        "https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?w=100",
-    },
-    model: "GPT-4",
-    category: "Writing",
-    stars: 1247,
-    forks: 89,
-    views: 3421,
-    lastUpdated: "2 days ago",
-    isTrending: true,
-    tags: ["gpt-4", "writing", "creative", "storytelling"],
-    solves:
-      "Generate compelling creative content with structured character development",
-    models: ["GPT-4", "Claude"],
-    difficulty: "Intermediate",
-    useCase: "Content Creation",
-  },
-  {
-    id: "2",
-    title: "Code Review & Optimization",
-    description:
-      "Detailed prompt for analyzing code quality, suggesting improvements, and identifying potential bugs across multiple languages.",
-    author: {
-      username: "Alex Kumar",
-      avatar:
-        "https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?w=100",
-    },
-    model: "Claude",
-    category: "Development",
-    stars: 892,
-    forks: 156,
-    views: 2103,
-    lastUpdated: "1 hour ago",
-    isRecent: true,
-    tags: ["claude", "development", "code-review", "optimization"],
-    solves: "Automated code analysis and improvement suggestions",
-    models: ["Claude", "GPT-4", "Gemini"],
-    difficulty: "Advanced",
-    useCase: "Development",
-  },
-  {
-    id: "3",
-    title: "Data Analysis Wizard",
-    description:
-      "Advanced prompt for interpreting datasets, creating visualizations, and generating actionable business insights.",
-    author: {
-      username: "Maria Rodriguez",
-      avatar:
-        "https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?w=100",
-    },
-    model: "Gemini",
-    category: "Analytics",
-    stars: 567,
-    forks: 43,
-    views: 1876,
-    lastUpdated: "3 days ago",
-    tags: ["gemini", "analytics", "data-science", "visualization"],
-    solves: "Transform raw data into actionable business insights",
-    models: ["Gemini", "GPT-4"],
-    difficulty: "Advanced",
-    useCase: "Business Intelligence",
-  },
-  {
-    id: "4",
-    title: "SEO Content Generator",
-    description:
-      "Optimize your content for search engines with this comprehensive SEO-focused writing prompt.",
-    author: {
-      username: "David Park",
-      avatar:
-        "https://images.pexels.com/photos/1043471/pexels-photo-1043471.jpeg?w=100",
-    },
-    model: "GPT-4",
-    category: "Marketing",
-    stars: 743,
-    forks: 67,
-    views: 2234,
-    lastUpdated: "5 days ago",
-    isTrending: true,
-    tags: ["gpt-4", "marketing", "seo", "content"],
-    solves: "Create search-optimized content that ranks and converts",
-    models: ["GPT-4"],
-    difficulty: "Beginner",
-    useCase: "Marketing",
-  },
-  {
-    id: "5",
-    title: "Educational Lesson Planner",
-    description:
-      "Create engaging lesson plans and educational content tailored to different learning styles and age groups.",
-    author: {
-      username: "Lisa Thompson",
-      avatar:
-        "https://images.pexels.com/photos/1181686/pexels-photo-1181686.jpeg?w=100",
-    },
-    model: "Claude",
-    category: "Education",
-    stars: 423,
-    forks: 28,
-    views: 1432,
-    lastUpdated: "1 week ago",
-    tags: ["claude", "education", "lesson-planning", "teaching"],
-    solves: "Design effective educational content for diverse learners",
-    models: ["Claude", "GPT-4"],
-    difficulty: "Intermediate",
-    useCase: "Education",
-  },
-  {
-    id: "6",
-    title: "Product Description Master",
-    description:
-      "Generate compelling product descriptions that convert visitors into customers with psychological triggers.",
-    author: {
-      username: "James Wilson",
-      avatar:
-        "https://images.pexels.com/photos/1681010/pexels-photo-1681010.jpeg?w=100",
-    },
-    model: "Llama",
-    category: "E-commerce",
-    stars: 856,
-    forks: 94,
-    views: 2876,
-    lastUpdated: "4 days ago",
-    tags: ["llama", "e-commerce", "copywriting", "conversion"],
-    solves: "Write product descriptions that drive sales and engagement",
-    models: ["Llama", "GPT-4", "Claude"],
-    difficulty: "Beginner",
-    useCase: "E-commerce",
-  },
-  {
-    id: "7",
-    title: "Legal Document Analyzer",
-    description:
-      "Comprehensive prompt for reviewing contracts, identifying key clauses, and suggesting modifications.",
-    author: {
-      username: "Jennifer Adams",
-      avatar:
-        "https://images.pexels.com/photos/1181424/pexels-photo-1181424.jpeg?w=100",
-    },
-    model: "Gemini",
-    category: "Legal",
-    stars: 1234,
-    forks: 89,
-    views: 3876,
-    lastUpdated: "6 hours ago",
-    isTrending: true,
-    tags: ["gemini", "legal", "document-analysis", "contracts"],
-    solves:
-      "Analyze legal documents and identify important clauses automatically",
-    models: ["Gemini", "Claude"],
-    difficulty: "Advanced",
-    useCase: "Legal",
-  },
-  {
-    id: "8",
-    title: "Social Media Content Creator",
-    description:
-      "Generate engaging social media posts, captions, and hashtags for multiple platforms.",
-    author: {
-      username: "Emma Foster",
-      avatar:
-        "https://images.pexels.com/photos/1130626/pexels-photo-1130626.jpeg?w=100",
-    },
-    model: "GPT-4",
-    category: "Marketing",
-    stars: 654,
-    forks: 45,
-    views: 1987,
-    lastUpdated: "2 days ago",
-    tags: ["gpt-4", "social-media", "content", "marketing"],
-    solves: "Create viral-worthy social media content across platforms",
-    models: ["GPT-4", "Claude"],
-    difficulty: "Beginner",
-    useCase: "Social Media",
-  },
-  {
-    id: "9",
-    title: "Research Paper Assistant",
-    description:
-      "Comprehensive prompt for academic research, citation formatting, and thesis development.",
-    author: {
-      username: "Dr. Michael Brown",
-      avatar:
-        "https://images.pexels.com/photos/1043473/pexels-photo-1043473.jpeg?w=100",
-    },
-    model: "Claude",
-    category: "Research",
-    stars: 789,
-    forks: 67,
-    views: 2345,
-    lastUpdated: "1 day ago",
-    isRecent: true,
-    tags: ["claude", "research", "academic", "writing"],
-    solves: "Streamline academic research and paper writing process",
-    models: ["Claude", "GPT-4"],
-    difficulty: "Advanced",
-    useCase: "Academic",
-  },
-];
+import { fetchAllPrompts, type PromptWithAuthor } from "@/lib/actions";
 
 const models = ["All Models", "GPT-4", "Claude", "Gemini", "Llama"];
 const categories = [
@@ -288,8 +80,24 @@ export default function ExplorePage() {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [activeTab, setActiveTab] = useState("all");
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [prompts, setPrompts] = useState<PromptWithAuthor[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const filteredPrompts = allPrompts.filter((prompt) => {
+  useEffect(() => {
+    const loadPrompts = async () => {
+      try {
+        const data = await fetchAllPrompts();
+        setPrompts(data);
+      } catch (error) {
+        console.error("Error fetching prompts:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadPrompts();
+  }, []);
+
+  const filteredPrompts = prompts.filter((prompt) => {
     const modelMatch =
       selectedModel === "All Models" ||
       prompt.model === selectedModel ||
@@ -299,16 +107,18 @@ export default function ExplorePage() {
       prompt.category === selectedCategory;
     const difficultyMatch =
       selectedDifficulty === "All Levels" ||
-      prompt.difficulty === selectedDifficulty;
+      ("difficulty" in prompt && prompt.difficulty === selectedDifficulty);
     const useCaseMatch =
-      selectedUseCase === "All Use Cases" || prompt.useCase === selectedUseCase;
+      selectedUseCase === "All Use Cases" ||
+      ("useCase" in prompt && prompt.useCase === selectedUseCase);
     const searchMatch =
       searchQuery === "" ||
       prompt.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       prompt.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      prompt.tags.some((tag) =>
-        tag.toLowerCase().includes(searchQuery.toLowerCase())
-      );
+      (prompt.tags &&
+        prompt.tags.some((tag) =>
+          tag.toLowerCase().includes(searchQuery.toLowerCase())
+        ));
 
     // Tab filtering
     if (activeTab === "trending") {
@@ -318,6 +128,7 @@ export default function ExplorePage() {
         difficultyMatch &&
         useCaseMatch &&
         searchMatch &&
+        "isTrending" in prompt &&
         prompt.isTrending
       );
     }
@@ -328,6 +139,7 @@ export default function ExplorePage() {
         difficultyMatch &&
         useCaseMatch &&
         searchMatch &&
+        "isRecent" in prompt &&
         prompt.isRecent
       );
     }
@@ -346,10 +158,14 @@ export default function ExplorePage() {
       case "popular":
         return b.stars - a.stars;
       case "trending":
-        return (b.isTrending ? 1 : 0) - (a.isTrending ? 1 : 0);
+        return (
+          ("isTrending" in b && b.isTrending ? 1 : 0) -
+          ("isTrending" in a && a.isTrending ? 1 : 0)
+        );
       case "recent":
         return (
-          new Date(b.lastUpdated).getTime() - new Date(a.lastUpdated).getTime()
+          new Date(b.lastUpdated as any).getTime() -
+          new Date(a.lastUpdated as any).getTime()
         );
       case "forks":
         return b.forks - a.forks;
@@ -372,6 +188,16 @@ export default function ExplorePage() {
     selectedDifficulty !== "All Levels" ||
     selectedUseCase !== "All Use Cases" ||
     searchQuery !== "";
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <span className="text-lg text-muted-foreground">
+          Loading prompts...
+        </span>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen">
@@ -653,7 +479,18 @@ export default function ExplorePage() {
                   }
                 >
                   {sortedPrompts.map((prompt) => (
-                    <PromptCard key={prompt.id} prompt={prompt} />
+                    <PromptCard
+                      key={prompt.id}
+                      prompt={{
+                        ...prompt,
+                        author: {
+                          username: prompt.author.username || "Anonymous",
+                          avatar: prompt.author.image || undefined,
+                        },
+                        tags: prompt.tags || [],
+                        models: prompt.models || [prompt.model],
+                      }}
+                    />
                   ))}
                 </div>
 

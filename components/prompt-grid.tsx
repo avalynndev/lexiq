@@ -1,164 +1,97 @@
 "use client";
 
-import { useState } from 'react';
-import { PromptCard } from './prompt-card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
-import { Search, Filter, TrendingUp, Clock, Star } from 'lucide-react';
+import { useState, useEffect } from "react";
+import { PromptCard } from "./prompt-card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Search, Filter, TrendingUp, Clock, Star } from "lucide-react";
+import { fetchAllPrompts, type PromptWithAuthor } from "@/lib/actions";
 
-const samplePrompts = [
-  {
-    id: "1",
-    title: "Creative Writing Assistant",
-    description:
-      "A comprehensive prompt for generating creative stories, novels, and screenplay content with character development guidance.",
-    author: {
-      username: "Sarah Chen",
-      avatar:
-        "https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?w=100",
-    },
-    model: "GPT-4",
-    category: "Writing",
-    stars: 1247,
-    forks: 89,
-    views: 3421,
-    lastUpdated: "2 days ago",
-    isTrending: true,
-    tags: ["gpt-4", "writing", "creative", "storytelling"],
-    solves:
-      "Generate compelling creative content with structured character development",
-    models: ["GPT-4", "Claude"],
-  },
-  {
-    id: "2",
-    title: "Code Review & Optimization",
-    description:
-      "Detailed prompt for analyzing code quality, suggesting improvements, and identifying potential bugs across multiple languages.",
-    author: {
-      username: "Alex Kumar",
-      avatar:
-        "https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?w=100",
-    },
-    model: "Claude",
-    category: "Development",
-    stars: 892,
-    forks: 156,
-    views: 2103,
-    lastUpdated: "1 hour ago",
-    isRecent: true,
-    tags: ["claude", "development", "code-review", "optimization"],
-    solves: "Automated code analysis and improvement suggestions",
-    models: ["Claude", "GPT-4", "Gemini"],
-  },
-  {
-    id: "3",
-    title: "Data Analysis Wizard",
-    description:
-      "Advanced prompt for interpreting datasets, creating visualizations, and generating actionable business insights.",
-    author: {
-      username: "Maria Rodriguez",
-      avatar:
-        "https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?w=100",
-    },
-    model: "Gemini",
-    category: "Analytics",
-    stars: 567,
-    forks: 43,
-    views: 1876,
-    lastUpdated: "3 days ago",
-    tags: ["gemini", "analytics", "data-science", "visualization"],
-    solves: "Transform raw data into actionable business insights",
-    models: ["Gemini", "GPT-4"],
-  },
-  {
-    id: "4",
-    title: "SEO Content Generator",
-    description:
-      "Optimize your content for search engines with this comprehensive SEO-focused writing prompt.",
-    author: {
-      username: "David Park",
-      avatar:
-        "https://images.pexels.com/photos/1043471/pexels-photo-1043471.jpeg?w=100",
-    },
-    model: "GPT-4",
-    category: "Marketing",
-    stars: 743,
-    forks: 67,
-    views: 2234,
-    lastUpdated: "5 days ago",
-    isTrending: true,
-    tags: ["gpt-4", "marketing", "seo", "content"],
-    solves: "Create search-optimized content that ranks and converts",
-    models: ["GPT-4"],
-  },
-  {
-    id: "5",
-    title: "Educational Lesson Planner",
-    description:
-      "Create engaging lesson plans and educational content tailored to different learning styles and age groups.",
-    author: {
-      username: "Lisa Thompson",
-      avatar:
-        "https://images.pexels.com/photos/1181686/pexels-photo-1181686.jpeg?w=100",
-    },
-    model: "Claude",
-    category: "Education",
-    stars: 423,
-    forks: 28,
-    views: 1432,
-    lastUpdated: "1 week ago",
-    tags: ["claude", "education", "lesson-planning", "teaching"],
-    solves: "Design effective educational content for diverse learners",
-    models: ["Claude", "GPT-4"],
-  },
-  {
-    id: "6",
-    title: "Product Description Master",
-    description:
-      "Generate compelling product descriptions that convert visitors into customers with psychological triggers.",
-    author: {
-      username: "James Wilson",
-      avatar:
-        "https://images.pexels.com/photos/1681010/pexels-photo-1681010.jpeg?w=100",
-    },
-    model: "Llama",
-    category: "E-commerce",
-    stars: 856,
-    forks: 94,
-    views: 2876,
-    lastUpdated: "4 days ago",
-    tags: ["llama", "e-commerce", "copywriting", "conversion"],
-    solves: "Write product descriptions that drive sales and engagement",
-    models: ["Llama", "GPT-4", "Claude"],
-  },
+const models = ["All", "GPT-4", "Claude", "Gemini", "Llama"];
+const categories = [
+  "All",
+  "Writing",
+  "Development",
+  "Analytics",
+  "Marketing",
+  "Education",
+  "E-commerce",
+  "Design",
+  "Business",
+  "Legal",
 ];
-
-const models = ['All', 'GPT-4', 'Claude', 'Gemini', 'Llama'];
-const categories = ['All', 'Writing', 'Development', 'Analytics', 'Marketing', 'Education', 'E-commerce'];
 const sortOptions = [
-  { label: 'Most Popular', value: 'popular', icon: Star },
-  { label: 'Trending', value: 'trending', icon: TrendingUp },
-  { label: 'Recently Updated', value: 'recent', icon: Clock },
+  { label: "Most Popular", value: "popular", icon: Star },
+  { label: "Trending", value: "trending", icon: TrendingUp },
+  { label: "Recently Updated", value: "recent", icon: Clock },
 ];
 
 export function PromptGrid() {
-  const [selectedModel, setSelectedModel] = useState('All');
-  const [selectedCategory, setSelectedCategory] = useState('All');
-  const [selectedSort, setSelectedSort] = useState('popular');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedModel, setSelectedModel] = useState("All");
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [selectedSort, setSelectedSort] = useState("popular");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [prompts, setPrompts] = useState<PromptWithAuthor[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const filteredPrompts = samplePrompts.filter(prompt => {
-    const modelMatch = selectedModel === 'All' || 
-      prompt.model === selectedModel || 
+  useEffect(() => {
+    const loadPrompts = async () => {
+      try {
+        const data = await fetchAllPrompts();
+        setPrompts(data);
+      } catch (error) {
+        console.error("Error fetching prompts:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadPrompts();
+  }, []);
+
+  const filteredPrompts = prompts.filter((prompt) => {
+    const modelMatch =
+      selectedModel === "All" ||
+      prompt.model === selectedModel ||
       (prompt.models && prompt.models.includes(selectedModel));
-    const categoryMatch = selectedCategory === 'All' || prompt.category === selectedCategory;
-    const searchMatch = searchQuery === '' || 
+    const categoryMatch =
+      selectedCategory === "All" || prompt.category === selectedCategory;
+    const searchMatch =
+      searchQuery === "" ||
       prompt.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       prompt.description.toLowerCase().includes(searchQuery.toLowerCase());
-    
+
     return modelMatch && categoryMatch && searchMatch;
   });
+
+  // Sort prompts based on selected sort option
+  const sortedPrompts = [...filteredPrompts].sort((a, b) => {
+    switch (selectedSort) {
+      case "popular":
+        return b.stars - a.stars;
+      case "trending":
+        return b.stars + b.forks - (a.stars + a.forks);
+      case "recent":
+        return (
+          new Date(b.lastUpdated).getTime() - new Date(a.lastUpdated).getTime()
+        );
+      default:
+        return 0;
+    }
+  });
+
+  if (loading) {
+    return (
+      <section className="py-16" id="explore">
+        <div className="container mx-auto px-4">
+          <div className="text-center">
+            <p className="text-lg text-muted-foreground">Loading prompts...</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="py-16" id="explore">
@@ -169,7 +102,8 @@ export function PromptGrid() {
             Explore Popular Prompts
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Discover, fork, and remix the best AI prompts created by our community
+            Discover, fork, and remix the best AI prompts created by our
+            community
           </p>
         </div>
 
@@ -195,9 +129,7 @@ export function PromptGrid() {
                   key={model}
                   variant={selectedModel === model ? "default" : "outline"}
                   className={`cursor-pointer transition-all ${
-                    selectedModel === model 
-                      ? '' 
-                      : 'hover:bg-accent'
+                    selectedModel === model ? "" : "hover:bg-accent"
                   }`}
                   onClick={() => setSelectedModel(model)}
                 >
@@ -211,11 +143,11 @@ export function PromptGrid() {
               {categories.map((category) => (
                 <Badge
                   key={category}
-                  variant={selectedCategory === category ? "default" : "outline"}
+                  variant={
+                    selectedCategory === category ? "default" : "outline"
+                  }
                   className={`cursor-pointer transition-all ${
-                    selectedCategory === category 
-                      ? '' 
-                      : 'hover:bg-accent'
+                    selectedCategory === category ? "" : "hover:bg-accent"
                   }`}
                   onClick={() => setSelectedCategory(category)}
                 >
@@ -232,7 +164,9 @@ export function PromptGrid() {
               return (
                 <Button
                   key={option.value}
-                  variant={selectedSort === option.value ? "default" : "outline"}
+                  variant={
+                    selectedSort === option.value ? "default" : "outline"
+                  }
                   size="sm"
                   onClick={() => setSelectedSort(option.value)}
                 >
@@ -247,14 +181,28 @@ export function PromptGrid() {
         {/* Results Count */}
         <div className="text-center mb-6">
           <p className="text-sm text-muted-foreground">
-            Showing {filteredPrompts.length} prompts
+            Showing {sortedPrompts.length} prompts
           </p>
         </div>
 
         {/* Prompt Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-          {filteredPrompts.map((prompt) => (
-            <PromptCard key={prompt.id} prompt={prompt} />
+          {sortedPrompts.map((prompt) => (
+            <PromptCard
+              key={prompt.id}
+              prompt={{
+                ...prompt,
+                author: {
+                  username:
+                    prompt.author.displayUsername ||
+                    prompt.author.username ||
+                    "Anonymous",
+                  avatar: prompt.author.image || undefined,
+                },
+                tags: prompt.tags || [],
+                models: prompt.models || [prompt.model],
+              }}
+            />
           ))}
         </div>
 
