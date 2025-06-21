@@ -2,11 +2,33 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { ThemeToggle } from "@/components/theme-toggle";
 import LexiqLogo from "@/components/logo";
 import {
-  Menu,
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
+  SidebarProvider,
+  SidebarRail,
+  SidebarTrigger,
+  useSidebar,
+} from "@/components/ui/sidebar";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import {
   Plus,
   Search,
   Grid3X3,
@@ -16,229 +38,218 @@ import {
   Settings,
   User,
   ChevronRight,
-  ChevronDown,
   FileText,
   Bookmark,
   TrendingUp,
   BarChart3,
   Bell,
   HelpCircle,
+  Home,
+  Zap,
 } from "lucide-react";
 import Link from "next/link";
-import { cn } from "@/lib/utils";
 
-const sidebarItems = [
-  {
-    title: "New Prompt",
-    icon: Plus,
-    href: "/dashboard/new",
-    variant: "primary" as const,
+const data = {
+  user: {
+    name: "avalynndev",
+    email: "avalynn@example.com",
+    avatar: "/avatars/avalynn.jpg",
   },
-  {
-    title: "Search",
-    icon: Search,
-    href: "/dashboard/search",
-  },
-  {
-    title: "My Prompts",
-    icon: Grid3X3,
-    href: "/dashboard/prompts",
-  },
-  {
-    title: "Recents",
-    icon: Clock,
-    href: "/dashboard/recents",
-  },
-  {
-    title: "Starred",
-    icon: Star,
-    href: "/dashboard/starred",
-  },
-  {
-    title: "Collections",
-    icon: Bookmark,
-    href: "/dashboard/collections",
-  },
-];
+  navMain: [
+    {
+      title: "New Prompt",
+      url: "/dashboard/new",
+      icon: Plus,
+      isActive: false,
+      variant: "primary" as const,
+    },
+    {
+      title: "Search",
+      url: "/dashboard/search",
+      icon: Search,
+      isActive: false,
+    },
+    {
+      title: "My Prompts",
+      url: "/dashboard/prompts",
+      icon: Grid3X3,
+      isActive: false,
+    },
+    {
+      title: "Recents",
+      url: "/dashboard/recents",
+      icon: Clock,
+      isActive: false,
+    },
+    {
+      title: "Starred",
+      url: "/dashboard/starred",
+      icon: Star,
+      isActive: false,
+    },
+    {
+      title: "Collections",
+      url: "/dashboard/collections",
+      icon: Bookmark,
+      isActive: false,
+    },
+  ],
+  favoritePrompts: [
+    {
+      name: "Writing Assistant",
+      url: "/dashboard/prompts/writing-assistant",
+      icon: FileText,
+    },
+    {
+      name: "Code Review",
+      url: "/dashboard/prompts/code-review",
+      icon: FileText,
+    },
+    {
+      name: "Data Analysis",
+      url: "/dashboard/prompts/data-analysis",
+      icon: FileText,
+    },
+  ],
+  recentPrompts: [
+    {
+      name: "SEO Content Generator",
+      url: "/dashboard/prompts/seo-content",
+      icon: Clock,
+    },
+    {
+      name: "Product Description",
+      url: "/dashboard/prompts/product-desc",
+      icon: Clock,
+    },
+    {
+      name: "Email Template",
+      url: "/dashboard/prompts/email-template",
+      icon: Clock,
+    },
+  ],
+};
 
-const favoriteItems = [
-  {
-    title: "Writing Assistant",
-    href: "/dashboard/prompts/writing-assistant",
-  },
-  {
-    title: "Code Review",
-    href: "/dashboard/prompts/code-review",
-  },
-  {
-    title: "Data Analysis",
-    href: "/dashboard/prompts/data-analysis",
-  },
-];
-
-const recentItems = [
-  {
-    title: "SEO Content Generator",
-    href: "/dashboard/prompts/seo-content",
-  },
-  {
-    title: "Product Description",
-    href: "/dashboard/prompts/product-desc",
-  },
-  {
-    title: "Email Template",
-    href: "/dashboard/prompts/email-template",
-  },
-];
-
-interface SidebarProps {
-  isCollapsed: boolean;
-  onToggle: () => void;
-}
-
-function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
-  const [favoritesExpanded, setFavoritesExpanded] = useState(true);
-  const [recentsExpanded, setRecentsExpanded] = useState(false);
-
+function AppSidebar() {
   return (
-    <div
-      className={cn(
-        "fixed left-0 top-0 z-40 h-full bg-background border-r border-border transition-all duration-300 ease-in-out",
-        isCollapsed ? "w-16" : "w-64"
-      )}
-      onMouseEnter={() => !isCollapsed && onToggle()}
-      onMouseLeave={() => isCollapsed && onToggle()}
-    >
-      <div className="flex h-full flex-col">
-        {/* Header */}
-        <div className="flex h-16 items-center justify-between px-4 border-b border-border">
-          {!isCollapsed && (
-            <div className="flex items-center gap-2">
-              <LexiqLogo className="h-6 w-6" />
-              <span className="font-semibold">Lexiq</span>
-              <span className="text-xs bg-muted px-2 py-1 rounded-full">Free</span>
-            </div>
-          )}
-          {isCollapsed && (
-            <div className="flex justify-center w-full">
-              <LexiqLogo className="h-6 w-6" />
-            </div>
-          )}
-        </div>
-
-        {/* Navigation */}
-        <div className="flex-1 overflow-y-auto py-4">
-          <nav className="space-y-1 px-2">
-            {sidebarItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={cn(
-                  "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground",
-                  item.variant === "primary" && "bg-primary text-primary-foreground hover:bg-primary/90"
-                )}
-              >
-                <item.icon className="h-4 w-4 flex-shrink-0" />
-                {!isCollapsed && <span>{item.title}</span>}
+    <Sidebar collapsible="icon">
+      <SidebarHeader>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton size="lg" asChild>
+              <Link href="/dashboard">
+                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+                  <LexiqLogo className="size-4" />
+                </div>
+                <div className="grid flex-1 text-left text-sm leading-tight">
+                  <span className="truncate font-semibold">Lexiq</span>
+                  <span className="truncate text-xs">Free Plan</span>
+                </div>
               </Link>
-            ))}
-          </nav>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarHeader>
 
-          {!isCollapsed && (
-            <>
-              {/* Favorite Prompts */}
-              <div className="mt-6 px-2">
-                <button
-                  onClick={() => setFavoritesExpanded(!favoritesExpanded)}
-                  className="flex w-full items-center justify-between px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground"
-                >
-                  <span>Favorite Prompts</span>
-                  {favoritesExpanded ? (
-                    <ChevronDown className="h-4 w-4" />
-                  ) : (
-                    <ChevronRight className="h-4 w-4" />
-                  )}
-                </button>
-                {favoritesExpanded && (
-                  <div className="space-y-1 mt-2">
-                    {favoriteItems.map((item) => (
-                      <Link
-                        key={item.href}
-                        href={item.href}
-                        className="flex items-center gap-3 rounded-lg px-6 py-2 text-sm text-muted-foreground hover:bg-accent hover:text-accent-foreground"
-                      >
-                        <FileText className="h-3 w-3 flex-shrink-0" />
-                        <span className="truncate">{item.title}</span>
-                      </Link>
-                    ))}
-                  </div>
-                )}
-              </div>
+      <SidebarContent>
+        <SidebarGroup>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {data.navMain.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton 
+                    asChild 
+                    isActive={item.isActive}
+                    className={item.variant === "primary" ? "bg-primary text-primary-foreground hover:bg-primary/90" : ""}
+                  >
+                    <Link href={item.url}>
+                      <item.icon />
+                      <span>{item.title}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
 
-              {/* Recent Prompts */}
-              <div className="mt-4 px-2">
-                <button
-                  onClick={() => setRecentsExpanded(!recentsExpanded)}
-                  className="flex w-full items-center justify-between px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground"
-                >
-                  <span>Recents</span>
-                  {recentsExpanded ? (
-                    <ChevronDown className="h-4 w-4" />
-                  ) : (
-                    <ChevronRight className="h-4 w-4" />
-                  )}
-                </button>
-                {recentsExpanded && (
-                  <div className="space-y-1 mt-2">
-                    {recentItems.map((item) => (
-                      <Link
-                        key={item.href}
-                        href={item.href}
-                        className="flex items-center gap-3 rounded-lg px-6 py-2 text-sm text-muted-foreground hover:bg-accent hover:text-accent-foreground"
-                      >
-                        <Clock className="h-3 w-3 flex-shrink-0" />
-                        <span className="truncate">{item.title}</span>
-                      </Link>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </>
-          )}
-        </div>
+        <Collapsible defaultOpen className="group/collapsible">
+          <SidebarGroup>
+            <SidebarGroupLabel asChild>
+              <CollapsibleTrigger className="group/label w-full text-sm text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+                Favorite Prompts
+                <ChevronRight className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-90" />
+              </CollapsibleTrigger>
+            </SidebarGroupLabel>
+            <CollapsibleContent>
+              <SidebarGroupContent>
+                <SidebarMenu>
+                  {data.favoritePrompts.map((item) => (
+                    <SidebarMenuItem key={item.name}>
+                      <SidebarMenuButton asChild>
+                        <Link href={item.url}>
+                          <item.icon />
+                          <span>{item.name}</span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  ))}
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </CollapsibleContent>
+          </SidebarGroup>
+        </Collapsible>
 
-        {/* Footer */}
-        {!isCollapsed && (
-          <div className="border-t border-border p-4">
-            <div className="flex items-center gap-3 mb-3">
-              <div className="h-8 w-8 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center text-white text-sm font-medium">
-                A
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium truncate">avalynndev</p>
-                <p className="text-xs text-muted-foreground truncate">Free Plan</p>
-              </div>
-            </div>
-            <div className="space-y-1">
-              <Link
-                href="/dashboard/settings"
-                className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-muted-foreground hover:bg-accent hover:text-accent-foreground"
-              >
-                <Settings className="h-4 w-4" />
+        <Collapsible className="group/collapsible">
+          <SidebarGroup>
+            <SidebarGroupLabel asChild>
+              <CollapsibleTrigger className="group/label w-full text-sm text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+                Recent Prompts
+                <ChevronRight className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-90" />
+              </CollapsibleTrigger>
+            </SidebarGroupLabel>
+            <CollapsibleContent>
+              <SidebarGroupContent>
+                <SidebarMenu>
+                  {data.recentPrompts.map((item) => (
+                    <SidebarMenuItem key={item.name}>
+                      <SidebarMenuButton asChild>
+                        <Link href={item.url}>
+                          <item.icon />
+                          <span>{item.name}</span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  ))}
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </CollapsibleContent>
+          </SidebarGroup>
+        </Collapsible>
+      </SidebarContent>
+
+      <SidebarFooter>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild>
+              <Link href="/dashboard/settings">
+                <Settings />
                 <span>Settings</span>
               </Link>
-              <Link
-                href="/dashboard/help"
-                className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-muted-foreground hover:bg-accent hover:text-accent-foreground"
-              >
-                <HelpCircle className="h-4 w-4" />
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild>
+              <Link href="/dashboard/help">
+                <HelpCircle />
                 <span>Help</span>
               </Link>
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarFooter>
+      <SidebarRail />
+    </Sidebar>
   );
 }
 
@@ -247,60 +258,14 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(true);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
   return (
-    <div className="min-h-screen bg-background">
-      {/* Desktop Sidebar */}
-      <div className="hidden md:block">
-        <Sidebar
-          isCollapsed={sidebarCollapsed}
-          onToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
-        />
-      </div>
-
-      {/* Mobile Sidebar */}
-      <div className="md:hidden">
-        <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
-          <SheetContent side="left" className="w-64 p-0">
-            <Sidebar isCollapsed={false} onToggle={() => {}} />
-          </SheetContent>
-        </Sheet>
-      </div>
-
-      {/* Main Content */}
-      <div
-        className={cn(
-          "transition-all duration-300 ease-in-out",
-          sidebarCollapsed ? "md:ml-16" : "md:ml-64"
-        )}
-      >
+    <SidebarProvider>
+      <AppSidebar />
+      <main className="flex flex-1 flex-col">
         {/* Top Bar */}
         <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 px-4">
           <div className="flex items-center gap-4">
-            {/* Mobile Menu Button */}
-            <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
-              <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="md:hidden">
-                  <Menu className="h-5 w-5" />
-                  <span className="sr-only">Toggle menu</span>
-                </Button>
-              </SheetTrigger>
-            </Sheet>
-
-            {/* Desktop Sidebar Toggle */}
-            <Button
-              variant="ghost"
-              size="icon"
-              className="hidden md:flex"
-              onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-            >
-              <Menu className="h-5 w-5" />
-              <span className="sr-only">Toggle sidebar</span>
-            </Button>
-
-            {/* Breadcrumb/Title */}
+            <SidebarTrigger />
             <div className="flex items-center gap-2">
               <h1 className="text-lg font-semibold">Dashboard</h1>
             </div>
@@ -320,10 +285,10 @@ export default function DashboardLayout({
         </header>
 
         {/* Page Content */}
-        <main className="flex-1 p-6">
+        <div className="flex-1 p-6">
           {children}
-        </main>
-      </div>
-    </div>
+        </div>
+      </main>
+    </SidebarProvider>
   );
 }
