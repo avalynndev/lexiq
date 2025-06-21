@@ -1,4 +1,4 @@
-import LexiqLogo from '@/components/logo';
+import LexiqLogo from "@/components/logo";
 import Link from "next/link";
 import { GithubStars } from "./github-stars";
 import { SocialLinks } from "./social-links";

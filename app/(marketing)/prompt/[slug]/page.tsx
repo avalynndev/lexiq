@@ -205,7 +205,7 @@ export default function PromptDetailPage() {
                         </div>
                         <Separator />
                       </div>
-                    )
+                    ),
                 )}
               </CardContent>
             </Card>

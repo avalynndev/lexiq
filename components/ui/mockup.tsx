@@ -13,7 +13,11 @@ interface MockupFrameProps {
   className?: string;
 }
 
-export function Mockup({ children, type = "responsive", className }: MockupProps) {
+export function Mockup({
+  children,
+  type = "responsive",
+  className,
+}: MockupProps) {
   return (
     <div
       className={cn(
@@ -23,7 +27,7 @@ export function Mockup({ children, type = "responsive", className }: MockupProps
           "aspect-4/3": type === "desktop",
           "aspect-9/16": type === "mobile",
         },
-        className
+        className,
       )}
     >
       {children}
@@ -31,7 +35,11 @@ export function Mockup({ children, type = "responsive", className }: MockupProps
   );
 }
 
-export function MockupFrame({ children, size = "medium", className }: MockupFrameProps) {
+export function MockupFrame({
+  children,
+  size = "medium",
+  className,
+}: MockupFrameProps) {
   return (
     <div
       className={cn(
@@ -41,7 +49,7 @@ export function MockupFrame({ children, size = "medium", className }: MockupFram
           "max-w-4xl": size === "medium",
           "max-w-6xl": size === "large",
         },
-        className
+        className,
       )}
     >
       <div className="relative rounded-xl border border-border/50 bg-background/50 backdrop-blur-xs p-2">

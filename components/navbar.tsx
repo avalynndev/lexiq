@@ -52,9 +52,7 @@ export default function Navbar() {
                 <div className="flex flex-col space-y-2 mt-8">
                   <div className="flex items-center space-x-2 mb-6">
                     <LexiqLogo className="h-8 w-8" />
-                    <span className="text-xl font-bold">
-                      Lexiq
-                    </span>
+                    <span className="text-xl font-bold">Lexiq</span>
                   </div>
                   {mobileLinks.map((link, index) => (
                     <Link
