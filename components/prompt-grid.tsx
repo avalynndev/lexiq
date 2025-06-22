@@ -61,8 +61,8 @@ export function PromptGrid() {
       searchQuery === "" ||
       prompt.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       prompt.description.toLowerCase().includes(searchQuery.toLowerCase());
-
-    return modelMatch && categoryMatch && searchMatch;
+    const isPublic = prompt.isPublic !== false;
+    return modelMatch && categoryMatch && searchMatch && isPublic;
   });
 
   // Sort prompts based on selected sort option

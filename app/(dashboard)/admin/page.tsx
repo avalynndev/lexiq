@@ -36,6 +36,7 @@ import {
 } from "lucide-react";
 import { Spotlight } from "@/components/ui/spotlight";
 import { fetchAllPrompts, type PromptWithAuthor } from "@/lib/actions";
+import { useSession } from "@/lib/auth-client";
 
 const models = ["All Models", "GPT-4", "Claude", "Gemini", "Llama"];
 const categories = [
@@ -82,6 +83,7 @@ export default function ExplorePage() {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [prompts, setPrompts] = useState<PromptWithAuthor[]>([]);
   const [loading, setLoading] = useState(true);
+  const { data: session } = useSession();
 
   useEffect(() => {
     const loadPrompts = async () => {
@@ -117,39 +119,28 @@ export default function ExplorePage() {
       prompt.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
       (prompt.tags &&
         prompt.tags.some((tag) =>
-          tag.toLowerCase().includes(searchQuery.toLowerCase()),
+          tag.toLowerCase().includes(searchQuery.toLowerCase())
         ));
 
-    // Tab filtering
+    let tabMatch = true;
     if (activeTab === "trending") {
-      return (
-        modelMatch &&
-        categoryMatch &&
-        difficultyMatch &&
-        useCaseMatch &&
-        searchMatch &&
-        "isTrending" in prompt &&
-        prompt.isTrending
-      );
-    }
-    if (activeTab === "recent") {
-      return (
-        modelMatch &&
-        categoryMatch &&
-        difficultyMatch &&
-        useCaseMatch &&
-        searchMatch &&
-        "isRecent" in prompt &&
-        prompt.isRecent
-      );
+      tabMatch = Boolean("isTrending" in prompt && prompt.isTrending);
+    } else if (activeTab === "recent") {
+      tabMatch = Boolean("isRecent" in prompt && prompt.isRecent);
     }
 
+    const isPublic = prompt.isPublic !== false;
+    const isOwner =
+      session?.user?.username &&
+      prompt.author?.username === session.user.username;
     return (
       modelMatch &&
       categoryMatch &&
       difficultyMatch &&
       useCaseMatch &&
-      searchMatch
+      searchMatch &&
+      tabMatch &&
+      (isPublic || isOwner)
     );
   });
 

@@ -6,10 +6,12 @@ import { Button } from "@/components/ui/button";
 import { Spotlight } from "@/components/ui/spotlight";
 import { fetchAllPrompts, type PromptWithAuthor } from "@/lib/actions";
 import Link from "next/link";
+import { useSession } from "@/lib/auth-client";
 
 export default function ExplorePage() {
   const [prompts, setPrompts] = useState<PromptWithAuthor[]>([]);
   const [loading, setLoading] = useState(true);
+  const { data: session } = useSession();
 
   useEffect(() => {
     const loadPrompts = async () => {
@@ -39,6 +41,14 @@ export default function ExplorePage() {
     );
   }
 
+  const filteredPrompts = prompts.filter((prompt) => {
+    const isPublic = prompt.isPublic !== false;
+    const isOwner =
+      session?.user?.username &&
+      prompt.author.username === session.user.username;
+    return isPublic || isOwner;
+  });
+
   return (
     <div className="min-h-screen">
       <Spotlight />
@@ -63,7 +73,7 @@ export default function ExplorePage() {
             <div
               className={"grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"}
             >
-              {prompts.map((prompt) => (
+              {filteredPrompts.map((prompt) => (
                 <PromptCard
                   key={prompt.id}
                   prompt={{

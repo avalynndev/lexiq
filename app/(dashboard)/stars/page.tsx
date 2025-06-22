@@ -23,13 +23,21 @@ export default function StarredPromptsPage() {
           setStarredPrompts(prompts);
         })
         .catch((err: any) =>
-          console.error("Failed to fetch starred prompts:", err),
+          console.error("Failed to fetch starred prompts:", err)
         )
         .finally(() => setLoading(false));
     } else if (session === null) {
       setLoading(false);
     }
   }, [session]);
+
+  const filteredPrompts = starredPrompts.filter((prompt) => {
+    const isPublic = prompt.isPublic !== false;
+    const isOwner =
+      session?.user?.username &&
+      prompt.author.username === session.user.username;
+    return isPublic || isOwner;
+  });
 
   return (
     <>
@@ -51,9 +59,9 @@ export default function StarredPromptsPage() {
             <div className="flex h-[calc(100vh-8rem)] items-center justify-center">
               <Spinner size="large" />
             </div>
-          ) : starredPrompts.length > 0 ? (
+          ) : filteredPrompts.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {starredPrompts.map((prompt) => (
+              {filteredPrompts.map((prompt) => (
                 <PromptCard
                   key={prompt.id}
                   prompt={{

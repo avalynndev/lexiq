@@ -8,7 +8,7 @@ import { fetchTrendingPrompts, type PromptWithAuthor } from "@/lib/actions";
 
 export function TrendingSection() {
   const [trendingPrompts, setTrendingPrompts] = useState<PromptWithAuthor[]>(
-    [],
+    []
   );
   const [loading, setLoading] = useState(true);
 
@@ -71,23 +71,25 @@ export function TrendingSection() {
 
         {/* Trending Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-          {trendingPrompts.map((prompt) => (
-            <PromptCard
-              key={prompt.id}
-              prompt={{
-                ...prompt,
-                author: {
-                  username:
-                    prompt.author.displayUsername ||
-                    prompt.author.username ||
-                    "Anonymous",
-                  avatar: prompt.author.image || undefined,
-                },
-                tags: prompt.tags || [],
-                models: prompt.models || [prompt.model],
-              }}
-            />
-          ))}
+          {trendingPrompts
+            .filter((prompt) => prompt.isPublic !== false)
+            .map((prompt) => (
+              <PromptCard
+                key={prompt.id}
+                prompt={{
+                  ...prompt,
+                  author: {
+                    username:
+                      prompt.author.displayUsername ||
+                      prompt.author.username ||
+                      "Anonymous",
+                    avatar: prompt.author.image || undefined,
+                  },
+                  tags: prompt.tags || [],
+                  models: prompt.models || [prompt.model],
+                }}
+              />
+            ))}
         </div>
 
         {/* Mobile View All Button */}

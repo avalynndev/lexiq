@@ -8,15 +8,16 @@ import { useUserProfile } from "@/hooks/use-user-profile";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export function UserProfileClient({ username }: { username: string }) {
+  console.log(username);
   const { data, isLoading, error } = useUserProfile(username);
 
   if (isLoading) {
     return <UserProfileSkeleton />;
   }
 
-  if (error || !data) {
+  if (error || !data || !data.prompts || !data.user) {
     return (
-      <div className="container mx-auto max-w-5xl py-8 px-4 text-center">
+      <div className="flex flex-col justify-center items-center min-h-screen w-full px-4">
         <h2 className="text-2xl font-bold mb-6">User not found</h2>
         <p className="text-muted-foreground">
           Could not retrieve profile for @{username}.
@@ -71,22 +72,24 @@ export function UserProfileClient({ username }: { username: string }) {
 
       <div>
         <h2 className="text-2xl font-bold mb-6">Public Prompts</h2>
-        {prompts.length > 0 ? (
+        {prompts.filter((prompt) => prompt.isPublic !== false).length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {prompts.map((prompt) => (
-              <PromptCard
-                key={prompt.id}
-                prompt={{
-                  ...prompt,
-                  author: {
-                    ...prompt.author,
-                    username: prompt.author.username ?? "Anonymous",
-                  },
-                  tags: prompt.tags ?? [],
-                  models: prompt.models ?? [],
-                }}
-              />
-            ))}
+            {prompts
+              .filter((prompt) => prompt.isPublic !== false)
+              .map((prompt) => (
+                <PromptCard
+                  key={prompt.id}
+                  prompt={{
+                    ...prompt,
+                    author: {
+                      ...prompt.author,
+                      username: prompt.author.username ?? "Anonymous",
+                    },
+                    tags: prompt.tags ?? [],
+                    models: prompt.models ?? [],
+                  }}
+                />
+              ))}
           </div>
         ) : (
           <div className="text-center py-12">

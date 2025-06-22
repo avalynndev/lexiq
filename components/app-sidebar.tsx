@@ -114,6 +114,14 @@ export function AppSidebar({ className }: { className?: string }) {
     }
   }, [session]);
 
+  const filteredPrompts = userPrompts.filter((prompt) => {
+    const isPublic = prompt.isPublic !== false;
+    const isOwner =
+      session?.user?.username &&
+      prompt.author.username === session.user.username;
+    return isPublic || isOwner;
+  });
+
   return (
     <Sidebar className={className}>
       <SidebarContent>
@@ -170,12 +178,12 @@ export function AppSidebar({ className }: { className?: string }) {
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               </SidebarMenu>
-            ) : userPrompts.length > 0 ? (
+            ) : filteredPrompts.length > 0 ? (
               <ScrollArea className="h-[300px]">
                 <SidebarMenu>
                   {(() => {
                     // Group prompts by date modified
-                    const groupedPrompts = userPrompts.reduce(
+                    const groupedPrompts = filteredPrompts.reduce(
                       (groups, prompt) => {
                         const date = new Date(prompt.lastUpdated);
                         const today = new Date();
@@ -202,7 +210,7 @@ export function AppSidebar({ className }: { className?: string }) {
                         groups[groupKey].push(prompt);
                         return groups;
                       },
-                      {} as Record<string, PromptWithAuthor[]>,
+                      {} as Record<string, PromptWithAuthor[]>
                     );
 
                     // Sort groups in desired order

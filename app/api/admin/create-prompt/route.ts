@@ -13,6 +13,7 @@ export async function POST(request: NextRequest) {
       category,
       tags,
       solves,
+      isPublic,
       models,
       authorId,
     } = body;
@@ -30,6 +31,7 @@ export async function POST(request: NextRequest) {
       description,
       prompt,
       model,
+      isPublic,
       category,
       tags,
       solves,

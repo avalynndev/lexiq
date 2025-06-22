@@ -316,7 +316,10 @@ export function CreatePromptModal({ children }: CreatePromptModalProps) {
                 id="public-switch"
                 checked={formData.isPublic}
                 onCheckedChange={(checked) =>
-                  setFormData((prev) => ({ ...prev, isPublic: checked }))
+                  setFormData((prev) => ({
+                    ...prev,
+                    isPublic: checked === true,
+                  }))
                 }
               />
               <Label htmlFor="public-switch">Public</Label>
@@ -330,7 +333,10 @@ export function CreatePromptModal({ children }: CreatePromptModalProps) {
                 id="public-switch"
                 checked={formData.isPublic}
                 onCheckedChange={(checked) =>
-                  setFormData((prev) => ({ ...prev, isPublic: checked }))
+                  setFormData((prev) => ({
+                    ...prev,
+                    isPublic: checked === true,
+                  }))
                 }
               />
               <Label htmlFor="public-switch">Public</Label>
