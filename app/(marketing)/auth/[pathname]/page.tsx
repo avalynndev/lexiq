@@ -1,23 +1,15 @@
-import { AuthCard, authViewPaths } from "@daveyplate/better-auth-ui";
+"use client"
 
-export function generateStaticParams() {
-  return Object.values(authViewPaths).map((pathname) => ({ pathname }));
-}
+import { AuthCard } from "@daveyplate/better-auth-ui";
+import { useParams } from "next/navigation";
 
-export default async function AuthPage({
-  params,
-  searchParams,
-}: {
-  params: Promise<{ pathname: string }>;
-  searchParams: Promise<{ redirectTo?: string }>;
-}) {
-  const { pathname } = await params;
-  const { redirectTo } = await searchParams;
+export default  function AuthPage() {
+  const params = useParams<{ pathname: string }>();
 
   return (
     <main className="flex min-h-screen items-center justify-center p-4">
       <div className="w-full max-w-md">
-        <AuthCard pathname={pathname} redirectTo={redirectTo} />
+        <AuthCard pathname={params.pathname}/>
       </div>
     </main>
   );
