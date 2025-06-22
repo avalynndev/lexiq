@@ -29,9 +29,7 @@ export default function RootLayout({
 
           <div className="flex-1 overflow-hidden">
             <main className="relative m-2 mt-0 flex-1 grow h-full">
-              <SidebarInset className="bg-[#0f0f10]">
-                {children}
-              </SidebarInset>
+              <SidebarInset className="bg-[#0f0f10]">{children}</SidebarInset>
             </main>
           </div>
         </SidebarProvider>

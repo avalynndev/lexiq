@@ -5,6 +5,7 @@ import {
   boolean,
   integer,
 } from "drizzle-orm/pg-core";
+import { relations } from "drizzle-orm";
 
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
@@ -24,6 +25,12 @@ export const user = pgTable("user", {
   displayUsername: text("display_username"),
 });
 
+export const userRelations = relations(user, ({ many }) => ({
+  prompts: many(prompt),
+  starredPrompts: many(starredPrompts),
+  forkedPrompts: many(forkedPrompts),
+}));
+
 export const prompt = pgTable("prompt", {
   id: text("id").primaryKey(),
   title: text("title").notNull(),
@@ -36,6 +43,12 @@ export const prompt = pgTable("prompt", {
     .notNull(),
   forks: integer("forks")
     .$defaultFn(() => 0)
+    .notNull(),
+  views: integer("views")
+    .$defaultFn(() => 0)
+    .notNull(),
+  isPublic: boolean("is_public")
+    .$defaultFn(() => true)
     .notNull(),
   lastUpdated: timestamp("last_updated")
     .$defaultFn(() => /* @__PURE__ */ new Date())
@@ -51,6 +64,15 @@ export const prompt = pgTable("prompt", {
     .references(() => user.id, { onDelete: "cascade" }),
 });
 
+export const promptRelations = relations(prompt, ({ one, many }) => ({
+  author: one(user, {
+    fields: [prompt.authorId],
+    references: [user.id],
+  }),
+  starredBy: many(starredPrompts),
+  forkedBy: many(forkedPrompts),
+}));
+
 export const promptWithFork = pgTable("prompt", {
   id: text("id").primaryKey(),
   title: text("title").notNull(),
@@ -63,6 +85,12 @@ export const promptWithFork = pgTable("prompt", {
     .notNull(),
   forks: integer("forks")
     .$defaultFn(() => 0)
+    .notNull(),
+  views: integer("views")
+    .$defaultFn(() => 0)
+    .notNull(),
+  isPublic: boolean("is_public")
+    .$defaultFn(() => true)
     .notNull(),
   lastUpdated: timestamp("last_updated")
     .$defaultFn(() => /* @__PURE__ */ new Date())
@@ -115,10 +143,10 @@ export const verification = pgTable("verification", {
   value: text("value").notNull(),
   expiresAt: timestamp("expires_at").notNull(),
   createdAt: timestamp("created_at").$defaultFn(
-    () => /* @__PURE__ */ new Date(),
+    () => /* @__PURE__ */ new Date()
   ),
   updatedAt: timestamp("updated_at").$defaultFn(
-    () => /* @__PURE__ */ new Date(),
+    () => /* @__PURE__ */ new Date()
   ),
 });
 
@@ -132,6 +160,38 @@ export const starredPrompts = pgTable("starred_prompts", {
     .references(() => prompt.id, { onDelete: "cascade" }),
 });
 
+export const starredPromptsRelations = relations(starredPrompts, ({ one }) => ({
+  user: one(user, {
+    fields: [starredPrompts.userId],
+    references: [user.id],
+  }),
+  prompt: one(prompt, {
+    fields: [starredPrompts.promptId],
+    references: [prompt.id],
+  }),
+}));
+
+export const forkedPrompts = pgTable("forked_prompts", {
+  id: text("id").primaryKey(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  promptId: text("prompt_id")
+    .notNull()
+    .references(() => prompt.id, { onDelete: "cascade" }),
+});
+
+export const forkedPromptsRelations = relations(forkedPrompts, ({ one }) => ({
+  user: one(user, {
+    fields: [forkedPrompts.userId],
+    references: [user.id],
+  }),
+  prompt: one(prompt, {
+    fields: [forkedPrompts.promptId],
+    references: [prompt.id],
+  }),
+}));
+
 export const schema = {
   user,
   session,
@@ -139,4 +199,9 @@ export const schema = {
   verification,
   prompt: promptWithFork,
   starredPrompts,
+  forkedPrompts,
+  userRelations,
+  promptRelations,
+  starredPromptsRelations,
+  forkedPromptsRelations,
 };

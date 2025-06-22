@@ -2,7 +2,12 @@
 
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { fetchAllPrompts, type PromptWithAuthor } from "@/lib/actions";
+import {
+  fetchAllPrompts,
+  type PromptWithAuthor,
+  checkUserStarredPrompt,
+  checkUserForkedPrompt,
+} from "@/lib/actions";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -19,23 +24,51 @@ import {
   Users,
   Info,
   Eye,
+  Sparkles,
+  Check,
 } from "lucide-react";
 import { format, formatDistanceToNow } from "date-fns";
 import Link from "next/link";
 import { Skeleton } from "@/components/ui/skeleton";
+import { PromptCard } from "@/components/prompt-card";
+import { useSession } from "@/lib/auth-client";
+import { useToast } from "@/hooks/use-toast";
 
 export default function PromptDetailPage() {
   const params = useParams<{ slug: string }>();
+  const { data: session } = useSession();
+  const { toast } = useToast();
   const [prompt, setPrompt] = useState<PromptWithAuthor | null>(null);
+  const [allPrompts, setAllPrompts] = useState<PromptWithAuthor[]>([]);
   const [loading, setLoading] = useState(true);
+  const [copied, setCopied] = useState(false);
+  const [isStarred, setIsStarred] = useState(false);
+  const [isForked, setIsForked] = useState(false);
+  const [starCount, setStarCount] = useState(0);
+  const [forkCount, setForkCount] = useState(0);
 
   useEffect(() => {
     const loadPrompt = async () => {
       setLoading(true);
       try {
         const prompts = await fetchAllPrompts();
+        setAllPrompts(prompts);
         const foundPrompt = prompts.find((p) => p.id === params.slug);
         setPrompt(foundPrompt || null);
+        if (foundPrompt) {
+          setStarCount(foundPrompt.stars);
+          setForkCount(foundPrompt.forks);
+
+          // Check if user has starred or forked this prompt
+          if (session?.user?.id) {
+            const [starred, forked] = await Promise.all([
+              checkUserStarredPrompt(session.user.id, foundPrompt.id),
+              checkUserForkedPrompt(session.user.id, foundPrompt.id),
+            ]);
+            setIsStarred(starred);
+            setIsForked(forked);
+          }
+        }
       } catch (error) {
         console.error("Error fetching prompt:", error);
         setPrompt(null);
@@ -47,11 +80,103 @@ export default function PromptDetailPage() {
     if (params.slug) {
       loadPrompt();
     }
-  }, [params.slug]);
+  }, [params.slug, session?.user?.id]);
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
-    // Add toast notification here
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+    toast({
+      title: "Copied!",
+      description: "Prompt copied to clipboard.",
+    });
+  };
+
+  const handleStar = async () => {
+    if (!session) {
+      toast({
+        title: "Please sign in",
+        description: "You need to be signed in to star a prompt.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const originalStarred = isStarred;
+    const originalStarCount = starCount;
+
+    // Optimistic update
+    setIsStarred(!originalStarred);
+    setStarCount(originalStarCount + (originalStarred ? -1 : 1));
+
+    try {
+      await fetch("/api/star", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ promptId: prompt?.id }),
+      });
+    } catch (error) {
+      // Revert on error
+      setIsStarred(originalStarred);
+      setStarCount(originalStarCount);
+      toast({
+        title: "Something went wrong",
+        description: "Could not update star status. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleFork = async () => {
+    if (!session) {
+      toast({
+        title: "Please sign in",
+        description: "You need to be signed in to fork a prompt.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const originalForked = isForked;
+    const originalForkCount = forkCount;
+
+    // Optimistic update
+    setIsForked(!originalForked);
+    setForkCount(originalForkCount + (originalForked ? -1 : 1));
+
+    try {
+      await fetch("/api/fork", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ promptId: prompt?.id }),
+      });
+    } catch (error) {
+      // Revert on error
+      setIsForked(originalForked);
+      setForkCount(originalForkCount);
+      toast({
+        title: "Something went wrong",
+        description: "Could not update fork status. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  // Get similar prompts (same category or similar tags)
+  const getSimilarPrompts = () => {
+    if (!prompt) return [];
+
+    return allPrompts
+      .filter((p) => p.id !== prompt.id)
+      .filter(
+        (p) =>
+          p.category === prompt.category ||
+          (prompt.tags &&
+            p.tags &&
+            prompt.tags.some((tag) => p.tags?.includes(tag)))
+      )
+      .sort((a, b) => b.stars - a.stars)
+      .slice(0, 6);
   };
 
   if (loading) {
@@ -77,26 +202,7 @@ export default function PromptDetailPage() {
     );
   }
 
-  const detailRows = [
-    {
-      icon: Info,
-      title: "Description",
-      content: prompt.description,
-      updated: prompt.lastUpdated,
-    },
-    {
-      icon: Code,
-      title: "Prompt",
-      content: prompt.prompt,
-      updated: prompt.createdOn,
-    },
-    {
-      icon: Puzzle,
-      title: "Solves",
-      content: prompt.solves,
-      updated: prompt.lastUpdated,
-    },
-  ];
+  const similarPrompts = getSimilarPrompts();
 
   return (
     <div className="bg-background text-foreground min-h-screen">
@@ -117,7 +223,7 @@ export default function PromptDetailPage() {
               <span className="mx-2">/</span>
               <span className="font-bold text-foreground">{prompt.title}</span>
               <Badge variant="outline" className="ml-4 text-xs font-mono">
-                Public
+                {prompt.isPublic ? "Public" : "Private"}
               </Badge>
             </h1>
             <div className="flex items-center gap-2">
@@ -125,17 +231,25 @@ export default function PromptDetailPage() {
                 variant="outline"
                 size="sm"
                 className="flex items-center gap-1.5"
+                onClick={handleFork}
+                disabled={!session}
               >
-                <GitFork className="h-4 w-4" /> Fork{" "}
-                <Badge variant="secondary">{prompt.forks}</Badge>
+                <GitFork
+                  className={`h-4 w-4 ${isForked ? "text-yellow-400 fill-yellow-400" : ""}`}
+                />{" "}
+                Fork <Badge variant="secondary">{forkCount}</Badge>
               </Button>
               <Button
                 variant="outline"
                 size="sm"
                 className="flex items-center gap-1.5"
+                onClick={handleStar}
+                disabled={!session}
               >
-                <Star className="h-4 w-4" /> Star{" "}
-                <Badge variant="secondary">{prompt.stars}</Badge>
+                <Star
+                  className={`h-4 w-4 ${isStarred ? "text-yellow-400 fill-yellow-400" : ""}`}
+                />{" "}
+                Star <Badge variant="secondary">{starCount}</Badge>
               </Button>
             </div>
           </div>
@@ -144,7 +258,7 @@ export default function PromptDetailPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2">
             <Card>
-              <CardHeader className="flex flex-row items-center justify-between p-4">
+              <CardHeader className="flex flex-row items-center justify-between px-4">
                 <div className="flex items-center gap-3">
                   <img
                     src={
@@ -165,47 +279,44 @@ export default function PromptDetailPage() {
                   })}
                 </span>
               </CardHeader>
-              <Separator />
               <CardContent className="p-0">
-                {detailRows.map(
-                  (row, index) =>
-                    row.content && (
-                      <div key={index}>
-                        <div className="flex items-center justify-between p-4 hover:bg-muted/50 transition-colors">
-                          <div className="flex items-center gap-4">
-                            <row.icon className="h-5 w-5 text-muted-foreground" />
-                            <div className="flex flex-col">
-                              <span className="font-medium">{row.title}</span>
-                              {row.title === "Prompt" ? (
-                                <div className="relative mt-2">
-                                  <pre className="bg-muted p-4 rounded-md font-mono text-sm whitespace-pre-wrap break-words w-full">
-                                    {row.content}
-                                  </pre>
-                                  <button
-                                    onClick={() =>
-                                      copyToClipboard(row.content as string)
-                                    }
-                                    className="absolute top-2 right-2 p-1.5 text-muted-foreground hover:bg-background rounded-md transition-colors"
-                                  >
-                                    <Copy className="h-4 w-4" />
-                                  </button>
-                                </div>
-                              ) : (
-                                <p className="text-sm text-muted-foreground mt-1">
-                                  {row.content}
-                                </p>
-                              )}
-                            </div>
-                          </div>
-                          <span className="text-sm text-muted-foreground text-right hidden md:block">
-                            {formatDistanceToNow(new Date(row.updated), {
-                              addSuffix: true,
-                            })}
-                          </span>
-                        </div>
-                        <Separator />
+                {/* Prompt Content */}
+                <div className="px-4 pb-4">
+                  <div className="flex items-center gap-4 mb-3">
+                    <Code className="h-5 w-5 text-muted-foreground" />
+                    <span className="font-medium">Prompt</span>
+                  </div>
+                  <div className="relative">
+                    <pre className="bg-muted p-4 rounded-md font-mono text-sm whitespace-pre-wrap break-words w-full">
+                      {prompt.prompt}
+                    </pre>
+                    <button
+                      onClick={() => copyToClipboard(prompt.prompt)}
+                      className="absolute top-2 right-2 p-1.5 text-muted-foreground hover:bg-background rounded-md transition-colors"
+                    >
+                      {copied ? (
+                        <Check className="h-4 w-4 text-green-500" />
+                      ) : (
+                        <Copy className="h-4 w-4" />
+                      )}
+                    </button>
+                  </div>
+                </div>
+
+                {/* Solves Section - only show if content exists */}
+                {prompt.solves && (
+                  <>
+                    <Separator />
+                    <div className="p-4">
+                      <div className="flex items-center gap-4 mb-3">
+                        <Puzzle className="h-5 w-5 text-muted-foreground" />
+                        <span className="font-medium">Solves</span>
                       </div>
-                    ),
+                      <p className="text-sm text-muted-foreground">
+                        {prompt.solves}
+                      </p>
+                    </div>
+                  </>
                 )}
               </CardContent>
             </Card>
@@ -279,6 +390,35 @@ export default function PromptDetailPage() {
             </Card>
           </div>
         </div>
+
+        {/* Similar Prompts Section */}
+        {similarPrompts.length > 0 && (
+          <div className="mt-12">
+            <div className="flex items-center gap-3 mb-8">
+              <Sparkles className="h-6 w-6 text-primary" />
+              <h2 className="text-2xl font-bold">Similar Prompts</h2>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {similarPrompts.map((similarPrompt) => (
+                <PromptCard
+                  key={similarPrompt.id}
+                  prompt={{
+                    ...similarPrompt,
+                    author: {
+                      username:
+                        similarPrompt.author.displayUsername ||
+                        similarPrompt.author.username ||
+                        "Anonymous",
+                      avatar: similarPrompt.author.image || undefined,
+                    },
+                    tags: similarPrompt.tags || [],
+                    models: similarPrompt.models || [similarPrompt.model],
+                  }}
+                />
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -299,30 +439,29 @@ const PromptPageSkeleton = () => (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
       <div className="lg:col-span-2">
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between p-4">
+          <CardHeader className="flex flex-row items-center justify-between px-4">
             <div className="flex items-center gap-3">
               <Skeleton className="h-8 w-8 rounded-full" />
               <Skeleton className="h-6 w-32" />
             </div>
             <Skeleton className="h-5 w-28" />
           </CardHeader>
-          <Separator />
           <CardContent className="p-0">
-            {[...Array(3)].map((_, index) => (
-              <div key={index}>
-                <div className="flex items-center justify-between p-4">
-                  <div className="flex items-center gap-4 w-full">
-                    <Skeleton className="h-5 w-5" />
-                    <div className="space-y-2 w-full">
-                      <Skeleton className="h-5 w-1/4" />
-                      <Skeleton className="h-4 w-full" />
-                    </div>
-                  </div>
-                  <Skeleton className="h-5 w-24 hidden md:block" />
-                </div>
-                <Separator />
+            <div className="px-4 pb-4">
+              <div className="flex items-center gap-4 mb-3">
+                <Skeleton className="h-5 w-5" />
+                <Skeleton className="h-5 w-20" />
               </div>
-            ))}
+              <Skeleton className="h-32 w-full" />
+            </div>
+            <Separator />
+            <div className="p-4">
+              <div className="flex items-center gap-4 mb-3">
+                <Skeleton className="h-5 w-5" />
+                <Skeleton className="h-5 w-16" />
+              </div>
+              <Skeleton className="h-4 w-full" />
+            </div>
           </CardContent>
         </Card>
       </div>

@@ -203,7 +203,7 @@ export default function ExplorePage() {
     <div className="min-h-screen">
       <Spotlight />
       <section className="pt-24 pb-12">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-4 overflow-hidden">
           <div className="text-center max-w-4xl mx-auto">
             <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-foreground to-muted-foreground bg-clip-text text-transparent">
               Explore AI Prompts
