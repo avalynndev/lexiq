@@ -31,8 +31,7 @@ export function Hero() {
           </Link>
 
           <h2 className="mt-6 md:mt-10 text-[#878787] leading-tight text-[24px] md:text-[36px] font-medium">
-            Discover, remix, and evolve the best AI prompts — with forks,
-            versions, and your own personal prompt workspace built for{" "}
+            Discover, remix, and evolve powerful AI prompts — built for{" "}
             <WordAnimation />
           </h2>
 

@@ -344,7 +344,6 @@ img::selection {
   background: transparent;
 }
 
-
 @layer base {
   * {
     @apply border-border outline-ring/50;

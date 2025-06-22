@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
     console.error("Error revalidating cache:", error);
     return NextResponse.json(
       { error: "Failed to revalidate cache" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

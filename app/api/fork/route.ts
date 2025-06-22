@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
   if (!promptId) {
     return NextResponse.json(
       { error: "Prompt ID is required" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
     const existingFork = await db.query.forkedPrompts.findFirst({
       where: and(
         eq(forkedPrompts.userId, userId),
-        eq(forkedPrompts.promptId, promptId)
+        eq(forkedPrompts.promptId, promptId),
       ),
     });
 
@@ -69,7 +69,7 @@ export async function POST(request: NextRequest) {
     console.error("Error forking prompt:", error);
     return NextResponse.json(
       { error: "Failed to fork prompt" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

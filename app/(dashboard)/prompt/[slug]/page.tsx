@@ -2,6 +2,7 @@
 
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import {
   fetchAllPrompts,
   type PromptWithAuthor,
@@ -190,7 +191,7 @@ export default function PromptDetailPage() {
           p.category === prompt.category ||
           (prompt.tags &&
             p.tags &&
-            prompt.tags.some((tag) => p.tags?.includes(tag)))
+            prompt.tags.some((tag) => p.tags?.includes(tag))),
       )
       .sort((a, b) => b.stars - a.stars)
       .slice(0, 6);
@@ -214,21 +215,22 @@ export default function PromptDetailPage() {
               </div>
             </div>
           </div>
-        </header><ScrollArea className="h-[calc(100vh-6.5rem)] px-4 py-2 rounded-b-xl border-b border-x">
-        <div className="min-h-screen bg-background text-foreground flex items-center justify-center">
-          <div className="text-center">
-            <h1 className="text-2xl font-bold mb-4">Prompt Not Found</h1>
-            <p className="text-muted-foreground mb-6">
-              The prompt you are looking for does not exist.
-            </p>
-            <Link href="/explore">
-              <Button>
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Back to Explore
-              </Button>
-            </Link>
+        </header>
+        <ScrollArea className="h-[calc(100vh-6.5rem)] px-4 py-2 rounded-b-xl border-b border-x">
+          <div className="min-h-screen bg-background text-foreground flex items-center justify-center">
+            <div className="text-center">
+              <h1 className="text-2xl font-bold mb-4">Prompt Not Found</h1>
+              <p className="text-muted-foreground mb-6">
+                The prompt you are looking for does not exist.
+              </p>
+              <Link href="/explore">
+                <Button>
+                  <ArrowLeft className="h-4 w-4 mr-2" />
+                  Back to Explore
+                </Button>
+              </Link>
+            </div>
           </div>
-        </div>
         </ScrollArea>
       </>
     );
@@ -302,13 +304,15 @@ export default function PromptDetailPage() {
                 <Card>
                   <CardHeader className="flex flex-row items-center justify-between px-4">
                     <div className="flex items-center gap-3">
-                      <img
+                      <Image
                         src={
                           prompt.author.image ||
                           `https://avatar.vercel.sh/${prompt.author.username}.png`
                         }
                         alt={prompt.author.username || "author"}
                         className="h-8 w-8 rounded-full"
+                        width={32}
+                        height={32}
                       />
                       <span className="font-semibold">
                         {prompt.author.username || "Anonymous"}
@@ -411,13 +415,15 @@ export default function PromptDetailPage() {
                   </CardHeader>
                   <CardContent>
                     <div className="flex items-center gap-3">
-                      <img
+                      <Image
                         src={
                           prompt.author.image ||
                           `https://avatar.vercel.sh/${prompt.author.username}.png`
                         }
                         alt={prompt.author.username || "author"}
                         className="h-10 w-10 rounded-full"
+                        width={40}
+                        height={40}
                       />
                       <div>
                         <div className="font-bold">
@@ -468,102 +474,102 @@ export default function PromptDetailPage() {
   );
 }
 
-const PromptPageSkeleton = () => (    <>
-      <header className="flex h-(--header-height) bg-sidebar shrink-0 rounded-t-xl border-t border-x items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height)">
-        <div className="flex w-full pt-5 p-5">
-          <div className="flex flex-col flex-1 border-alpha-200 border-t sm:border-t-0">
-            <div className="flex items-center gap-3 pl-4 pr-3 sm:pl-3 sm:pr-2 h-12 border-b border-alpha-200 sm:mx-0 shrink-0">
-              <SidebarTrigger className="-ml-1" />
-              <h1 className="hidden truncate text-base font-medium sm:inline sm:tracking-tight">
-                <span className="text-primary hover:underline cursor-pointer">
-                  Anonymous
-                </span>
-                <span className="mx-2">/</span>
-                <span className="font-bold text-foreground">
-                   
-                </span>
-              </h1>
+const PromptPageSkeleton = () => (
+  <>
+    <header className="flex h-(--header-height) bg-sidebar shrink-0 rounded-t-xl border-t border-x items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height)">
+      <div className="flex w-full pt-5 p-5">
+        <div className="flex flex-col flex-1 border-alpha-200 border-t sm:border-t-0">
+          <div className="flex items-center gap-3 pl-4 pr-3 sm:pl-3 sm:pr-2 h-12 border-b border-alpha-200 sm:mx-0 shrink-0">
+            <SidebarTrigger className="-ml-1" />
+            <h1 className="hidden truncate text-base font-medium sm:inline sm:tracking-tight">
+              <span className="text-primary hover:underline cursor-pointer">
+                Anonymous
+              </span>
+              <span className="mx-2">/</span>
+              <span className="font-bold text-foreground"></span>
+            </h1>
+          </div>
+        </div>
+      </div>
+    </header>
+    <ScrollArea className="h-[calc(100vh-6.5rem)] px-4 py-2 rounded-b-xl border-b border-x">
+      <div className="container mx-auto px-4 py-8">
+        <div className="mb-6">
+          <Skeleton className="h-6 w-40 mb-4" />
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <Skeleton className="h-8 w-1/2" />
+            <div className="flex items-center gap-2">
+              <Skeleton className="h-9 w-24" />
+              <Skeleton className="h-9 w-24" />
             </div>
           </div>
         </div>
-      </header>
-      <ScrollArea className="h-[calc(100vh-6.5rem)] px-4 py-2 rounded-b-xl border-b border-x">
-  <div className="container mx-auto px-4 py-8">
-    <div className="mb-6">
-      <Skeleton className="h-6 w-40 mb-4" />
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <Skeleton className="h-8 w-1/2" />
-        <div className="flex items-center gap-2">
-          <Skeleton className="h-9 w-24" />
-          <Skeleton className="h-9 w-24" />
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-2">
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between px-4">
+                <div className="flex items-center gap-3">
+                  <Skeleton className="h-8 w-8 rounded-full" />
+                  <Skeleton className="h-6 w-32" />
+                </div>
+                <Skeleton className="h-5 w-28" />
+              </CardHeader>
+              <CardContent className="p-0">
+                <div className="px-4 pb-4">
+                  <div className="flex items-center gap-4 mb-3">
+                    <Skeleton className="h-5 w-5" />
+                    <Skeleton className="h-5 w-20" />
+                  </div>
+                  <Skeleton className="h-32 w-full" />
+                </div>
+                <Separator />
+                <div className="p-4">
+                  <div className="flex items-center gap-4 mb-3">
+                    <Skeleton className="h-5 w-5" />
+                    <Skeleton className="h-5 w-16" />
+                  </div>
+                  <Skeleton className="h-4 w-full" />
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+          <div className="lg:col-span-1 space-y-6">
+            <Card>
+              <CardHeader>
+                <Skeleton className="h-7 w-20" />
+              </CardHeader>
+              <CardContent>
+                <Skeleton className="h-4 w-full mb-2" />
+                <Skeleton className="h-4 w-3/4 mb-4" />
+                <div className="flex flex-wrap gap-2 mb-4">
+                  <Skeleton className="h-6 w-16" />
+                  <Skeleton className="h-6 w-20" />
+                </div>
+                <Separator className="my-4" />
+                <div className="space-y-3">
+                  <Skeleton className="h-4 w-full" />
+                  <Skeleton className="h-4 w-full" />
+                  <Skeleton className="h-4 w-full" />
+                </div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader>
+                <Skeleton className="h-7 w-20" />
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center gap-3">
+                  <Skeleton className="h-10 w-10 rounded-full" />
+                  <div className="space-y-2">
+                    <Skeleton className="h-5 w-24" />
+                    <Skeleton className="h-3 w-32" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </div>
-    </div>
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-      <div className="lg:col-span-2">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between px-4">
-            <div className="flex items-center gap-3">
-              <Skeleton className="h-8 w-8 rounded-full" />
-              <Skeleton className="h-6 w-32" />
-            </div>
-            <Skeleton className="h-5 w-28" />
-          </CardHeader>
-          <CardContent className="p-0">
-            <div className="px-4 pb-4">
-              <div className="flex items-center gap-4 mb-3">
-                <Skeleton className="h-5 w-5" />
-                <Skeleton className="h-5 w-20" />
-              </div>
-              <Skeleton className="h-32 w-full" />
-            </div>
-            <Separator />
-            <div className="p-4">
-              <div className="flex items-center gap-4 mb-3">
-                <Skeleton className="h-5 w-5" />
-                <Skeleton className="h-5 w-16" />
-              </div>
-              <Skeleton className="h-4 w-full" />
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-      <div className="lg:col-span-1 space-y-6">
-        <Card>
-          <CardHeader>
-            <Skeleton className="h-7 w-20" />
-          </CardHeader>
-          <CardContent>
-            <Skeleton className="h-4 w-full mb-2" />
-            <Skeleton className="h-4 w-3/4 mb-4" />
-            <div className="flex flex-wrap gap-2 mb-4">
-              <Skeleton className="h-6 w-16" />
-              <Skeleton className="h-6 w-20" />
-            </div>
-            <Separator className="my-4" />
-            <div className="space-y-3">
-              <Skeleton className="h-4 w-full" />
-              <Skeleton className="h-4 w-full" />
-              <Skeleton className="h-4 w-full" />
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <Skeleton className="h-7 w-20" />
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center gap-3">
-              <Skeleton className="h-10 w-10 rounded-full" />
-              <div className="space-y-2">
-                <Skeleton className="h-5 w-24" />
-                <Skeleton className="h-3 w-32" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    </div>
-  </div></ScrollArea>
+    </ScrollArea>
   </>
 );

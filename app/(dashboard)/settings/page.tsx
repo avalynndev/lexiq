@@ -37,7 +37,6 @@ export default function CustomSettingsPage() {
             <DeleteAccountCard />
           </div>
         </div>
-      
       </ScrollArea>
     </>
   );

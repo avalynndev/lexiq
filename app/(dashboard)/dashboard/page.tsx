@@ -56,7 +56,7 @@ export default function DashboardPage() {
   const recentPrompts = userPrompts
     .sort(
       (a, b) =>
-        new Date(b.createdOn).getTime() - new Date(a.createdOn).getTime()
+        new Date(b.createdOn).getTime() - new Date(a.createdOn).getTime(),
     )
     .slice(0, 5);
 

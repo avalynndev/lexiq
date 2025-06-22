@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
   if (!promptId) {
     return NextResponse.json(
       { error: "Prompt ID is required" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
     const existingStar = await db.query.starredPrompts.findFirst({
       where: and(
         eq(starredPrompts.userId, userId),
-        eq(starredPrompts.promptId, promptId)
+        eq(starredPrompts.promptId, promptId),
       ),
     });
 
@@ -69,7 +69,7 @@ export async function POST(request: NextRequest) {
     console.error("Error starring prompt:", error);
     return NextResponse.json(
       { error: "Failed to star prompt" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

@@ -32,7 +32,7 @@ export async function fetchTrendingPrompts(): Promise<PromptWithAuthor[]> {
 }
 
 export async function fetchUserPrompts(
-  userId: string
+  userId: string,
 ): Promise<PromptWithAuthor[]> {
   try {
     return await getUserPrompts(userId);
@@ -43,7 +43,7 @@ export async function fetchUserPrompts(
 }
 
 export async function fetchStarredPrompts(
-  userId: string
+  userId: string,
 ): Promise<PromptWithAuthor[]> {
   try {
     return await getStarredPrompts(userId);
@@ -54,7 +54,7 @@ export async function fetchStarredPrompts(
 }
 
 export async function fetchForkedPrompts(
-  userId: string
+  userId: string,
 ): Promise<PromptWithAuthor[]> {
   try {
     return await getForkedPrompts(userId);
@@ -66,7 +66,7 @@ export async function fetchForkedPrompts(
 
 export async function checkUserStarredPrompt(
   userId: string,
-  promptId: string
+  promptId: string,
 ): Promise<boolean> {
   try {
     return await hasUserStarredPrompt(userId, promptId);
@@ -78,7 +78,7 @@ export async function checkUserStarredPrompt(
 
 export async function checkUserForkedPrompt(
   userId: string,
-  promptId: string
+  promptId: string,
 ): Promise<boolean> {
   try {
     return await hasUserForkedPrompt(userId, promptId);

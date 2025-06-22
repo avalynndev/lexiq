@@ -145,7 +145,7 @@ export default function Navbar() {
 
             {/* Auth Buttons (Hidden on mobile) */}
             <div className="hidden md:flex items-center">
-              <UserButton size="icon"/>
+              <UserButton size="icon" />
             </div>
           </div>
         </div>
