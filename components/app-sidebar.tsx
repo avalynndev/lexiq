@@ -54,6 +54,8 @@ import { useSession } from "@/lib/auth-client";
 import { fetchUserPrompts, type PromptWithAuthor } from "@/lib/actions";
 import Link from "next/link";
 import { CreatePromptModal } from "@/components/create-prompt-modal";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { format, formatDistanceToNow } from "date-fns";
 
 import {
   Sidebar,
@@ -76,24 +78,14 @@ const data = [
     icon: IconDashboard,
   },
   {
-    title: "Explore",
-    url: "/explore",
+    title: "Community",
+    url: "/community",
     icon: IconSearch,
   },
   {
-    title: "Trending",
-    url: "/trending",
-    icon: IconTrendingUp,
-  },
-  {
-    title: "Categories",
-    url: "/categories",
-    icon: IconLayoutGrid,
-  },
-  {
-    title: "Collections",
-    url: "/collections",
-    icon: IconFolder,
+    title: "Stared Prompts",
+    url: "/stars",
+    icon: IconStar,
   },
 ];
 
@@ -144,7 +136,7 @@ export function AppSidebar({ className }: { className?: string }) {
                   variant="outline"
                   asChild
                 >
-                  <Link href="/explore">
+                  <Link href="/community">
                     <IconSearch />
                     <span className="sr-only">Explore</span>
                   </Link>
@@ -169,57 +161,118 @@ export function AppSidebar({ className }: { className?: string }) {
         <SidebarGroup>
           <SidebarGroupLabel>Your Prompts</SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu>
-              {loading ? (
+            {loading ? (
+              <SidebarMenu>
                 <SidebarMenuItem>
                   <SidebarMenuButton disabled>
                     <IconClock className="animate-spin" />
                     <span>Loading...</span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
-              ) : userPrompts.length > 0 ? (
-                userPrompts.slice(0, 5).map((prompt) => (
-                  <SidebarMenuItem key={prompt.id}>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <SidebarMenuButton asChild>
-                          <Link href={`/prompt/${prompt.id}`}>
-                            <IconFileDescription />
-                            <span className="truncate">{prompt.title}</span>
-                          </Link>
-                        </SidebarMenuButton>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent
-                        className="w-24 rounded-lg"
-                        side={isMobile ? "bottom" : "right"}
-                        align={isMobile ? "end" : "start"}
-                      >
-                        <DropdownMenuItem asChild>
-                          <Link href={`/prompt/${prompt.id}`}>
-                            <IconBook />
-                            <span>View</span>
-                          </Link>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem asChild>
-                          <Link href={`/prompt/${prompt.id}/edit`}>
-                            <IconFileDescription />
-                            <span>Edit</span>
-                          </Link>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem>
-                          <IconShare3 />
-                          <span>Share</span>
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem variant="destructive">
-                          <IconTrash />
-                          <span>Delete</span>
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </SidebarMenuItem>
-                ))
-              ) : (
+              </SidebarMenu>
+            ) : userPrompts.length > 0 ? (
+              <ScrollArea className="h-[300px]">
+                <SidebarMenu>
+                  {(() => {
+                    // Group prompts by date modified
+                    const groupedPrompts = userPrompts.reduce(
+                      (groups, prompt) => {
+                        const date = new Date(prompt.lastUpdated);
+                        const today = new Date();
+                        const yesterday = new Date(today);
+                        yesterday.setDate(yesterday.getDate() - 1);
+
+                        let groupKey = "Older";
+                        if (date.toDateString() === today.toDateString()) {
+                          groupKey = "Today";
+                        } else if (
+                          date.toDateString() === yesterday.toDateString()
+                        ) {
+                          groupKey = "Yesterday";
+                        } else if (
+                          date.getTime() >
+                          today.getTime() - 7 * 24 * 60 * 60 * 1000
+                        ) {
+                          groupKey = "This Week";
+                        }
+
+                        if (!groups[groupKey]) {
+                          groups[groupKey] = [];
+                        }
+                        groups[groupKey].push(prompt);
+                        return groups;
+                      },
+                      {} as Record<string, PromptWithAuthor[]>
+                    );
+
+                    // Sort groups in desired order
+                    const groupOrder = [
+                      "Today",
+                      "Yesterday",
+                      "This Week",
+                      "Older",
+                    ];
+
+                    return groupOrder.map((groupKey) => {
+                      const prompts = groupedPrompts[groupKey];
+                      if (!prompts || prompts.length === 0) return null;
+
+                      return (
+                        <div key={groupKey}>
+                          <SidebarGroupLabel className="text-xs text-muted-foreground px-2 py-1">
+                            {groupKey}
+                          </SidebarGroupLabel>
+                          {prompts.map((prompt) => (
+                            <SidebarMenuItem key={prompt.id}>
+                              <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                  <SidebarMenuButton asChild>
+                                    <Link href={`/prompt/${prompt.id}`}>
+                                      <IconFileDescription />
+                                      <span className="truncate">
+                                        {prompt.title}
+                                      </span>
+                                    </Link>
+                                  </SidebarMenuButton>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent
+                                  className="w-24 rounded-lg"
+                                  side={isMobile ? "bottom" : "right"}
+                                  align={isMobile ? "end" : "start"}
+                                >
+                                  <DropdownMenuItem asChild>
+                                    <Link href={`/prompt/${prompt.id}`}>
+                                      <IconBook />
+                                      <span>View</span>
+                                    </Link>
+                                  </DropdownMenuItem>
+                                  <DropdownMenuItem asChild>
+                                    <Link href={`/prompt/${prompt.id}/edit`}>
+                                      <IconFileDescription />
+                                      <span>Edit</span>
+                                    </Link>
+                                  </DropdownMenuItem>
+                                  <DropdownMenuItem>
+                                    <IconShare3 />
+                                    <span>Share</span>
+                                  </DropdownMenuItem>
+                                  <DropdownMenuSeparator />
+                                  <DropdownMenuItem variant="destructive">
+                                    <IconTrash />
+                                    <span>Delete</span>
+                                  </DropdownMenuItem>
+                                </DropdownMenuContent>
+                              </DropdownMenu>
+                            </SidebarMenuItem>
+                          ))}
+                        </div>
+                      );
+                    });
+                  })()}
+                </SidebarMenu>
+              </ScrollArea>
+            ) : (
+              <SidebarMenu>
                 <SidebarMenuItem>
                   <SidebarMenuButton
                     disabled
@@ -229,21 +282,8 @@ export function AppSidebar({ className }: { className?: string }) {
                     <span>Create your first prompt</span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
-              )}
-              {userPrompts.length > 5 && (
-                <SidebarMenuItem>
-                  <SidebarMenuButton
-                    className="text-sidebar-foreground/70"
-                    asChild
-                  >
-                    <Link href="/dashboard">
-                      <IconDots className="text-sidebar-foreground/70" />
-                      <span>View all ({userPrompts.length})</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              )}
-            </SidebarMenu>
+              </SidebarMenu>
+            )}
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
