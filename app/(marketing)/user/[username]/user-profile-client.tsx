@@ -7,30 +7,6 @@ import { Separator } from "@/components/ui/separator";
 import { useUserProfile } from "@/hooks/use-user-profile";
 import { Skeleton } from "@/components/ui/skeleton";
 
-type UserWithStats = {
-  id: string;
-  name: string;
-  username: string | null;
-  image?: string | null;
-  stars: number;
-  forks: number;
-};
-
-type PromptWithAuthor = {
-  id: string;
-  title: string;
-  description: string;
-  author: { username: string | null; image?: string | null };
-  model: string;
-  category: string;
-  stars: number;
-  forks: number;
-  lastUpdated: string | Date;
-  createdOn: string | Date;
-  tags?: string[] | null;
-  models?: string[] | null;
-};
-
 export function UserProfileClient({ username }: { username: string }) {
   const { data, isLoading, error } = useUserProfile(username);
 
