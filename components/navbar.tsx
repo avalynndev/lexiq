@@ -1,35 +1,39 @@
 "use client";
 
 import { useState } from "react";
-import { Menu, Github, Twitter } from "lucide-react";
+import { Menu, Github, Twitter, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import LexiqLogo from "@/components/logo";
 import Link from "next/link";
 import { UserButton } from "@daveyplate/better-auth-ui";
+import { useSession } from "@/lib/auth-client";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const { data: session } = useSession();
 
   const navItems = [
     { label: "Explore", href: "/explore" },
-    { label: "Trending", href: "/trending" },
-    { label: "Docs", href: "/docs" },
     { label: "Categories", href: "/categories" },
-    { label: "Pricing", href: "/pricing" },
   ];
 
   const mobileLinks = [
     { text: "Documentation", href: "/docs" },
     { text: "Explore Prompts", href: "/explore" },
     { text: "Categories", href: "/categories" },
-    { text: "Trending", href: "/trending" },
-    { text: "Pricing", href: "/pricing" },
-    { text: "Submit Prompt", href: "/submit" },
-    { text: "Collections", href: "/collections" },
-    { text: "API", href: "/api" },
   ];
+
+  const additionalLinks = session?.user?.username
+    ? [
+        {
+          href: `/user/${session.user.username}`,
+          label: "My Profile",
+          icon: <User className="w-4 h-4" />,
+        },
+      ]
+    : [];
 
   return (
     <header className="sticky top-0 z-50 -mb-4 pb-4">
@@ -145,7 +149,7 @@ export default function Navbar() {
 
             {/* Auth Buttons (Hidden on mobile) */}
             <div className="hidden md:flex items-center">
-              <UserButton size="icon" />
+              <UserButton size="icon" additionalLinks={additionalLinks} />
             </div>
           </div>
         </div>

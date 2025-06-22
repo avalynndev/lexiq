@@ -29,7 +29,7 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="Lexiq" />
       </head>
       <body
-        className={`${GeistSans.variable} ${GeistMono.variable} bg-background antialiased font-sans text-foreground`}
+        className={`${GeistSans.variable} ${GeistMono.variable} overflow-x-hidden bg-background antialiased font-sans text-foreground`}
       >
         <ThemeProvider
           attribute="class"

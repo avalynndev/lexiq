@@ -75,7 +75,60 @@ export const getAllPrompts = unstable_cache(
   {
     revalidate: 30, // 30 seconds
     tags: ["prompts"],
+  }
+);
+
+// Cached version of getPromptById with 30 second revalidation
+export const getPromptById = unstable_cache(
+  async (promptId: string): Promise<PromptWithAuthor | null> => {
+    if (!promptId) return null;
+
+    const result = await db
+      .select({
+        id: prompt.id,
+        title: prompt.title,
+        description: prompt.description,
+        prompt: prompt.prompt,
+        model: prompt.model,
+        category: prompt.category,
+        stars: prompt.stars,
+        forks: prompt.forks,
+        views: prompt.views,
+        isPublic: prompt.isPublic,
+        lastUpdated: prompt.lastUpdated,
+        createdOn: prompt.createdOn,
+        tags: prompt.tags,
+        solves: prompt.solves,
+        models: prompt.models,
+        author: {
+          username: user.username,
+          displayUsername: user.displayUsername,
+          image: user.image,
+        },
+      })
+      .from(prompt)
+      .leftJoin(user, eq(prompt.authorId, user.id))
+      .where(eq(prompt.id, promptId));
+
+    if (result.length === 0) {
+      return null;
+    }
+
+    const p = result[0];
+    return {
+      ...p,
+      author: p.author ?? {
+        username: null,
+        displayUsername: null,
+        image: null,
+      },
+    };
   },
+  ["prompt-by-id"],
+  {
+    revalidate: 30, // 30 seconds
+    tags: ["prompts"],
+  }
 );
 
 // Cached version of getTrendingPrompts with 60 second revalidation
@@ -123,7 +176,7 @@ export const getTrendingPrompts = unstable_cache(
   {
     revalidate: 60, // 60 seconds
     tags: ["prompts", "trending"],
-  },
+  }
 );
 
 // Cached version of getUserPrompts with 10 second revalidation
@@ -170,7 +223,7 @@ export const getUserPrompts = unstable_cache(
   {
     revalidate: 10, // 10 seconds
     tags: ["prompts", "user"],
-  },
+  }
 );
 
 // Cached version of getStarredPrompts with 10 second revalidation
@@ -220,7 +273,7 @@ export const getStarredPrompts = unstable_cache(
   {
     revalidate: 10, // 10 seconds
     tags: ["prompts", "starred"],
-  },
+  }
 );
 
 // Cached version of getForkedPrompts with 10 second revalidation
@@ -270,18 +323,18 @@ export const getForkedPrompts = unstable_cache(
   {
     revalidate: 10, // 10 seconds
     tags: ["prompts", "forked"],
-  },
+  }
 );
 
 // Non-cached functions for real-time data
 export async function hasUserStarredPrompt(
   userId: string,
-  promptId: string,
+  promptId: string
 ): Promise<boolean> {
   const result = await db.query.starredPrompts.findFirst({
     where: and(
       eq(starredPrompts.userId, userId),
-      eq(starredPrompts.promptId, promptId),
+      eq(starredPrompts.promptId, promptId)
     ),
   });
   return !!result;
@@ -289,12 +342,12 @@ export async function hasUserStarredPrompt(
 
 export async function hasUserForkedPrompt(
   userId: string,
-  promptId: string,
+  promptId: string
 ): Promise<boolean> {
   const result = await db.query.forkedPrompts.findFirst({
     where: and(
       eq(forkedPrompts.userId, userId),
-      eq(forkedPrompts.promptId, promptId),
+      eq(forkedPrompts.promptId, promptId)
     ),
   });
   return !!result;

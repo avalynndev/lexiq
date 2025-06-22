@@ -1,6 +1,5 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -14,7 +13,10 @@ import {
   DefaultAIIcon,
 } from "@/components/logos";
 import { Star, GitFork } from "lucide-react";
-import { checkUserStarredPrompt, checkUserForkedPrompt } from "@/lib/actions";
+import { useCheckStarred } from "@/hooks/use-check-starred";
+import { useStarMutation } from "@/hooks/use-star-mutation";
+import { useCheckForked } from "@/hooks/use-check-forked";
+import { useForkMutation } from "@/hooks/use-fork-mutation";
 
 interface PromptCardProps {
   prompt: {
@@ -40,40 +42,16 @@ interface PromptCardProps {
 export function PromptCard({ prompt }: PromptCardProps) {
   const { data: session } = useSession();
   const { toast } = useToast();
-  const [isStarred, setIsStarred] = useState(false);
-  const [isForked, setIsForked] = useState(false);
-  const [starCount, setStarCount] = useState(prompt.stars);
-  const [forkCount, setForkCount] = useState(prompt.forks);
-  const [isLoading, setIsLoading] = useState(true);
 
-  // Check initial starred/forked state when component mounts or session changes
-  useEffect(() => {
-    const checkInitialState = async () => {
-      if (session?.user?.id) {
-        try {
-          const [starred, forked] = await Promise.all([
-            checkUserStarredPrompt(session.user.id, prompt.id),
-            checkUserForkedPrompt(session.user.id, prompt.id),
-          ]);
-          setIsStarred(starred);
-          setIsForked(forked);
-        } catch (error) {
-          console.error("Error checking initial state:", error);
-        }
-      } else {
-        setIsStarred(false);
-        setIsForked(false);
-      }
-      setIsLoading(false);
-    };
+  // SWR hooks for live data and mutations
+  const { isStarred, isLoading: isStarredLoading } = useCheckStarred(prompt.id);
+  const { handleStar, isStaring } = useStarMutation(prompt.id);
+  const { isForked, isLoading: isForkedLoading } = useCheckForked(prompt.id);
+  const { handleFork, isForking } = useForkMutation(prompt.id);
 
-    checkInitialState();
-  }, [session?.user?.id, prompt.id]);
-
-  const handleStar = async (e: React.MouseEvent) => {
+  const onStarClick = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-
     if (!session) {
       toast({
         title: "Please sign in",
@@ -82,40 +60,12 @@ export function PromptCard({ prompt }: PromptCardProps) {
       });
       return;
     }
-
-    const originalStarred = isStarred;
-    const originalStarCount = starCount;
-
-    // Optimistic update
-    setIsStarred(!originalStarred);
-    setStarCount(originalStarCount + (originalStarred ? -1 : 1));
-
-    try {
-      const response = await fetch("/api/star", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ promptId: prompt.id }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to update star status");
-      }
-    } catch (error) {
-      // Revert on error
-      setIsStarred(originalStarred);
-      setStarCount(originalStarCount);
-      toast({
-        title: "Something went wrong",
-        description: "Could not update star status. Please try again.",
-        variant: "destructive",
-      });
-    }
+    await handleStar();
   };
 
-  const handleFork = async (e: React.MouseEvent) => {
+  const onForkClick = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-
     if (!session) {
       toast({
         title: "Please sign in",
@@ -124,34 +74,7 @@ export function PromptCard({ prompt }: PromptCardProps) {
       });
       return;
     }
-
-    const originalForked = isForked;
-    const originalForkCount = forkCount;
-
-    // Optimistic update
-    setIsForked(!originalForked);
-    setForkCount(originalForkCount + (originalForked ? -1 : 1));
-
-    try {
-      const response = await fetch("/api/fork", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ promptId: prompt.id }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to update fork status");
-      }
-    } catch (error) {
-      // Revert on error
-      setIsForked(originalForked);
-      setForkCount(originalForkCount);
-      toast({
-        title: "Something went wrong",
-        description: "Could not update fork status. Please try again.",
-        variant: "destructive",
-      });
-    }
+    await handleFork();
   };
 
   // Check if the prompt is new (created within the last 24 hours)
@@ -249,54 +172,51 @@ export function PromptCard({ prompt }: PromptCardProps) {
             {supportedModels.slice(0, 4).map((model, index) => (
               <span
                 key={index}
-                className="text-muted-foreground transition-colors group-hover:text-foreground"
                 title={getModelTitle(model)}
+                className="flex items-center"
               >
                 {getModelIcon(model)}
               </span>
             ))}
             {supportedModels.length > 4 && (
-              <span className="text-xs text-muted-foreground ml-1">
+              <span className="text-xs text-muted-foreground">
                 +{supportedModels.length - 4}
               </span>
             )}
           </div>
-        </div>
 
-        {/* Star and Fork Buttons */}
-        <div className="flex items-center justify-between gap-2 border-t border-t-border/50 py-3 px-6">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-4">
             <Button
               variant="ghost"
               size="sm"
-              className="h-8 px-2 text-xs"
-              onClick={handleStar}
-              disabled={!session || isLoading}
+              className="flex items-center gap-1.5"
+              onClick={onStarClick}
+              disabled={isStaring || isStarredLoading}
             >
               <Star
-                className={`h-3 w-3 mr-1 ${isStarred ? "text-yellow-400 fill-yellow-400" : ""}`}
+                className={`h-4 w-4 ${
+                  isStarred
+                    ? "text-yellow-400 fill-yellow-400"
+                    : "text-muted-foreground"
+                }`}
               />
-              {starCount}
+              <span className="text-xs">{prompt.stars}</span>
             </Button>
             <Button
               variant="ghost"
               size="sm"
-              className="h-8 px-2 text-xs"
-              onClick={handleFork}
-              disabled={!session || isLoading}
+              className="flex items-center gap-1.5"
+              onClick={onForkClick}
+              disabled={isForking || isForkedLoading}
             >
               <GitFork
-                className={`h-3 w-3 mr-1 ${isForked ? "text-yellow-400 fill-yellow-400" : ""}`}
+                className={`h-4 w-4 ${
+                  isForked ? "text-blue-400" : "text-muted-foreground"
+                }`}
               />
-              {forkCount}
+              <span className="text-xs">{prompt.forks}</span>
             </Button>
           </div>
-          <a
-            href={`/prompt/${prompt.id}`}
-            className="text-xs text-muted-foreground hover:text-foreground transition-colors"
-          >
-            View Details →
-          </a>
         </div>
       </div>
     </Card>

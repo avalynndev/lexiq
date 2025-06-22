@@ -25,6 +25,7 @@ import { useSession } from "@/lib/auth-client";
 import { useToast } from "@/hooks/use-toast";
 import { Spinner } from "@/components/ui/spinner";
 import { Switch } from "@/components/ui/switch";
+import { useCreatePromptMutation } from "@/hooks/use-create-prompt-mutation";
 
 const models = ["GPT-4", "Claude", "Gemini", "Llama"];
 const categories = [
@@ -50,7 +51,7 @@ export function CreatePromptModal({ children }: CreatePromptModalProps) {
   const { data: session } = useSession();
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const { handleCreatePrompt, isCreating, error } = useCreatePromptMutation();
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -91,28 +92,12 @@ export function CreatePromptModal({ children }: CreatePromptModalProps) {
       return;
     }
 
-    setLoading(true);
+    const newPrompt = await handleCreatePrompt({
+      ...formData,
+      authorId: session.user.id,
+    });
 
-    try {
-      const response = await fetch("/api/admin/create-prompt", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          ...formData,
-          authorId: session.user.id,
-          createdOn: new Date().toISOString(),
-          lastUpdated: new Date().toISOString(),
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to create prompt");
-      }
-
-      const newPrompt = await response.json();
-
+    if (newPrompt) {
       toast({
         title: "Prompt created successfully!",
         description: "Your prompt has been published.",
@@ -131,18 +116,12 @@ export function CreatePromptModal({ children }: CreatePromptModalProps) {
       });
       setTagInput("");
       setOpen(false);
-
-      // Refresh the page or update the prompts list
-      window.location.reload();
-    } catch (error) {
-      console.error("Error creating prompt:", error);
+    } else {
       toast({
         title: "Error creating prompt",
-        description: "Something went wrong. Please try again.",
+        description: error || "Something went wrong. Please try again.",
         variant: "destructive",
       });
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -332,36 +311,32 @@ export function CreatePromptModal({ children }: CreatePromptModalProps) {
                 Anyone on the internet can see this prompt.
               </p>
             </div>
-            <Switch
-              id="is-public"
-              checked={formData.isPublic}
-              onCheckedChange={(checked) =>
-                setFormData((prev) => ({ ...prev, isPublic: checked }))
-              }
-            />
+            <div className="flex items-center space-x-2">
+              <Switch
+                id="public-switch"
+                checked={formData.isPublic}
+                onCheckedChange={(checked) =>
+                  setFormData((prev) => ({ ...prev, isPublic: checked }))
+                }
+              />
+              <Label htmlFor="public-switch">Public</Label>
+            </div>
           </div>
 
           {/* Submit Button */}
-          <div className="flex justify-end gap-3 pt-4">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => setOpen(false)}
-            >
-              Cancel
-            </Button>
-            <Button type="submit" disabled={loading}>
-              {loading ? (
-                <>
-                  <Spinner size="large" className="size-6 mr-2" />
-                  Creating...
-                </>
-              ) : (
-                <>
-                  <Sparkles className="h-4 w-4 mr-2" />
-                  Create Prompt
-                </>
-              )}
+          <div className="flex justify-end gap-4 items-center">
+            <div className="flex items-center space-x-2">
+              <Switch
+                id="public-switch"
+                checked={formData.isPublic}
+                onCheckedChange={(checked) =>
+                  setFormData((prev) => ({ ...prev, isPublic: checked }))
+                }
+              />
+              <Label htmlFor="public-switch">Public</Label>
+            </div>
+            <Button type="submit" disabled={isCreating} className="w-32">
+              {isCreating ? <Spinner /> : "Create Prompt"}
             </Button>
           </div>
         </form>
