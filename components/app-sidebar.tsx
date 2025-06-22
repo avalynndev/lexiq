@@ -179,7 +179,7 @@ export function AppSidebar({ className }: { className?: string }) {
                 </SidebarMenuItem>
               </SidebarMenu>
             ) : filteredPrompts.length > 0 ? (
-              <ScrollArea className="h-[300px]">
+              <ScrollArea className="h-[calc(100vh-15rem)]">
                 <SidebarMenu>
                   {(() => {
                     // Group prompts by date modified
