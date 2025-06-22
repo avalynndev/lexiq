@@ -8,9 +8,9 @@ export function Hero() {
   return (
     <section className="mt-[60px] lg:mt-[180px] min-h-[530px] relative lg:h-[calc(100vh-300px)]">
       <div className="flex flex-col lg:flex-row lg:items-start lg:gap-12">
-        {/* Left side - Text content */}
         <div className="flex flex-col lg:w-1/2 lg:max-w-[580px]">
-          <Link href="/updates/latest">
+          {/**
+         <Link href="/updates/latest">
             <Button
               variant="outline"
               className="rounded-full border-border flex space-x-2 items-center w-fit"
@@ -29,6 +29,7 @@ export function Hero() {
               </svg>
             </Button>
           </Link>
+          */}
 
           <h2 className="mt-6 md:mt-10 text-[#878787] leading-tight text-[24px] md:text-[36px] font-medium">
             Discover, remix, and evolve powerful AI prompts — built for{" "}
@@ -56,13 +57,11 @@ export function Hero() {
             Start exploring for free, no account required.
           </p>
 
-          {/* Floating cards - shown below text on small screens */}
           <div className="mt-12 pr-20 lg:hidden justify-center items-center">
             <FloatingPromptCards />
           </div>
         </div>
 
-        {/* Right side - Floating cards for large screens */}
         <div className="hidden lg:block lg:w-1/2 lg:flex-1">
           <FloatingPromptCards />
         </div>

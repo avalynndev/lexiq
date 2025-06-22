@@ -1,6 +1,5 @@
 import LexiqLogo from "@/components/logo";
 import Link from "next/link";
-import { GithubStars } from "./github-stars";
 import { SocialLinks } from "./social-links";
 
 export function Footer() {
@@ -14,105 +13,16 @@ export function Footer() {
               <span className="text-2xl font-bold">Lexiq</span>
             </div>
             <span className="sr-only">Lexiq</span>
+            <span className="font-normal  text-right">
+              Discover. Fork. Remix AI prompts.
+            </span>
           </Link>
 
           <div className="flex items-center">
-            <GithubStars />
             <SocialLinks />
           </div>
         </div>
-
-        <div className="flex flex-col md:flex-row w-full">
-          <div className="flex flex-col space-y-8 md:space-y-0 md:flex-row md:w-6/12 justify-between leading-8">
-            <div>
-              <span className="font-medium">Platform</span>
-              <ul>
-                <li className="transition-colors text-[#878787] hover:text-foreground">
-                  <Link href="/explore">Explore</Link>
-                </li>
-                <li className="transition-colors text-[#878787] hover:text-foreground">
-                  <Link href="/categories">Categories</Link>
-                </li>
-                <li className="transition-colors text-[#878787] hover:text-foreground">
-                  <Link href="/trending">Trending</Link>
-                </li>
-                <li className="transition-colors text-[#878787] hover:text-foreground">
-                  <Link href="/submit">Submit Prompt</Link>
-                </li>
-                <li className="transition-colors text-[#878787] hover:text-foreground">
-                  <Link href="/collections">Collections</Link>
-                </li>
-                <li className="transition-colors text-[#878787] hover:text-foreground">
-                  <Link href="/pricing">Pricing</Link>
-                </li>
-                <li className="transition-colors text-[#878787] hover:text-foreground">
-                  <Link href="/api">API</Link>
-                </li>
-                <li className="transition-colors text-[#878787] hover:text-foreground">
-                  <Link href="/download">Download</Link>
-                </li>
-              </ul>
-            </div>
-
-            <div>
-              <span className="font-medium">Resources</span>
-              <ul>
-                <li className="transition-colors text-[#878787] hover:text-foreground">
-                  <Link href="https://github.com/lexiq">Github</Link>
-                </li>
-                <li className="transition-colors text-[#878787] hover:text-foreground">
-                  <Link href="/docs">Documentation</Link>
-                </li>
-                <li className="transition-colors text-[#878787] hover:text-foreground">
-                  <Link href="/support">Support</Link>
-                </li>
-                <li className="transition-colors text-[#878787] hover:text-foreground">
-                  <Link href="/privacy">Privacy Policy</Link>
-                </li>
-                <li className="transition-colors text-[#878787] hover:text-foreground">
-                  <Link href="/terms">Terms of Service</Link>
-                </li>
-                <li className="transition-colors text-[#878787] hover:text-foreground">
-                  <Link href="/branding">Brand Kit</Link>
-                </li>
-              </ul>
-            </div>
-
-            <div>
-              <span className="font-medium">Company</span>
-              <ul>
-                <li className="transition-colors text-[#878787] hover:text-foreground">
-                  <Link href="/about">About</Link>
-                </li>
-                <li className="transition-colors text-[#878787] hover:text-foreground">
-                  <Link href="/blog">Blog</Link>
-                </li>
-                <li className="transition-colors text-[#878787] hover:text-foreground">
-                  <Link href="/updates">Updates</Link>
-                </li>
-                <li className="transition-colors text-[#878787] hover:text-foreground">
-                  <Link href="/open-source">Open Source</Link>
-                </li>
-                <li className="transition-colors text-[#878787] hover:text-foreground">
-                  <Link href="/community">Community</Link>
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="md:w-6/12 flex mt-8 md:mt-0 md:justify-end md:pb-0 pb-8">
-            <div className="flex md:items-end flex-col">
-              <span className="font-normal md:text-2xl text-right">
-                Discover. Fork. Remix AI prompts.
-              </span>
-            </div>
-          </div>
-        </div>
       </div>
-
-      <h5 className="dark:text-[#161616] text-[#F4F4F3] hidden md:block md:text-[500px] leading-none text-center pointer-events-none">
-        lexiq
-      </h5>
     </footer>
   );
 }

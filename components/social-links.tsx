@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Github, Twitter, Linkedin, Youtube, X } from "lucide-react";
+import { Github, Youtube, } from "lucide-react";
 
 export function SocialLinks() {
   const socialLinks = [
@@ -21,7 +21,7 @@ export function SocialLinks() {
   ];
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-1">
       {socialLinks.map((link) => {
         return (
           <Button

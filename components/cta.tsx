@@ -26,13 +26,6 @@ const benefits = [
   "24/7 community support",
 ];
 
-const stats = [
-  { icon: Users, value: "50K+", label: "Active Users" },
-  { icon: Star, value: "1M+", label: "Stars Given" },
-  { icon: GitFork, value: "25K+", label: "Forks Made" },
-  { icon: Zap, value: "100K+", label: "Prompts Created" },
-];
-
 export function CTA() {
   return (
     <section className="py-24 px-4">
@@ -82,24 +75,6 @@ export function CTA() {
               </div>
             ))}
           </div>
-          {/* Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-16">
-            {stats.map((stat, index) => {
-              const IconComponent = stat.icon;
-              return (
-                <div key={index} className="text-center">
-                  <div className="flex items-center justify-center mb-2">
-                    <IconComponent className="h-6 w-6 text-primary mr-2" />
-                    <div className="text-2xl font-bold">{stat.value}</div>
-                  </div>
-                  <div className="text-sm text-muted-foreground">
-                    {stat.label}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-          {/* Trust badges */}
           <Card className="border-dashed">
             <CardContent className="p-8">
               <div className="flex flex-col md:flex-row items-center justify-between gap-6">
