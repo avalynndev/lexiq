@@ -33,6 +33,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { PromptCard } from "@/components/prompt-card";
 import { useSession } from "@/lib/auth-client";
 import { useToast } from "@/hooks/use-toast";
+import { SidebarTrigger } from "@/components/ui/sidebar";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export default function PromptDetailPage() {
   const params = useParams<{ slug: string }>();
@@ -200,246 +202,292 @@ export default function PromptDetailPage() {
 
   if (!prompt) {
     return (
-      <div className="min-h-screen bg-background text-foreground flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold mb-4">Prompt Not Found</h1>
-          <p className="text-muted-foreground mb-6">
-            The prompt you are looking for does not exist.
-          </p>
-          <Link href="/explore">
-            <Button>
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Explore
-            </Button>
-          </Link>
+      <>
+        <header className="flex h-(--header-height) bg-sidebar shrink-0 rounded-t-xl border-t border-x items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height)">
+          <div className="flex w-full pt-5 p-5">
+            <div className="flex flex-col flex-1 border-alpha-200 border-t sm:border-t-0">
+              <div className="flex items-center gap-3 pl-4 pr-3 sm:pl-3 sm:pr-2 h-12 border-b border-alpha-200 sm:mx-0 shrink-0">
+                <SidebarTrigger className="-ml-1" />
+                <h1 className="hidden truncate text-base font-medium sm:inline sm:tracking-tight">
+                  Prompt
+                </h1>
+              </div>
+            </div>
+          </div>
+        </header><ScrollArea className="h-[calc(100vh-6.5rem)] px-4 py-2 rounded-b-xl border-b border-x">
+        <div className="min-h-screen bg-background text-foreground flex items-center justify-center">
+          <div className="text-center">
+            <h1 className="text-2xl font-bold mb-4">Prompt Not Found</h1>
+            <p className="text-muted-foreground mb-6">
+              The prompt you are looking for does not exist.
+            </p>
+            <Link href="/explore">
+              <Button>
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Back to Explore
+              </Button>
+            </Link>
+          </div>
         </div>
-      </div>
+        </ScrollArea>
+      </>
     );
   }
 
   const similarPrompts = getSimilarPrompts();
 
   return (
-    <div className="bg-background text-foreground min-h-screen">
-      <div className="container mx-auto px-4 py-8">
-        <div className="mb-6">
-          <Link
-            href="/explore"
-            className="text-sm text-muted-foreground hover:text-primary transition-colors inline-flex items-center mb-4"
-          >
-            <ArrowLeft className="h-3 w-3 mr-1" />
-            Back to explore
-          </Link>
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <h1 className="text-2xl font-semibold text-muted-foreground">
-              <span className="text-primary hover:underline cursor-pointer">
-                {prompt.author.username || "Anonymous"}
-              </span>
-              <span className="mx-2">/</span>
-              <span className="font-bold text-foreground">{prompt.title}</span>
-              <Badge variant="outline" className="ml-4 text-xs font-mono">
-                {prompt.isPublic ? "Public" : "Private"}
-              </Badge>
-            </h1>
-            <div className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                className="flex items-center gap-1.5"
-                onClick={handleFork}
-                disabled={!session}
-              >
-                <GitFork
-                  className={`h-4 w-4 ${isForked ? "text-yellow-400 fill-yellow-400" : ""}`}
-                />{" "}
-                Fork <Badge variant="secondary">{forkCount}</Badge>
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                className="flex items-center gap-1.5"
-                onClick={handleStar}
-                disabled={!session}
-              >
-                <Star
-                  className={`h-4 w-4 ${isStarred ? "text-yellow-400 fill-yellow-400" : ""}`}
-                />{" "}
-                Star <Badge variant="secondary">{starCount}</Badge>
-              </Button>
+    <>
+      <header className="flex h-(--header-height) bg-sidebar shrink-0 rounded-t-xl border-t border-x items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height)">
+        <div className="flex w-full pt-5 p-5">
+          <div className="flex flex-col flex-1 border-alpha-200 border-t sm:border-t-0">
+            <div className="flex items-center gap-3 pl-4 pr-3 sm:pl-3 sm:pr-2 h-12 border-b border-alpha-200 sm:mx-0 shrink-0">
+              <SidebarTrigger className="-ml-1" />
+              <h1 className="hidden truncate text-base font-medium sm:inline sm:tracking-tight">
+                <span className="text-primary hover:underline cursor-pointer">
+                  {prompt.author.username || "Anonymous"}
+                </span>
+                <span className="mx-2">/</span>
+                <span className="font-bold text-foreground">
+                  {prompt.title}
+                </span>
+              </h1>
             </div>
           </div>
         </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2">
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between px-4">
-                <div className="flex items-center gap-3">
-                  <img
-                    src={
-                      prompt.author.image ||
-                      `https://avatar.vercel.sh/${prompt.author.username}.png`
-                    }
-                    alt={prompt.author.username || "author"}
-                    className="h-8 w-8 rounded-full"
-                  />
-                  <span className="font-semibold">
-                    {prompt.author.username || "Anonymous"}
-                  </span>
+      </header>
+      <ScrollArea className="h-[calc(100vh-6.5rem)] px-4 py-2 rounded-b-xl border-b border-x">
+        <div className="">
+          <div className="container mx-auto px-4 py-8">
+            <div className="mb-6">
+              <Link
+                href="/explore"
+                className="text-sm text-muted-foreground hover:text-primary transition-colors inline-flex items-center mb-4"
+              >
+                <ArrowLeft className="h-3 w-3 mr-1" />
+                Back to explore
+              </Link>
+              <div className="flex flex-wrap items-center justify-between gap-4">
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex items-center gap-1.5"
+                    onClick={handleFork}
+                    disabled={!session}
+                  >
+                    <GitFork
+                      className={`h-4 w-4 ${isForked ? "text-yellow-400 fill-yellow-400" : ""}`}
+                    />{" "}
+                    Fork <Badge variant="secondary">{forkCount}</Badge>
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex items-center gap-1.5"
+                    onClick={handleStar}
+                    disabled={!session}
+                  >
+                    <Star
+                      className={`h-4 w-4 ${isStarred ? "text-yellow-400 fill-yellow-400" : ""}`}
+                    />{" "}
+                    Star <Badge variant="secondary">{starCount}</Badge>
+                  </Button>
                 </div>
-                <span className="text-sm text-muted-foreground">
-                  Last updated{" "}
-                  {formatDistanceToNow(new Date(prompt.lastUpdated), {
-                    addSuffix: true,
-                  })}
-                </span>
-              </CardHeader>
-              <CardContent className="p-0">
-                {/* Prompt Content */}
-                <div className="px-4 pb-4">
-                  <div className="flex items-center gap-4 mb-3">
-                    <Code className="h-5 w-5 text-muted-foreground" />
-                    <span className="font-medium">Prompt</span>
-                  </div>
-                  <div className="relative">
-                    <pre className="bg-muted p-4 rounded-md font-mono text-sm whitespace-pre-wrap break-words w-full">
-                      {prompt.prompt}
-                    </pre>
-                    <button
-                      onClick={() => copyToClipboard(prompt.prompt)}
-                      className="absolute top-2 right-2 p-1.5 text-muted-foreground hover:bg-background rounded-md transition-colors"
-                    >
-                      {copied ? (
-                        <Check className="h-4 w-4 text-green-500" />
-                      ) : (
-                        <Copy className="h-4 w-4" />
-                      )}
-                    </button>
-                  </div>
-                </div>
+              </div>
+            </div>
 
-                {/* Solves Section - only show if content exists */}
-                {prompt.solves && (
-                  <>
-                    <Separator />
-                    <div className="p-4">
-                      <div className="flex items-center gap-4 mb-3">
-                        <Puzzle className="h-5 w-5 text-muted-foreground" />
-                        <span className="font-medium">Solves</span>
-                      </div>
-                      <p className="text-sm text-muted-foreground">
-                        {prompt.solves}
-                      </p>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              <div className="lg:col-span-2">
+                <Card>
+                  <CardHeader className="flex flex-row items-center justify-between px-4">
+                    <div className="flex items-center gap-3">
+                      <img
+                        src={
+                          prompt.author.image ||
+                          `https://avatar.vercel.sh/${prompt.author.username}.png`
+                        }
+                        alt={prompt.author.username || "author"}
+                        className="h-8 w-8 rounded-full"
+                      />
+                      <span className="font-semibold">
+                        {prompt.author.username || "Anonymous"}
+                      </span>
                     </div>
-                  </>
-                )}
-              </CardContent>
-            </Card>
-          </div>
+                    <span className="text-sm text-muted-foreground">
+                      Last updated{" "}
+                      {formatDistanceToNow(new Date(prompt.lastUpdated), {
+                        addSuffix: true,
+                      })}
+                    </span>
+                  </CardHeader>
+                  <CardContent className="p-0">
+                    {/* Prompt Content */}
+                    <div className="px-4 pb-4">
+                      <div className="flex items-center gap-4 mb-3">
+                        <Code className="h-5 w-5 text-muted-foreground" />
+                        <span className="font-medium">Prompt</span>
+                      </div>
+                      <div className="relative">
+                        <pre className="bg-muted p-4 rounded-md font-mono text-sm whitespace-pre-wrap break-words w-full">
+                          {prompt.prompt}
+                        </pre>
+                        <button
+                          onClick={() => copyToClipboard(prompt.prompt)}
+                          className="absolute top-2 right-2 p-1.5 text-muted-foreground hover:bg-background rounded-md transition-colors"
+                        >
+                          {copied ? (
+                            <Check className="h-4 w-4 text-green-500" />
+                          ) : (
+                            <Copy className="h-4 w-4" />
+                          )}
+                        </button>
+                      </div>
+                    </div>
 
-          <div className="lg:col-span-1 space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>About</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground mb-4">
-                  {prompt.description}
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  {prompt.tags?.map((tag) => (
-                    <Badge key={tag} variant="secondary">
-                      #{tag}
-                    </Badge>
+                    {/* Solves Section - only show if content exists */}
+                    {prompt.solves && (
+                      <>
+                        <Separator />
+                        <div className="p-4">
+                          <div className="flex items-center gap-4 mb-3">
+                            <Puzzle className="h-5 w-5 text-muted-foreground" />
+                            <span className="font-medium">Solves</span>
+                          </div>
+                          <p className="text-sm text-muted-foreground">
+                            {prompt.solves}
+                          </p>
+                        </div>
+                      </>
+                    )}
+                  </CardContent>
+                </Card>
+              </div>
+
+              <div className="lg:col-span-1 space-y-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>About</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      {prompt.description}
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      {prompt.tags?.map((tag) => (
+                        <Badge key={tag} variant="secondary">
+                          #{tag}
+                        </Badge>
+                      ))}
+                    </div>
+                    <Separator className="my-4" />
+                    <div className="space-y-2 text-sm">
+                      <div className="flex items-center gap-2">
+                        <Book className="h-4 w-4 text-muted-foreground" />{" "}
+                        <span>{prompt.category}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Star className="h-4 w-4 text-muted-foreground" />{" "}
+                        <span>{prompt.stars} stars</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <GitFork className="h-4 w-4 text-muted-foreground" />{" "}
+                        <span>{prompt.forks} forks</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Calendar className="h-4 w-4 text-muted-foreground" />{" "}
+                        <span>
+                          Created on{" "}
+                          {format(new Date(prompt.createdOn), "MMM d, yyyy")}
+                        </span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Author</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex items-center gap-3">
+                      <img
+                        src={
+                          prompt.author.image ||
+                          `https://avatar.vercel.sh/${prompt.author.username}.png`
+                        }
+                        alt={prompt.author.username || "author"}
+                        className="h-10 w-10 rounded-full"
+                      />
+                      <div>
+                        <div className="font-bold">
+                          {prompt.author.username || "Anonymous"}
+                        </div>
+                        <div className="text-xs text-muted-foreground">
+                          The author has not provided a bio.
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+
+            {/* Similar Prompts Section */}
+            {similarPrompts.length > 0 && (
+              <div className="mt-12">
+                <div className="flex items-center gap-3 mb-8">
+                  <Sparkles className="h-6 w-6 text-primary" />
+                  <h2 className="text-2xl font-bold">Similar Prompts</h2>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {similarPrompts.map((similarPrompt) => (
+                    <PromptCard
+                      key={similarPrompt.id}
+                      prompt={{
+                        ...similarPrompt,
+                        author: {
+                          username:
+                            similarPrompt.author.displayUsername ||
+                            similarPrompt.author.username ||
+                            "Anonymous",
+                          avatar: similarPrompt.author.image || undefined,
+                        },
+                        tags: similarPrompt.tags || [],
+                        models: similarPrompt.models || [similarPrompt.model],
+                      }}
+                    />
                   ))}
                 </div>
-                <Separator className="my-4" />
-                <div className="space-y-2 text-sm">
-                  <div className="flex items-center gap-2">
-                    <Book className="h-4 w-4 text-muted-foreground" />{" "}
-                    <span>{prompt.category}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Star className="h-4 w-4 text-muted-foreground" />{" "}
-                    <span>{prompt.stars} stars</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <GitFork className="h-4 w-4 text-muted-foreground" />{" "}
-                    <span>{prompt.forks} forks</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Calendar className="h-4 w-4 text-muted-foreground" />{" "}
-                    <span>
-                      Created on{" "}
-                      {format(new Date(prompt.createdOn), "MMM d, yyyy")}
-                    </span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Author</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="flex items-center gap-3">
-                  <img
-                    src={
-                      prompt.author.image ||
-                      `https://avatar.vercel.sh/${prompt.author.username}.png`
-                    }
-                    alt={prompt.author.username || "author"}
-                    className="h-10 w-10 rounded-full"
-                  />
-                  <div>
-                    <div className="font-bold">
-                      {prompt.author.username || "Anonymous"}
-                    </div>
-                    <div className="text-xs text-muted-foreground">
-                      The author has not provided a bio.
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+              </div>
+            )}
           </div>
         </div>
-
-        {/* Similar Prompts Section */}
-        {similarPrompts.length > 0 && (
-          <div className="mt-12">
-            <div className="flex items-center gap-3 mb-8">
-              <Sparkles className="h-6 w-6 text-primary" />
-              <h2 className="text-2xl font-bold">Similar Prompts</h2>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {similarPrompts.map((similarPrompt) => (
-                <PromptCard
-                  key={similarPrompt.id}
-                  prompt={{
-                    ...similarPrompt,
-                    author: {
-                      username:
-                        similarPrompt.author.displayUsername ||
-                        similarPrompt.author.username ||
-                        "Anonymous",
-                      avatar: similarPrompt.author.image || undefined,
-                    },
-                    tags: similarPrompt.tags || [],
-                    models: similarPrompt.models || [similarPrompt.model],
-                  }}
-                />
-              ))}
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
+      </ScrollArea>
+    </>
   );
 }
 
-const PromptPageSkeleton = () => (
+const PromptPageSkeleton = () => (    <>
+      <header className="flex h-(--header-height) bg-sidebar shrink-0 rounded-t-xl border-t border-x items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height)">
+        <div className="flex w-full pt-5 p-5">
+          <div className="flex flex-col flex-1 border-alpha-200 border-t sm:border-t-0">
+            <div className="flex items-center gap-3 pl-4 pr-3 sm:pl-3 sm:pr-2 h-12 border-b border-alpha-200 sm:mx-0 shrink-0">
+              <SidebarTrigger className="-ml-1" />
+              <h1 className="hidden truncate text-base font-medium sm:inline sm:tracking-tight">
+                <span className="text-primary hover:underline cursor-pointer">
+                  Anonymous
+                </span>
+                <span className="mx-2">/</span>
+                <span className="font-bold text-foreground">
+                   
+                </span>
+              </h1>
+            </div>
+          </div>
+        </div>
+      </header>
+      <ScrollArea className="h-[calc(100vh-6.5rem)] px-4 py-2 rounded-b-xl border-b border-x">
   <div className="container mx-auto px-4 py-8">
     <div className="mb-6">
       <Skeleton className="h-6 w-40 mb-4" />
@@ -516,5 +564,6 @@ const PromptPageSkeleton = () => (
         </Card>
       </div>
     </div>
-  </div>
+  </div></ScrollArea>
+  </>
 );

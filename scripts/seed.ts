@@ -5,24 +5,22 @@ import { eq } from "drizzle-orm";
 
 async function seed() {
   try {
-    // Check if user already exists, if not create one
     const existingUser = await db
       .select()
       .from(user)
-      .where(eq(user.id, "admin-user-id"))
+      .where(eq(user.id, "lvnNY0KwTxLNBRQHqLY1eGCdZVeKDXb6"))
       .limit(1);
 
     if (existingUser.length === 0) {
       const sampleUser = await db
         .insert(user)
         .values({
-          id: "admin-user-id",
-          name: "Admin User",
-          email: "admin@example.com",
-          username: "admin",
-          displayUsername: "Admin",
-          image:
-            "https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?w=100",
+          id: "lvnNY0KwTxLNBRQHqLY1eGCdZVeKDXb6",
+          name: "Avalynndev",
+          email: "avalyndev@gmail.com",
+          username: "avalynndev",
+          displayUsername: "avalynndev",
+          image: "",
         })
         .returning();
 
@@ -59,7 +57,7 @@ Please help me write a story about: [USER'S STORY IDEA]`,
         solves:
           "Generate compelling creative content with structured character development",
         models: ["GPT-4", "Claude"],
-        authorId: "admin-user-id",
+        authorId: "lvnNY0KwTxLNBRQHqLY1eGCdZVeKDXb6",
         createdOn: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), // 2 days ago
         lastUpdated: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
       },
@@ -89,7 +87,7 @@ Please provide a detailed analysis with actionable recommendations.`,
         tags: ["claude", "development", "code-review", "optimization"],
         solves: "Automated code analysis and improvement suggestions",
         models: ["Claude", "GPT-4", "Gemini"],
-        authorId: "admin-user-id",
+        authorId: "lvnNY0KwTxLNBRQHqLY1eGCdZVeKDXb6",
         createdOn: new Date(Date.now() - 1 * 60 * 60 * 1000), // 1 hour ago
         lastUpdated: new Date(Date.now() - 1 * 60 * 60 * 1000),
       },
@@ -117,7 +115,7 @@ Please provide a comprehensive analysis with clear, actionable insights.`,
         tags: ["gemini", "analytics", "data-science", "visualization"],
         solves: "Transform raw data into actionable business insights",
         models: ["Gemini", "GPT-4"],
-        authorId: "admin-user-id",
+        authorId: "lvnNY0KwTxLNBRQHqLY1eGCdZVeKDXb6",
         createdOn: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000), // 3 days ago
         lastUpdated: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
       },
@@ -145,7 +143,7 @@ Please create SEO-optimized content that ranks well and provides value to reader
         tags: ["gpt-4", "marketing", "seo", "content"],
         solves: "Create search-optimized content that ranks and converts",
         models: ["GPT-4"],
-        authorId: "admin-user-id",
+        authorId: "lvnNY0KwTxLNBRQHqLY1eGCdZVeKDXb6",
         createdOn: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000), // 5 days ago
         lastUpdated: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000),
       },
@@ -174,7 +172,7 @@ Please create a comprehensive lesson plan that engages all learners.`,
         tags: ["claude", "education", "lesson-planning", "teaching"],
         solves: "Design effective educational content for diverse learners",
         models: ["Claude", "GPT-4"],
-        authorId: "admin-user-id",
+        authorId: "lvnNY0KwTxLNBRQHqLY1eGCdZVeKDXb6",
         createdOn: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000), // 1 week ago
         lastUpdated: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
       },
@@ -203,7 +201,7 @@ Please create a product description that drives sales and engagement.`,
         tags: ["llama", "e-commerce", "copywriting", "conversion"],
         solves: "Write product descriptions that drive sales and engagement",
         models: ["Llama", "GPT-4", "Claude"],
-        authorId: "admin-user-id",
+        authorId: "lvnNY0KwTxLNBRQHqLY1eGCdZVeKDXb6",
         createdOn: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000), // 4 days ago
         lastUpdated: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000),
       },

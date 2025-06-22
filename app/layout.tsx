@@ -25,6 +25,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <meta name="apple-mobile-web-app-title" content="Lexiq" />
+      </head>
       <body
         className={`${GeistSans.variable} ${GeistMono.variable} bg-background antialiased font-sans text-foreground`}
       >
