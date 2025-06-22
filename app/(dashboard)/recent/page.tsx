@@ -125,64 +125,64 @@ export default function RecentPage() {
   return (
     <>
       <header className="flex h-(--header-height) bg-sidebar shrink-0 rounded-t-xl border-t border-x items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height)">
-          <div className="flex w-full pt-20 p-5">
-            <div className="flex flex-col flex-1 border-alpha-200 border-t sm:border-t-0">
-              <div className="flex items-center gap-3 h-12 border-b border-alpha-200 sm:mx-0 shrink-0">
-                <SidebarTrigger className="-ml-1" />
-                <h1 className="hidden truncate text-base font-medium sm:inline sm:tracking-tight">
-                  Recents
-                </h1>
+        <div className="flex w-full pt-20 p-5">
+          <div className="flex flex-col flex-1 border-alpha-200 border-t sm:border-t-0">
+            <div className="flex items-center gap-3 pl-4 pr-3 sm:pl-3 sm:pr-2 h-12 border-b border-alpha-200 sm:mx-0 shrink-0">
+              <SidebarTrigger className="-ml-1" />
+              <h1 className="hidden truncate text-base font-medium sm:inline sm:tracking-tight">
+                Recents
+              </h1>
 
-                <div className="flex flex-1 items-center empty:hidden sm:ml-2 -ml-1.5">
-                  <Tabs defaultValue="chats" className="w-full">
-                    <TabsList className="bg-background flex gap-0.5 h-11 items-center">
-                      <TabsTrigger value="chats" asChild>
-                        <Link
-                          href="/chat/history"
-                          className="h-11 items-center font-normal"
-                        >
-                          Chats
-                        </Link>
-                      </TabsTrigger>
-                      <TabsTrigger value="blocks" asChild>
-                        <Link
-                          href="/chat/blocks"
-                          className="h-11 items-center font-normal"
-                        >
-                          Blocks
-                        </Link>
-                      </TabsTrigger>
-                    </TabsList>
-                  </Tabs>
-                </div>
-              </div>
-
-              {/* Search Bar */}
-              <div className="flex h-[50px] w-full items-center gap-2 px-4 border-b border-b-alpha-200 shrink-0 empty:hidden">
-                <form className="flex flex-1 items-center gap-2">
-                  <label
-                    className="pointer-events-none flex items-center justify-center rounded-lg"
-                    htmlFor="q"
-                  >
-                    <Search className="size-4 !text-gray-500" />
-                    <span className="sr-only">Search</span>
-                  </label>
-
-                  <div className="flex w-full">
-                    <div className="flex w-full items-center bg-background-subtle border py-1 px-1 h-full rounded-lg shadow-none border-none focus-within:border-alpha-600 disabled:border-alpha-300">
-                      <Input
-                        id="q"
-                        name="q"
-                        type="search"
-                        placeholder="Search for a chat…"
-                        className="w-full bg-transparent outline-none placeholder:text-gray-400 text-label-14 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:cursor-not-allowed disabled:text-gray-400"
-                      />
-                    </div>
-                  </div>
-                </form>
+              <div className="flex flex-1 items-center empty:hidden sm:ml-2 -ml-1.5">
+                <Tabs defaultValue="chats" className="w-full">
+                  <TabsList className="bg-background flex gap-0.5 h-11 items-center">
+                    <TabsTrigger value="chats" asChild>
+                      <Link
+                        href="/chat/history"
+                        className="h-11 items-center font-normal"
+                      >
+                        Chats
+                      </Link>
+                    </TabsTrigger>
+                    <TabsTrigger value="blocks" asChild>
+                      <Link
+                        href="/chat/blocks"
+                        className="h-11 items-center font-normal"
+                      >
+                        Blocks
+                      </Link>
+                    </TabsTrigger>
+                  </TabsList>
+                </Tabs>
               </div>
             </div>
+
+            {/* Search Bar */}
+            <div className="flex h-[50px] w-full items-center gap-2 px-4 border-b border-b-alpha-200 shrink-0 empty:hidden">
+              <form className="flex flex-1 items-center gap-2">
+                <label
+                  className="pointer-events-none flex items-center justify-center rounded-lg"
+                  htmlFor="q"
+                >
+                  <Search className="size-4 !text-gray-500" />
+                  <span className="sr-only">Search</span>
+                </label>
+
+                <div className="flex w-full">
+                  <div className="flex w-full items-center bg-background-subtle border py-1 px-1 h-full rounded-lg shadow-none border-none focus-within:border-alpha-600 disabled:border-alpha-300">
+                    <Input
+                      id="q"
+                      name="q"
+                      type="search"
+                      placeholder="Search for a chat…"
+                      className="w-full bg-transparent outline-none placeholder:text-gray-400 text-label-14 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:cursor-not-allowed disabled:text-gray-400"
+                    />
+                  </div>
+                </div>
+              </form>
+            </div>
           </div>
+        </div>
       </header>
       <ScrollArea className="h-[calc(100vh-6.5rem)] pt-16 rounded-b-xl border-b border-x">
         <div className="flex-1">
