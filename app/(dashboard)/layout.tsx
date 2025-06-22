@@ -1,7 +1,6 @@
 import { AppSidebar } from "@/components/app-sidebar";
 import Navbar from "@/components/dashboard-nav";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
 import { SidebarInset } from "@/components/ui/sidebar";
 
 export default function RootLayout({
@@ -25,27 +24,13 @@ export default function RootLayout({
           }
         >
           <div className="flex-none">
-            <AppSidebar className="h-[850px]" />
+            <AppSidebar className="h-[calc(100vh-3.5rem)]" />
           </div>
 
-          {/* Main Content */}
-          <div className="flex-1 overflow-auto">
-            <main className="h-full p-2">
-              <SidebarInset className="pt-10">
-                <header className="flex h-(--header-height) bg-sidebar shrink-0 rounded-t-xl border-t border-x items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height)">
-                  <div className="flex w-full items-center gap-1 px-4 lg:gap-2 lg:px-6">
-                    <SidebarTrigger className="-ml-1" />
-                  </div>
-                </header>
-                <ScrollArea className="h-[850px]  rounded-b-xl border-b border-x">
-                  <div className="flex flex-1 flex-col bg-sidebar">
-                    <div className="flex flex-1 flex-col gap-2">
-                      <div className="flex flex-col gap-4  md:gap-6 md:py-6">
-                        <div className="px-4 lg:px-6">{children}</div>
-                      </div>
-                    </div>
-                  </div>
-                </ScrollArea>
+          <div className="flex-1 overflow-hidden">
+            <main className="relative m-2 mt-0 flex-1 grow h-full">
+              <SidebarInset className="bg-[#0f0f10]">
+                {children}
               </SidebarInset>
             </main>
           </div>
