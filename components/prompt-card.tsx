@@ -172,51 +172,54 @@ export function PromptCard({ prompt }: PromptCardProps) {
             {supportedModels.slice(0, 4).map((model, index) => (
               <span
                 key={index}
+                className="text-muted-foreground transition-colors group-hover:text-foreground"
                 title={getModelTitle(model)}
-                className="flex items-center"
               >
                 {getModelIcon(model)}
               </span>
             ))}
             {supportedModels.length > 4 && (
-              <span className="text-xs text-muted-foreground">
+              <span className="text-xs text-muted-foreground ml-1">
                 +{supportedModels.length - 4}
               </span>
             )}
           </div>
+        </div>
 
-          <div className="flex items-center gap-4">
+        {/* Star and Fork Buttons */}
+        <div className="flex items-center justify-between gap-2 border-t border-t-border/50 py-3 px-6">
+          <div className="flex items-center gap-2">
             <Button
               variant="ghost"
               size="sm"
-              className="flex items-center gap-1.5"
+              className="h-8 px-2 text-xs"
               onClick={onStarClick}
               disabled={isStaring || isStarredLoading}
             >
               <Star
-                className={`h-4 w-4 ${
-                  isStarred
-                    ? "text-yellow-400 fill-yellow-400"
-                    : "text-muted-foreground"
-                }`}
+                className={`h-3 w-3 mr-1 ${isStarred ? "text-yellow-400 fill-yellow-400" : ""}`}
               />
-              <span className="text-xs">{prompt.stars}</span>
+              {prompt.stars}
             </Button>
             <Button
               variant="ghost"
               size="sm"
-              className="flex items-center gap-1.5"
+              className="h-8 px-2 text-xs"
               onClick={onForkClick}
               disabled={isForking || isForkedLoading}
             >
               <GitFork
-                className={`h-4 w-4 ${
-                  isForked ? "text-blue-400" : "text-muted-foreground"
-                }`}
+                className={`h-3 w-3 mr-1 ${isForked ? "text-yellow-400 fill-yellow-400" : ""}`}
               />
-              <span className="text-xs">{prompt.forks}</span>
+              {prompt.forks}
             </Button>
           </div>
+          <a
+            href={`/prompt/${prompt.id}`}
+            className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+          >
+            View Details →
+          </a>
         </div>
       </div>
     </Card>
