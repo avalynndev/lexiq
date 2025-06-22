@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getPromptById } from "@/lib/queries";
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { slug: string } }
-) {
+export async function GET(request: NextRequest) {
+  const { pathname } = new URL(request.url);
+  const slug = pathname.split("/").pop();
+
   try {
-    const prompt = await getPromptById(params.slug);
+    const prompt = await getPromptById(slug as string);
 
     if (!prompt) {
       return NextResponse.json({ error: "Prompt not found" }, { status: 404 });
