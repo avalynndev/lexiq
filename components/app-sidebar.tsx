@@ -202,7 +202,7 @@ export function AppSidebar({ className }: { className?: string }) {
                         groups[groupKey].push(prompt);
                         return groups;
                       },
-                      {} as Record<string, PromptWithAuthor[]>
+                      {} as Record<string, PromptWithAuthor[]>,
                     );
 
                     // Sort groups in desired order
