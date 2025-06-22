@@ -15,7 +15,11 @@ export default function ExplorePage() {
     const loadPrompts = async () => {
       try {
         const data = await fetchAllPrompts();
-        setPrompts(data);
+        // Sort by stars (highest to lowest) and limit to 15 prompts
+        const sortedPrompts = data
+          .sort((a, b) => (b.stars || 0) - (a.stars || 0))
+          .slice(0, 15);
+        setPrompts(sortedPrompts);
       } catch (error) {
         console.error("Error fetching prompts:", error);
       } finally {

@@ -1,15 +1,17 @@
 "use client";
 
 import { Hero } from "@/components/hero";
-import { TrendingSection } from "@/components/trending-section";
-import { PromptGrid } from "@/components/prompt-grid";
+import { FeaturesSection } from "@/components/features-section";
+import { TestimonialsSection } from "@/components/testimonials-section";
+import { CTA } from "@/components/cta";
 
 export default function Home() {
   return (
-    <div>
+    <div className="min-h-screen">
       <Hero />
-      <TrendingSection />
-      <PromptGrid />
+      <FeaturesSection />
+      <TestimonialsSection />
+      <CTA />
     </div>
   );
 }
