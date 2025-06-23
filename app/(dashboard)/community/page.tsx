@@ -128,8 +128,11 @@ export default function ExplorePage() {
     if (activeTab === "trending") {
       tabMatch = prompt.stars > 0;
     } else if (activeTab === "recent") {
-      const isNew = prompt.tags?.includes("New");
-      tabMatch = !!isNew;
+      const sevenDaysAgo = new Date();
+      sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+      tabMatch = new Date(prompt.lastUpdated) >= sevenDaysAgo;
+    } else if (activeTab === "remixes") {
+      tabMatch = prompt.remixes > 0;
     }
 
     const isPublic = prompt.isPublic !== false;
@@ -151,15 +154,6 @@ export default function ExplorePage() {
     switch (selectedSort) {
       case "popular":
         return b.stars - a.stars;
-      case "trending":
-        return b.stars - a.stars;
-      case "recent":
-        return (
-          new Date(b.lastUpdated as any).getTime() -
-          new Date(a.lastUpdated as any).getTime()
-        );
-      case "remixes":
-        return b.remixes - a.remixes;
       default:
         return 0;
     }
@@ -217,6 +211,15 @@ export default function ExplorePage() {
                 >
                   <Clock className="h-4 w-4" />
                   Recent
+                </Button>
+                <Button
+                  variant={activeTab === "remixes" ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setActiveTab("remixes")}
+                  className="flex items-center gap-2"
+                >
+                  <Users className="h-4 w-4" />
+                  Most Remixed
                 </Button>
               </div>
             </div>
@@ -402,39 +405,6 @@ export default function ExplorePage() {
                                 ))}
                               </SelectContent>
                             </Select>
-                          </div>
-
-                          {/* Sort Options */}
-                          <div>
-                            <label className="text-sm font-medium mb-3 block">
-                              Sort By
-                            </label>
-                            <div className="grid grid-cols-2 gap-2">
-                              {sortOptions.map((option) => {
-                                const IconComponent = option.icon;
-                                return (
-                                  <div
-                                    className={buttonVariants({
-                                      variant:
-                                        selectedSort === option.value
-                                          ? "default"
-                                          : "outline",
-                                      className:
-                                        "flex items-center gap-2 justify-start w-full cursor-pointer",
-                                    })}
-                                    onClick={() =>
-                                      setSelectedSort(option.value)
-                                    }
-                                    tabIndex={0}
-                                    role="button"
-                                    key={option.value}
-                                  >
-                                    <IconComponent className="h-4 w-4" />
-                                    {option.label}
-                                  </div>
-                                );
-                              })}
-                            </div>
                           </div>
 
                           {/* Clear Filters */}

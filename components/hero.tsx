@@ -9,13 +9,12 @@ export function Hero() {
     <section className="mt-[60px] lg:mt-[180px] min-h-[530px] relative lg:h-[calc(100vh-300px)]">
       <div className="flex flex-col lg:flex-row lg:items-start lg:gap-12">
         <div className="flex flex-col lg:w-1/2 lg:max-w-[580px]">
-          {/**
-         <Link href="/updates/latest">
+         <Link href="/docs">
             <Button
               variant="outline"
               className="rounded-full border-border flex space-x-2 items-center w-fit"
             >
-              <span className="font-mono text-xs">Latest Updates</span>
+              <span className="font-mono text-xs">Learn Prompting</span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width={12}
@@ -29,7 +28,6 @@ export function Hero() {
               </svg>
             </Button>
           </Link>
-          */}
 
           <h2 className="mt-6 md:mt-10 text-[#878787] leading-tight text-[24px] md:text-[36px] font-medium">
             Discover, remix, and evolve powerful AI prompts — built for{" "}
@@ -38,7 +36,7 @@ export function Hero() {
 
           <div className="mt-8 md:mt-10">
             <div className="flex items-center space-x-4">
-              <Link href="/signup" target="_blank" rel="noopener noreferrer">
+              <Link href="/auth/signup" target="_blank" rel="noopener noreferrer">
                 <Button
                   variant="outline"
                   className="border-transparent h-11 px-6 dark:bg-[#1D1D1D] bg-[#F2F1EF]"
