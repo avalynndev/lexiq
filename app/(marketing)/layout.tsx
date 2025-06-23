@@ -7,9 +7,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="overflow-x-hidden">
+    <div>
       <Navbar />
-      <main className="container mx-auto px-4 overflow-hidden md:overflow-visible">
+      <main className="container mx-auto px-4 md:overflow-visible">
         {children}
       </main>
       <Footer />

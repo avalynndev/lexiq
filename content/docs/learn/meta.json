@@ -1,0 +1,27 @@
+{
+  "title": "Prompt Engineering",
+  "pages": [
+    "01-introduction",
+    "02-understanding-models",
+    "03-basic-structures",
+    "04-clarity-specificity",
+    "05-using-context",
+    "06-role-instructions",
+    "07-step-by-step",
+    "08-handling-ambiguity",
+    "09-creativity-vs-precision",
+    "10-using-examples",
+    "11-advanced-techniques",
+    "12-troubleshooting",
+    "13-common-pitfalls",
+    "14-evaluating-quality",
+    "15-real-world-examples",
+    "16-prompt-templates",
+    "17-ai-tasks",
+    "18-safety-ethics",
+    "19-multimodal",
+    "20-data-extraction",
+    "21-conversation",
+    "22-personalization"
+  ]
+}

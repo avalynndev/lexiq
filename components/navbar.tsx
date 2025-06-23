@@ -143,7 +143,7 @@ export default function Navbar() {
             </div>
 
             {/* Theme Toggle (Visible only on md+) */}
-            <div className="hidden md:flex items-center justify-center">
+            <div className="hidden md:flex items-center justify-center pr-2">
               <ThemeToggle />
             </div>
 

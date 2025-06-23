@@ -1,0 +1,44 @@
+---
+title: Data Extraction
+description: Structuring prompts for extracting structured data.
+---
+
+# Data Extraction
+
+You can use prompts to extract structured data from text. Data extraction is useful for tasks like pulling out names, dates, email addresses, or other key information from unstructured content. Well-structured prompts help the AI understand exactly what data you need and how it should be formatted.
+
+## Why Use Data Extraction Prompts?
+
+- **Automates tedious tasks:** Quickly extract information without manual review.
+- **Improves accuracy:** Clear instructions reduce errors and omissions.
+- **Enables downstream processing:** Structured outputs can be used in databases, spreadsheets, or other tools.
+
+## Example
+
+```
+Extract all email addresses from the following text and list them:
+{text}
+```
+
+**Expanded Example:**
+
+```
+Extract all dates, email addresses, and phone numbers from the following customer feedback. Present the results in a table with columns for 'Type' and 'Value.'
+{text}
+```
+
+<Callout type="tip">
+  Be specific about the format you want for extracted data. If you need a table,
+  list, or JSON output, mention it in your prompt.
+</Callout>
+
+## Best Practices for Data Extraction
+
+- Specify the data types you want to extract (e.g., names, dates, locations).
+- Request a specific output format (e.g., table, list, JSON).
+- Test your prompt with different types of input to ensure reliability.
+
+## Related Topics
+
+- [AI Tasks](./17-ai-tasks)
+- [Using Examples](./10-using-examples)

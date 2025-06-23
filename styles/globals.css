@@ -1,6 +1,9 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @source "../node_modules/@daveyplate/better-auth-ui";
+@plugin 'tailwind-scrollbar' {
+  nocompatible: true;
+}
 
 @custom-variant dark (&:is(.dark *));
 
@@ -80,6 +83,8 @@
   --color-sidebar-primary: var(--sidebar-primary);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar: var(--sidebar);
+  --header-height: calc(var(--spacing) * 12 + 1px);
+  --top-spacing: calc(var(--spacing) * 4);
 }
 
 /*
@@ -351,4 +356,8 @@ img::selection {
   body {
     @apply bg-background text-foreground;
   }
+}
+
+@utility no-scrollbar {
+  @apply [scrollbar-width:none] [&::-webkit-scrollbar]:hidden;
 }

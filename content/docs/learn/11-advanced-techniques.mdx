@@ -1,0 +1,40 @@
+---
+title: Advanced Techniques
+description: Learn advanced prompt engineering techniques for complex tasks.
+---
+
+# Advanced Techniques: Chaining and Memory
+
+For complex tasks, you can chain prompts or simulate memory to get better results. Advanced techniques help you tackle multi-step or context-heavy problems, and are especially useful for building sophisticated applications or workflows.
+
+## Chaining Prompts
+
+Break a big task into smaller steps and use the output of one prompt as the input for the next. This approach allows you to build up complex results in a controlled, modular way.
+
+**Example:**
+
+1. Prompt 1: "Summarize the following article."
+2. Prompt 2: "Based on the summary, list three key challenges discussed."
+3. Prompt 3: "For each challenge, suggest a possible solution."
+
+## Simulating Memory
+
+Remind the AI of previous context within your prompt. Since most models don't have persistent memory, you need to include relevant information from earlier steps in your input.
+
+**Example:**
+
+```
+Earlier, you recommended three books: 'Dune,' 'The Hound of the Baskervilles,' and 'The Martian.' For each book, explain why it matches the user's interests in science fiction and mystery.
+```
+
+<Callout type="tip">
+  Advanced techniques help you tackle multi-step or context-heavy problems. Use
+  chaining for workflows and simulated memory for continuity across prompts.
+</Callout>
+
+## Best Practices for Advanced Techniques
+
+- Plan your workflow: Outline the steps before writing prompts.
+- Pass relevant context between steps to maintain continuity.
+- Test each step individually before combining them.
+- Use advanced techniques for tasks like multi-turn conversations, data extraction, or decision-making processes.
