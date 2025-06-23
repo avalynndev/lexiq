@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
     console.error("Error fetching prompt:", error);
     return NextResponse.json(
       { error: "Failed to fetch prompt" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -46,7 +46,7 @@ export async function DELETE(request: NextRequest) {
     console.error("Error deleting prompt:", error);
     return NextResponse.json(
       { error: "Failed to delete prompt" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -80,7 +80,7 @@ export async function PUT(request: NextRequest) {
     if (Object.keys(updateData).length === 0) {
       return NextResponse.json(
         { error: "No valid fields to update" },
-        { status: 400 }
+        { status: 400 },
       );
     }
     updateData.lastUpdated = new Date();
@@ -98,7 +98,7 @@ export async function PUT(request: NextRequest) {
     console.error("Error updating prompt:", error);
     return NextResponse.json(
       { error: "Failed to update prompt" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

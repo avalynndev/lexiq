@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
   if (!promptId) {
     return NextResponse.json(
       { error: "Prompt ID is required" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -25,7 +25,7 @@ export async function GET(request: NextRequest) {
     console.error("Error checking remixed status:", error);
     return NextResponse.json(
       { error: "Failed to check remixed status" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

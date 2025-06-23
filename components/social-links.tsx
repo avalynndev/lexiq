@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Github, Youtube, } from "lucide-react";
+import { Github, Youtube } from "lucide-react";
 
 export function SocialLinks() {
   const socialLinks = [

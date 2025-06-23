@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
   if (!username) {
     return NextResponse.json(
       { error: "Username is required" },
-      { status: 400 }
+      { status: 400 },
     );
   }
   try {
@@ -42,7 +42,7 @@ export async function GET(request: NextRequest) {
     console.error(`Error fetching user ${username}:`, error);
     return NextResponse.json(
       { error: "Failed to fetch user profile" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

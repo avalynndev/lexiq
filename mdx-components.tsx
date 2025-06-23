@@ -24,7 +24,7 @@ export const mdxComponents = {
     <h1
       className={cn(
         "font-heading mt-2 scroll-m-28 text-3xl font-bold tracking-tight",
-        className
+        className,
       )}
       {...props}
     />
@@ -40,7 +40,7 @@ export const mdxComponents = {
           .toLowerCase()}
         className={cn(
           "font-heading mt-12 scroll-m-28 text-2xl font-medium tracking-tight first:mt-0 lg:mt-20 [&+p]:!mt-4 *:[code]:text-2xl",
-          className
+          className,
         )}
         {...props}
       />
@@ -50,7 +50,7 @@ export const mdxComponents = {
     <h3
       className={cn(
         "font-heading mt-8 scroll-m-28 text-xl font-semibold tracking-tight *:[code]:text-xl",
-        className
+        className,
       )}
       {...props}
     />
@@ -59,7 +59,7 @@ export const mdxComponents = {
     <h4
       className={cn(
         "font-heading mt-8 scroll-m-28 text-lg font-medium tracking-tight",
-        className
+        className,
       )}
       {...props}
     />
@@ -68,7 +68,7 @@ export const mdxComponents = {
     <h5
       className={cn(
         "mt-8 scroll-m-28 text-lg font-medium tracking-tight",
-        className
+        className,
       )}
       {...props}
     />
@@ -77,7 +77,7 @@ export const mdxComponents = {
     <h6
       className={cn(
         "mt-8 scroll-m-28 text-base font-medium tracking-tight",
-        className
+        className,
       )}
       {...props}
     />
@@ -124,7 +124,7 @@ export const mdxComponents = {
       <table
         className={cn(
           "relative w-full overflow-hidden border-none text-sm",
-          className
+          className,
         )}
         {...props}
       />
@@ -140,7 +140,7 @@ export const mdxComponents = {
     <th
       className={cn(
         "px-4 py-2 text-left font-bold [&[align=center]]:text-center [&[align=right]]:text-right",
-        className
+        className,
       )}
       {...props}
     />
@@ -149,7 +149,7 @@ export const mdxComponents = {
     <td
       className={cn(
         "px-4 py-2 text-left [&[align=center]]:text-center [&[align=right]]:text-right",
-        className
+        className,
       )}
       {...props}
     />
@@ -159,7 +159,7 @@ export const mdxComponents = {
       <pre
         className={cn(
           "no-scrollbar min-w-0 overflow-x-auto px-4 py-3.5 outline-none has-[[data-highlighted-line]]:px-0 has-[[data-line-numbers]]:px-0 has-[[data-slot=tabs]]:p-0",
-          className
+          className,
         )}
         {...props}
       >
@@ -184,7 +184,7 @@ export const mdxComponents = {
       <figcaption
         className={cn(
           "text-code-foreground [&_svg]:text-code-foreground flex items-center gap-2 [&_svg]:size-4 [&_svg]:opacity-70",
-          className
+          className,
         )}
         {...props}
       >
@@ -216,7 +216,7 @@ export const mdxComponents = {
         <code
           className={cn(
             "bg-muted relative rounded-md px-[0.3rem] py-[0.2rem] font-mono text-[0.8rem] outline-none",
-            className
+            className,
           )}
           {...props}
         />
@@ -248,7 +248,7 @@ export const mdxComponents = {
     <h3
       className={cn(
         "font-heading mt-8 scroll-m-32 text-xl font-medium tracking-tight",
-        className
+        className,
       )}
       {...props}
     />
@@ -288,7 +288,7 @@ export const mdxComponents = {
     <TabsList
       className={cn(
         "justify-start gap-4 rounded-none bg-transparent px-2 md:px-0",
-        className
+        className,
       )}
       {...props}
     />
@@ -300,7 +300,7 @@ export const mdxComponents = {
     <TabsTrigger
       className={cn(
         "text-muted-foreground data-[state=active]:text-foreground px-0 text-base data-[state=active]:shadow-none dark:data-[state=active]:border-transparent dark:data-[state=active]:bg-transparent",
-        className
+        className,
       )}
       {...props}
     />
@@ -312,7 +312,7 @@ export const mdxComponents = {
     <TabsContent
       className={cn(
         "relative [&_h3.font-heading]:text-base [&_h3.font-heading]:font-medium *:[figure]:first:mt-0 [&>.steps]:mt-6",
-        className
+        className,
       )}
       {...props}
     />
@@ -341,7 +341,7 @@ export const mdxComponents = {
     <Link
       className={cn(
         "bg-surface text-surface-foreground hover:bg-surface/80 flex w-full flex-col items-center rounded-xl p-6 transition-colors sm:p-10",
-        className
+        className,
       )}
       {...props}
     />

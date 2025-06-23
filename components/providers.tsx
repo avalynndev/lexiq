@@ -24,6 +24,7 @@ export function Providers({ children }: { children: ReactNode }) {
       nameRequired={false}
       Link={Link}
       deleteUser
+      multiSession
       username
     >
       {children}

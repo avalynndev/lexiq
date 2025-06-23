@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { UserProfileClient } from "./user-profile-client";
 import { useParams } from "next/navigation";
 

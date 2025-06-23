@@ -31,38 +31,43 @@ import { usePromptRemixes } from "@/hooks/use-prompt-remixes";
 import type { FC } from "react";
 import Link from "next/link";
 
-// New component for recent prompts activity
 interface RecentPromptsActivityProps {
   prompt: PromptWithAuthor;
 }
 
 const RecentPromptsActivity: FC<RecentPromptsActivityProps> = ({ prompt }) => {
   const { stars: liveStars, isLoading: isStarsLoading } = usePromptStars(
-    prompt.id
+    prompt.id,
   );
   const { remixes: liveRemixes, isLoading: isRemixesLoading } =
     usePromptRemixes(prompt.id);
   return (
-    <div className="flex items-center justify-between p-3 rounded-lg border">
-      <div className="flex-1">
-        <h4 className="font-medium">{prompt.title}</h4>
-        <p className="text-sm text-muted-foreground">
-          {formatDistanceToNow(new Date(prompt.createdOn), { addSuffix: true })}
-        </p>
+    <Link href={`/prompt/${prompt.id}`}>
+      <div className="flex items-center justify-between p-3 rounded-lg border mb-4">
+        <div className="flex-1">
+          <h4 className="font-medium">{prompt.title}</h4>
+          <p className="text-sm text-muted-foreground">
+            {formatDistanceToNow(new Date(prompt.createdOn), {
+              addSuffix: true,
+            })}
+          </p>
+        </div>
+        <div className="flex items-center gap-4 text-sm text-muted-foreground">
+          <span className="flex items-center gap-1">
+            <Star className="h-4 w-4" />
+            {isStarsLoading || liveStars === undefined
+              ? prompt.stars
+              : liveStars}
+          </span>
+          <span className="flex items-center gap-1">
+            <GitFork className="h-4 w-4" />
+            {isRemixesLoading || liveRemixes === undefined
+              ? prompt.remixes
+              : liveRemixes}
+          </span>
+        </div>
       </div>
-      <div className="flex items-center gap-4 text-sm text-muted-foreground">
-        <span className="flex items-center gap-1">
-          <Star className="h-4 w-4" />
-          {isStarsLoading || liveStars === undefined ? prompt.stars : liveStars}
-        </span>
-        <span className="flex items-center gap-1">
-          <GitFork className="h-4 w-4" />
-          {isRemixesLoading || liveRemixes === undefined
-            ? prompt.remixes
-            : liveRemixes}
-        </span>
-      </div>
-    </div>
+    </Link>
   );
 };
 
@@ -95,12 +100,12 @@ export default function DashboardPage() {
   const totalStars = userPrompts.reduce((sum, prompt) => sum + prompt.stars, 0);
   const totalForks = userPrompts.reduce(
     (sum, prompt) => sum + prompt.remixes,
-    0
+    0,
   );
   const recentPrompts = userPrompts
     .sort(
       (a, b) =>
-        new Date(b.createdOn).getTime() - new Date(a.createdOn).getTime()
+        new Date(b.createdOn).getTime() - new Date(a.createdOn).getTime(),
     )
     .slice(0, 5);
 
@@ -199,7 +204,7 @@ export default function DashboardPage() {
                 </CardHeader>
                 <CardContent>
                   {recentPrompts.length > 0 ? (
-                    <div className="space-y-4">
+                    <div className="space-y-6">
                       {recentPrompts.map((prompt) => (
                         <RecentPromptsActivity
                           prompt={prompt}

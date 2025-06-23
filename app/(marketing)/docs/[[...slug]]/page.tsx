@@ -49,7 +49,7 @@ export async function generateMetadata(props: {
       images: [
         {
           url: `/og?title=${encodeURIComponent(
-            doc.title
+            doc.title,
           )}&description=${encodeURIComponent(doc.description)}`,
         },
       ],
@@ -61,7 +61,7 @@ export async function generateMetadata(props: {
       images: [
         {
           url: `/og?title=${encodeURIComponent(
-            doc.title
+            doc.title,
           )}&description=${encodeURIComponent(doc.description)}`,
         },
       ],
@@ -195,7 +195,7 @@ export default async function Page(props: {
             <DocsTableOfContents toc={doc.toc} />
             <div className="h-12" />
           </div>
-        ) : null}  
+        ) : null}
       </div>
     </div>
   );

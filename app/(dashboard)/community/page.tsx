@@ -121,7 +121,7 @@ export default function ExplorePage() {
       prompt.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
       (prompt.tags &&
         prompt.tags.some((tag) =>
-          tag.toLowerCase().includes(searchQuery.toLowerCase())
+          tag.toLowerCase().includes(searchQuery.toLowerCase()),
         ));
 
     let tabMatch = true;

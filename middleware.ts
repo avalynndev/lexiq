@@ -13,7 +13,7 @@ const PROTECTED_PATHS = [
 
 export async function middleware(request: NextRequest) {
   const isProtectedPath = PROTECTED_PATHS.some((path) =>
-    request.nextUrl.pathname.startsWith(path)
+    request.nextUrl.pathname.startsWith(path),
   );
 
   if (isProtectedPath) {

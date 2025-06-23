@@ -301,7 +301,7 @@ export function CreatePromptModal({ children }: CreatePromptModalProps) {
                             return {
                               ...prev,
                               models: prev.models.filter(
-                                (m) => m !== model.name
+                                (m) => m !== model.name,
                               ),
                             };
                           } else {

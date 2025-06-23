@@ -3,12 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
+    "dev": "next dev --turbopack",
+    "build": "next build --turbopack",
     "start": "next start",
     "lint": "next lint",
-    "db:seed": "bun run scripts/seed.ts",
-    "postinstall": "fumadocs-mdx"
+    "db:seed": "bun run scripts/seed.ts"
   },
   "dependencies": {
     "@daveyplate/better-auth-ui": "^2.0.8",
@@ -61,14 +60,14 @@
     "embla-carousel-react": "^8.6.0",
     "eslint": "9.29.0",
     "eslint-config-next": "15.3.4",
-    "framer-motion": "^12.18.1",
+    "framer-motion": "^12.19.1",
     "fumadocs-core": "^15.5.4",
     "fumadocs-mdx": "^11.6.9",
     "fumadocs-ui": "^15.5.4",
     "geist": "^1.4.2",
     "input-otp": "^1.4.2",
     "lucide-react": "^0.522.0",
-    "motion": "^12.18.1",
+    "motion": "^12.19.1",
     "next": "15.3.4",
     "next-themes": "^0.4.6",
     "postcss": "8.5.6",
@@ -77,7 +76,8 @@
     "react-dom": "19.1.0",
     "react-hook-form": "^7.58.1",
     "react-resizable-panels": "^3.0.3",
-    "recharts": "^2.15.4",
+    "recharts": "^3.0.0",
+    "resend": "^4.6.0",
     "sonner": "^2.0.5",
     "swr": "^2.3.3",
     "tailwind-merge": "^3.3.1",
@@ -88,7 +88,7 @@
     "zod": "^3.25.67"
   },
   "devDependencies": {
-    "drizzle-kit": "^0.31.1",
+    "drizzle-kit": "^0.31.2",
     "tw-animate-css": "^1.3.4"
   }
 }

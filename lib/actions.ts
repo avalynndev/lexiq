@@ -17,7 +17,7 @@ import { eq, and, desc } from "drizzle-orm";
 export type { PromptWithAuthor };
 
 export async function fetchAllPrompts(
-  userId?: string
+  userId?: string,
 ): Promise<PromptWithAuthor[]> {
   try {
     if (!userId) {
@@ -49,7 +49,7 @@ export async function fetchAllPrompts(
     const allPrompts = [
       ...publicPrompts,
       ...mappedUserPrivatePrompts.filter(
-        (p) => !publicPrompts.some((pub) => pub.id === p.id)
+        (p) => !publicPrompts.some((pub) => pub.id === p.id),
       ),
     ];
     return allPrompts;
@@ -69,7 +69,7 @@ export async function fetchTrendingPrompts(): Promise<PromptWithAuthor[]> {
 }
 
 export async function fetchUserPrompts(
-  userId: string
+  userId: string,
 ): Promise<PromptWithAuthor[]> {
   try {
     return await getUserPrompts(userId);
@@ -80,7 +80,7 @@ export async function fetchUserPrompts(
 }
 
 export async function fetchStarredPrompts(
-  userId: string
+  userId: string,
 ): Promise<PromptWithAuthor[]> {
   try {
     return await getStarredPrompts(userId);
@@ -91,7 +91,7 @@ export async function fetchStarredPrompts(
 }
 
 export async function fetchRemixedPrompts(
-  userId: string
+  userId: string,
 ): Promise<PromptWithAuthor[]> {
   try {
     return await getRemixedPrompts(userId);
@@ -103,7 +103,7 @@ export async function fetchRemixedPrompts(
 
 export async function checkUserStarredPrompt(
   userId: string,
-  promptId: string
+  promptId: string,
 ): Promise<boolean> {
   try {
     return await hasUserStarredPrompt(userId, promptId);
@@ -115,7 +115,7 @@ export async function checkUserStarredPrompt(
 
 export async function checkUserRemixedPrompt(
   userId: string,
-  promptId: string
+  promptId: string,
 ): Promise<boolean> {
   try {
     return await hasUserRemixedPrompt(userId, promptId);
@@ -137,7 +137,7 @@ export async function getUserProfile(username: string) {
   const prompts = await db.query.prompt.findMany({
     where: and(
       eq(promptSchema.authorId, user.id),
-      eq(promptSchema.isPublic, true)
+      eq(promptSchema.isPublic, true),
     ),
     orderBy: [desc(promptSchema.createdOn)],
     with: {

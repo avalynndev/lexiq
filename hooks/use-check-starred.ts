@@ -11,7 +11,7 @@ export function useCheckStarred(promptId?: string, session?: { user?: any }) {
       shouldFetch
         ? `/api/check-starred?promptId=${encodeURIComponent(promptId!)}`
         : null,
-    [shouldFetch, promptId]
+    [shouldFetch, promptId],
   );
 
   const { data, error, isLoading } = useSWR<{ isStarred: boolean }>(
@@ -21,7 +21,7 @@ export function useCheckStarred(promptId?: string, session?: { user?: any }) {
       refreshInterval: 3 * 60 * 1000,
       revalidateOnFocus: false,
       dedupingInterval: 60 * 1000,
-    }
+    },
   );
 
   return {

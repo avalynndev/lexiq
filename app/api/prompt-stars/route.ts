@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
   if (!promptId) {
     return NextResponse.json(
       { error: "Prompt ID is required" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -25,7 +25,7 @@ export async function GET(request: NextRequest) {
     console.error("Error fetching prompt stars:", error);
     return NextResponse.json(
       { error: "Failed to fetch prompt stars" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

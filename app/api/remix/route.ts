@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
   if (!promptId) {
     return NextResponse.json(
       { error: "Prompt ID is required" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
     const existingRemix = await db.query.remixedPrompts.findFirst({
       where: and(
         eq(remixedPrompts.userId, userId),
-        eq(remixedPrompts.promptId, promptId)
+        eq(remixedPrompts.promptId, promptId),
       ),
     });
 
@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
       if (!originalPrompt) {
         return NextResponse.json(
           { error: "Prompt not found" },
-          { status: 404 }
+          { status: 404 },
         );
       }
 
@@ -102,7 +102,7 @@ export async function POST(request: NextRequest) {
     console.error("Error remixing prompt:", error);
     return NextResponse.json(
       { error: "Failed to remix prompt" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

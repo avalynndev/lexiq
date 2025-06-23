@@ -20,7 +20,7 @@ export function useUpdatePromptMutation() {
 
   const handleUpdatePrompt = async (
     promptId: string,
-    updateData: UpdatePromptData
+    updateData: UpdatePromptData,
   ) => {
     setIsUpdating(true);
     setError(null);

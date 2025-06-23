@@ -8,7 +8,7 @@ import { fetchTrendingPrompts, type PromptWithAuthor } from "@/lib/actions";
 
 export function TrendingSection() {
   const [trendingPrompts, setTrendingPrompts] = useState<PromptWithAuthor[]>(
-    []
+    [],
   );
   const [loading, setLoading] = useState(true);
 

@@ -9,7 +9,7 @@ export function usePrompt(promptId?: string) {
 
   const url = useMemo(
     () => (shouldFetch ? `/api/prompts/${promptId}` : null),
-    [shouldFetch, promptId]
+    [shouldFetch, promptId],
   );
 
   const { data, error, isLoading } = useSWR<PromptWithAuthor>(url, fetcher);
