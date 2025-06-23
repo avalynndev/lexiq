@@ -15,8 +15,10 @@ import {
 import { Star, GitFork } from "lucide-react";
 import { useCheckStarred } from "@/hooks/use-check-starred";
 import { useStarMutation } from "@/hooks/use-star-mutation";
-import { useCheckForked } from "@/hooks/use-check-forked";
-import { useForkMutation } from "@/hooks/use-fork-mutation";
+import { usePromptStars } from "@/hooks/use-prompt-stars";
+import { useCheckRemixed } from "@/hooks/use-check-remixed";
+import { useRemixMutation } from "@/hooks/use-remix-mutation";
+import { usePromptRemixes } from "@/hooks/use-prompt-remixes";
 
 interface PromptCardProps {
   prompt: {
@@ -30,7 +32,7 @@ interface PromptCardProps {
     model: string;
     category: string;
     stars: number;
-    forks: number;
+    remixes: number;
     lastUpdated: Date | string;
     createdOn: Date | string;
     tags?: string[];
@@ -46,8 +48,13 @@ export function PromptCard({ prompt }: PromptCardProps) {
   // SWR hooks for live data and mutations
   const { isStarred, isLoading: isStarredLoading } = useCheckStarred(prompt.id);
   const { handleStar, isStaring } = useStarMutation(prompt.id);
-  const { isForked, isLoading: isForkedLoading } = useCheckForked(prompt.id);
-  const { handleFork, isForking } = useForkMutation(prompt.id);
+  const { stars: liveStars, isLoading: isStarsLoading } = usePromptStars(
+    prompt.id
+  );
+  const { isRemixed, isLoading: isRemixedLoading } = useCheckRemixed(prompt.id);
+  const { handleRemix, isRemixing } = useRemixMutation(prompt.id);
+  const { remixes: liveRemixes, isLoading: isRemixesLoading } =
+    usePromptRemixes(prompt.id);
 
   const onStarClick = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -63,18 +70,18 @@ export function PromptCard({ prompt }: PromptCardProps) {
     await handleStar();
   };
 
-  const onForkClick = async (e: React.MouseEvent) => {
+  const onRemixClick = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     if (!session) {
       toast({
         title: "Please sign in",
-        description: "You need to be signed in to fork a prompt.",
+        description: "You need to be signed in to remix a prompt.",
         variant: "destructive",
       });
       return;
     }
-    await handleFork();
+    await handleRemix();
   };
 
   // Check if the prompt is new (created within the last 24 hours)
@@ -194,24 +201,28 @@ export function PromptCard({ prompt }: PromptCardProps) {
               size="sm"
               className="h-8 px-2 text-xs"
               onClick={onStarClick}
-              disabled={isStaring || isStarredLoading}
+              disabled={!session || isStaring || isStarredLoading}
             >
               <Star
                 className={`h-3 w-3 mr-1 ${isStarred ? "text-yellow-400 fill-yellow-400" : ""}`}
               />
-              {prompt.stars}
+              {isStarsLoading || liveStars === undefined
+                ? prompt.stars
+                : liveStars}
             </Button>
             <Button
               variant="ghost"
               size="sm"
               className="h-8 px-2 text-xs"
-              onClick={onForkClick}
-              disabled={isForking || isForkedLoading}
+              onClick={onRemixClick}
+              disabled={!session || isRemixing || isRemixedLoading}
             >
               <GitFork
-                className={`h-3 w-3 mr-1 ${isForked ? "text-yellow-400 fill-yellow-400" : ""}`}
+                className={`h-3 w-3 mr-1 ${isRemixed ? "text-yellow-400 fill-yellow-400" : ""}`}
               />
-              {prompt.forks}
+              {isRemixesLoading || liveRemixes === undefined
+                ? prompt.remixes
+                : liveRemixes}
             </Button>
           </div>
           <a

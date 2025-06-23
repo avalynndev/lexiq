@@ -35,9 +35,9 @@ const features = [
   },
   {
     icon: GitFork,
-    title: "Fork & Remix",
+    title: "Remix",
     description:
-      "Build upon existing prompts. Fork any prompt and customize it for your specific needs.",
+      "Build upon existing prompts. Remix any prompt and customize it for your specific needs.",
     gradient: "from-green-500 to-emerald-500",
   },
   {

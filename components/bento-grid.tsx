@@ -57,12 +57,12 @@ const bentoItems = [
     className: "col-span-1 row-span-1",
   },
   {
-    title: "Fork & Remix",
+    title: "Remix",
     description: "Build upon existing prompts",
     icon: GitFork,
     gradient: "from-orange-500 to-red-500",
     href: "/explore",
-    stats: "15k+ forks",
+    stats: "15k+ remixes",
     className: "col-span-1 row-span-1",
   },
   {
@@ -154,7 +154,7 @@ export function BentoGrid() {
           </div>
           <div>
             <div className="text-3xl font-bold text-foreground">25K+</div>
-            <div className="text-muted-foreground">Forks Made</div>
+            <div className="text-muted-foreground">Remixes Made</div>
           </div>
         </div>
       </div>

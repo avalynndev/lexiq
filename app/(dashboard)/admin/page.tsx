@@ -37,6 +37,7 @@ import {
 import { Spotlight } from "@/components/ui/spotlight";
 import { fetchAllPrompts, type PromptWithAuthor } from "@/lib/actions";
 import { useSession } from "@/lib/auth-client";
+import { usePromptRemixes } from "@/hooks/use-prompt-remixes";
 
 const models = ["All Models", "GPT-4", "Claude", "Gemini", "Llama"];
 const categories = [
@@ -68,7 +69,7 @@ const sortOptions = [
   { label: "Most Popular", value: "popular", icon: Star },
   { label: "Trending", value: "trending", icon: TrendingUp },
   { label: "Recently Updated", value: "recent", icon: Clock },
-  { label: "Most Forked", value: "forks", icon: Users },
+  { label: "Most Remix", value: "remixes", icon: Users },
 ];
 
 export default function ExplorePage() {
@@ -88,7 +89,7 @@ export default function ExplorePage() {
   useEffect(() => {
     const loadPrompts = async () => {
       try {
-        const data = await fetchAllPrompts();
+        const data = await fetchAllPrompts(session?.user?.id);
         setPrompts(data);
       } catch (error) {
         console.error("Error fetching prompts:", error);
@@ -97,7 +98,7 @@ export default function ExplorePage() {
       }
     };
     loadPrompts();
-  }, []);
+  }, [session]);
 
   const filteredPrompts = prompts.filter((prompt) => {
     const modelMatch =
@@ -158,8 +159,8 @@ export default function ExplorePage() {
           new Date(b.lastUpdated as any).getTime() -
           new Date(a.lastUpdated as any).getTime()
         );
-      case "forks":
-        return b.forks - a.forks;
+      case "remixes":
+        return b.remixes - a.remixes;
       default:
         return 0;
     }

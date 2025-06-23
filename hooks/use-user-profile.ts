@@ -9,7 +9,7 @@ type UserWithStats = {
   username: string | null;
   image?: string | null;
   stars: number;
-  forks: number;
+  remixes: number;
 };
 
 interface UserProfileData {

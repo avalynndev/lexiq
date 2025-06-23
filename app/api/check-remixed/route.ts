@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
-import { hasUserForkedPrompt } from "@/lib/queries";
+import { hasUserRemixedPrompt } from "@/lib/queries";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -14,18 +14,18 @@ export async function GET(request: NextRequest) {
   if (!promptId) {
     return NextResponse.json(
       { error: "Prompt ID is required" },
-      { status: 400 },
+      { status: 400 }
     );
   }
 
   try {
-    const isForked = await hasUserForkedPrompt(session.user.id, promptId);
-    return NextResponse.json({ isForked });
+    const isRemixed = await hasUserRemixedPrompt(session.user.id, promptId);
+    return NextResponse.json({ isRemixed });
   } catch (error) {
-    console.error("Error checking forked status:", error);
+    console.error("Error checking remixed status:", error);
     return NextResponse.json(
-      { error: "Failed to check forked status" },
-      { status: 500 },
+      { error: "Failed to check remixed status" },
+      { status: 500 }
     );
   }
 }

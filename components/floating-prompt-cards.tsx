@@ -22,7 +22,7 @@ const sampleCards = [
     model: "GPT-4",
     stars: 1247,
     views: 3421,
-    forks: 89,
+    remixes: 89,
     tags: ["creative", "storytelling", "characters"],
     gradient: "from-purple-500 to-pink-500",
   },
@@ -35,7 +35,7 @@ const sampleCards = [
     model: "Claude",
     stars: 892,
     views: 2103,
-    forks: 156,
+    remixes: 156,
     tags: ["review", "optimization", "debugging"],
     gradient: "from-blue-500 to-cyan-500",
   },
@@ -48,7 +48,7 @@ const sampleCards = [
     model: "Gemini",
     stars: 567,
     views: 1876,
-    forks: 43,
+    remixes: 43,
     tags: ["data-science", "visualization", "insights"],
     gradient: "from-green-500 to-emerald-500",
   },
@@ -196,7 +196,7 @@ export function FloatingPromptCards() {
                     </div>
                     <div className="flex items-center gap-1">
                       <GitFork className="h-3 w-3" />
-                      <span>{card.forks}</span>
+                      <span>{card.remixes}</span>
                     </div>
                   </div>
                 </div>

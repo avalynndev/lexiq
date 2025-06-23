@@ -19,7 +19,7 @@ import { Globe } from "./ui/globe";
 
 const benefits = [
   "Access to 100K+ curated prompts",
-  "Fork and customize any prompt",
+  "Remix and customize any prompt",
   "Join 50K+ creators worldwide",
   "Multi-model AI support",
   "Beautiful, intuitive interface",

@@ -6,7 +6,7 @@ import { GeistSans } from "geist/font/sans";
 import { Providers } from "@/components/providers";
 
 export const metadata: Metadata = {
-  title: "Lexiq - Tweak. Fork. Remix your AI prompts",
+  title: "Lexiq - Tweak. Remix. Edit your AI prompts",
   description:
     "Discover the best prompts for every AI model, remix them, and evolve your own collection.",
 };

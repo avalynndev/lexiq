@@ -71,7 +71,7 @@ export function PromptGrid() {
       case "popular":
         return b.stars - a.stars;
       case "trending":
-        return b.stars + b.forks - (a.stars + a.forks);
+        return b.stars + b.remixes - (a.stars + a.remixes);
       case "recent":
         return (
           new Date(b.lastUpdated).getTime() - new Date(a.lastUpdated).getTime()
@@ -102,7 +102,7 @@ export function PromptGrid() {
             Explore Popular Prompts
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Discover, fork, and remix the best AI prompts created by our
+            Discover, remix, and remix the best AI prompts created by our
             community
           </p>
         </div>

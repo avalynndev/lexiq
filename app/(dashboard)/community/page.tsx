@@ -39,6 +39,8 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Spinner } from "@/components/ui/spinner";
 import { useSession } from "@/lib/auth-client";
+import { usePromptStars } from "@/hooks/use-prompt-stars";
+import { usePromptRemixes } from "@/hooks/use-prompt-remixes";
 
 const models = ["All Models", "GPT-4", "Claude", "Gemini", "Llama"];
 const categories = [
@@ -70,7 +72,7 @@ const sortOptions = [
   { label: "Most Popular", value: "popular", icon: Star },
   { label: "Trending", value: "trending", icon: TrendingUp },
   { label: "Recently Updated", value: "recent", icon: Clock },
-  { label: "Most Forked", value: "forks", icon: Users },
+  { label: "Most Remixed", value: "remixes", icon: Users },
 ];
 
 export default function ExplorePage() {
@@ -90,7 +92,7 @@ export default function ExplorePage() {
   useEffect(() => {
     const loadPrompts = async () => {
       try {
-        const data = await fetchAllPrompts();
+        const data = await fetchAllPrompts(session?.user?.id);
         setPrompts(data);
       } catch (error) {
         console.error("Error fetching prompts:", error);
@@ -99,7 +101,7 @@ export default function ExplorePage() {
       }
     };
     loadPrompts();
-  }, []);
+  }, [session]);
 
   const filteredPrompts = prompts.filter((prompt) => {
     const modelMatch =
@@ -152,14 +154,14 @@ export default function ExplorePage() {
       case "popular":
         return b.stars - a.stars;
       case "trending":
-        return b.stars - a.stars; // Sort by stars for trending
+        return b.stars - a.stars;
       case "recent":
         return (
           new Date(b.lastUpdated as any).getTime() -
           new Date(a.lastUpdated as any).getTime()
         );
-      case "forks":
-        return b.forks - a.forks;
+      case "remixes":
+        return b.remixes - a.remixes;
       default:
         return 0;
     }
@@ -501,20 +503,30 @@ export default function ExplorePage() {
                             : "space-y-4"
                         }
                       >
-                        {sortedPrompts.map((prompt) => (
-                          <PromptCard
-                            key={prompt.id}
-                            prompt={{
-                              ...prompt,
-                              author: {
-                                username: prompt.author.username || "Anonymous",
-                                avatar: prompt.author.image || undefined,
-                              },
-                              tags: prompt.tags || [],
-                              models: prompt.models || [prompt.model],
-                            }}
-                          />
-                        ))}
+                        {sortedPrompts.map((prompt) => {
+                          const {
+                            stars: liveStars,
+                            isLoading: isStarsLoading,
+                          } = usePromptStars(prompt.id);
+                          const { remixes: liveRemixes } = usePromptRemixes(
+                            prompt.id
+                          );
+                          return (
+                            <PromptCard
+                              key={prompt.id}
+                              prompt={{
+                                ...prompt,
+                                author: {
+                                  username:
+                                    prompt.author.username || "Anonymous",
+                                  avatar: prompt.author.image || undefined,
+                                },
+                                tags: prompt.tags || [],
+                                models: prompt.models || [prompt.model],
+                              }}
+                            />
+                          );
+                        })}
                       </div>
                     </>
                   )}

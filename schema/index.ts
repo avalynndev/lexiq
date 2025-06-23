@@ -28,7 +28,7 @@ export const user = pgTable("user", {
 export const userRelations = relations(user, ({ many }) => ({
   prompts: many(prompt),
   starredPrompts: many(starredPrompts),
-  forkedPrompts: many(forkedPrompts),
+  remixedPrompts: many(remixedPrompts),
 }));
 
 export const prompt = pgTable("prompt", {
@@ -41,7 +41,7 @@ export const prompt = pgTable("prompt", {
   stars: integer("stars")
     .$defaultFn(() => 0)
     .notNull(),
-  forks: integer("forks")
+  remixes: integer("remixes")
     .$defaultFn(() => 0)
     .notNull(),
   views: integer("views")
@@ -70,10 +70,10 @@ export const promptRelations = relations(prompt, ({ one, many }) => ({
     references: [user.id],
   }),
   starredBy: many(starredPrompts),
-  forkedBy: many(forkedPrompts),
+  remixedBy: many(remixedPrompts),
 }));
 
-export const promptWithFork = pgTable("prompt", {
+export const promptWithRemix = pgTable("prompt", {
   id: text("id").primaryKey(),
   title: text("title").notNull(),
   description: text("description").notNull(),
@@ -83,7 +83,7 @@ export const promptWithFork = pgTable("prompt", {
   stars: integer("stars")
     .$defaultFn(() => 0)
     .notNull(),
-  forks: integer("forks")
+  remixes: integer("remixes")
     .$defaultFn(() => 0)
     .notNull(),
   views: integer("views")
@@ -143,10 +143,10 @@ export const verification = pgTable("verification", {
   value: text("value").notNull(),
   expiresAt: timestamp("expires_at").notNull(),
   createdAt: timestamp("created_at").$defaultFn(
-    () => /* @__PURE__ */ new Date(),
+    () => /* @__PURE__ */ new Date()
   ),
   updatedAt: timestamp("updated_at").$defaultFn(
-    () => /* @__PURE__ */ new Date(),
+    () => /* @__PURE__ */ new Date()
   ),
 });
 
@@ -171,7 +171,7 @@ export const starredPromptsRelations = relations(starredPrompts, ({ one }) => ({
   }),
 }));
 
-export const forkedPrompts = pgTable("forked_prompts", {
+export const remixedPrompts = pgTable("remixed_prompts", {
   id: text("id").primaryKey(),
   userId: text("user_id")
     .notNull()
@@ -181,13 +181,13 @@ export const forkedPrompts = pgTable("forked_prompts", {
     .references(() => prompt.id, { onDelete: "cascade" }),
 });
 
-export const forkedPromptsRelations = relations(forkedPrompts, ({ one }) => ({
+export const remixedPromptsRelations = relations(remixedPrompts, ({ one }) => ({
   user: one(user, {
-    fields: [forkedPrompts.userId],
+    fields: [remixedPrompts.userId],
     references: [user.id],
   }),
   prompt: one(prompt, {
-    fields: [forkedPrompts.promptId],
+    fields: [remixedPrompts.promptId],
     references: [prompt.id],
   }),
 }));
@@ -197,11 +197,11 @@ export const schema = {
   session,
   account,
   verification,
-  prompt: promptWithFork,
+  prompt: promptWithRemix,
   starredPrompts,
-  forkedPrompts,
+  remixedPrompts,
   userRelations,
   promptRelations,
   starredPromptsRelations,
-  forkedPromptsRelations,
+  remixedPromptsRelations,
 };

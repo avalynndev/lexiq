@@ -5,9 +5,9 @@ import {
   getTrendingPrompts,
   getUserPrompts,
   getStarredPrompts,
-  getForkedPrompts,
+  getRemixedPrompts,
   hasUserStarredPrompt,
-  hasUserForkedPrompt,
+  hasUserRemixedPrompt,
   type PromptWithAuthor,
 } from "./queries";
 import { db } from "@/db";
@@ -16,9 +16,43 @@ import { eq, and, desc } from "drizzle-orm";
 
 export type { PromptWithAuthor };
 
-export async function fetchAllPrompts(): Promise<PromptWithAuthor[]> {
+export async function fetchAllPrompts(
+  userId?: string
+): Promise<PromptWithAuthor[]> {
   try {
-    return await getAllPrompts();
+    if (!userId) {
+      return await getAllPrompts();
+    }
+    // Get all public prompts
+    const publicPrompts = await getAllPrompts();
+    // Get all private prompts owned by the user
+    const userPrivatePrompts = await db.query.prompt.findMany({
+      where: (fields, { eq, and }) =>
+        and(eq(fields.authorId, userId), eq(fields.isPublic, false)),
+      with: {
+        author: true,
+      },
+    });
+    // Map userPrivatePrompts to PromptWithAuthor shape if needed
+    // (Assume fields match, but ensure author shape is correct)
+    const mappedUserPrivatePrompts = userPrivatePrompts.map((p) => ({
+      ...p,
+      author: p.author
+        ? {
+            username: p.author.username ?? null,
+            displayUsername: p.author.displayUsername ?? null,
+            image: p.author.image ?? null,
+          }
+        : { username: null, displayUsername: null, image: null },
+    }));
+    // Merge and deduplicate by id
+    const allPrompts = [
+      ...publicPrompts,
+      ...mappedUserPrivatePrompts.filter(
+        (p) => !publicPrompts.some((pub) => pub.id === p.id)
+      ),
+    ];
+    return allPrompts;
   } catch (error) {
     console.error("Error fetching all prompts:", error);
     return [];
@@ -56,13 +90,13 @@ export async function fetchStarredPrompts(
   }
 }
 
-export async function fetchForkedPrompts(
+export async function fetchRemixedPrompts(
   userId: string
 ): Promise<PromptWithAuthor[]> {
   try {
-    return await getForkedPrompts(userId);
+    return await getRemixedPrompts(userId);
   } catch (error) {
-    console.error("Error fetching forked prompts:", error);
+    console.error("Error fetching remixed prompts:", error);
     return [];
   }
 }
@@ -79,14 +113,14 @@ export async function checkUserStarredPrompt(
   }
 }
 
-export async function checkUserForkedPrompt(
+export async function checkUserRemixedPrompt(
   userId: string,
   promptId: string
 ): Promise<boolean> {
   try {
-    return await hasUserForkedPrompt(userId, promptId);
+    return await hasUserRemixedPrompt(userId, promptId);
   } catch (error) {
-    console.error("Error checking if user forked prompt:", error);
+    console.error("Error checking if user remixed prompt:", error);
     return false;
   }
 }
@@ -114,7 +148,7 @@ export async function getUserProfile(username: string) {
   const userWithStats = {
     ...user,
     stars: prompts.reduce((acc, p) => acc + p.stars, 0),
-    forks: prompts.reduce((acc, p) => acc + p.forks, 0),
+    remixes: prompts.reduce((acc, p) => acc + p.remixes, 0),
   };
 
   return { user: userWithStats, prompts };

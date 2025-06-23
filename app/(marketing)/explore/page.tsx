@@ -16,7 +16,7 @@ export default function ExplorePage() {
   useEffect(() => {
     const loadPrompts = async () => {
       try {
-        const data = await fetchAllPrompts();
+        const data = await fetchAllPrompts(session?.user?.id);
         // Sort by stars (highest to lowest) and limit to 15 prompts
         const sortedPrompts = data
           .sort((a, b) => (b.stars || 0) - (a.stars || 0))
@@ -29,7 +29,7 @@ export default function ExplorePage() {
       }
     };
     loadPrompts();
-  }, []);
+  }, [session]);
 
   if (loading) {
     return (

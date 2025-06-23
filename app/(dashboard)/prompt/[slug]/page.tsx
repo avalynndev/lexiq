@@ -31,9 +31,11 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { usePrompt } from "@/hooks/use-prompt";
 import { useCheckStarred } from "@/hooks/use-check-starred";
 import { useStarMutation } from "@/hooks/use-star-mutation";
-import { useCheckForked } from "@/hooks/use-check-forked";
-import { useForkMutation } from "@/hooks/use-fork-mutation";
 import { useState } from "react";
+import { usePromptStars } from "@/hooks/use-prompt-stars";
+import { useCheckRemixed } from "@/hooks/use-check-remixed";
+import { useRemixMutation } from "@/hooks/use-remix-mutation";
+import { usePromptRemixes } from "@/hooks/use-prompt-remixes";
 
 export default function PromptDetailPage() {
   const params = useParams<{ slug: string }>();
@@ -47,8 +49,15 @@ export default function PromptDetailPage() {
     prompt?.id
   );
   const { handleStar, isStaring } = useStarMutation(prompt?.id);
-  const { isForked, isLoading: isForkedLoading } = useCheckForked(prompt?.id);
-  const { handleFork, isForking } = useForkMutation(prompt?.id);
+  const { stars: liveStars, isLoading: isStarsLoading } = usePromptStars(
+    prompt?.id
+  );
+  const { isRemixed, isLoading: isRemixedLoading } = useCheckRemixed(
+    prompt?.id
+  );
+  const { handleRemix, isRemixing } = useRemixMutation(prompt?.id);
+  const { remixes: liveRemixes, isLoading: isRemixesLoading } =
+    usePromptRemixes(prompt?.id);
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
@@ -71,17 +80,16 @@ export default function PromptDetailPage() {
     }
     await handleStar();
   };
-
-  const onForkClick = async () => {
+  const onRemixClick = async () => {
     if (!session) {
       toast({
         title: "Please sign in",
-        description: "You need to be signed in to fork a prompt.",
+        description: "You need to be signed in to remix a prompt.",
         variant: "destructive",
       });
       return;
     }
-    await handleFork();
+    await handleRemix();
   };
 
   if (isPromptLoading) {
@@ -207,17 +215,28 @@ export default function PromptDetailPage() {
                     {isStarred ? "Starred" : "Star"}
                   </Button>
                   <Button
-                    onClick={onForkClick}
-                    disabled={isForking || isForkedLoading}
+                    onClick={onRemixClick}
+                    disabled={isRemixed || isRemixedLoading}
                     variant="outline"
                     className="flex-1"
                   >
                     <GitFork
                       className={`mr-2 h-4 w-4 ${
-                        isForked ? "text-blue-400" : ""
+                        isRemixed ? "text-blue-400" : ""
                       }`}
                     />
-                    {isForked ? "Forked" : "Fork"}
+                    {isRemixed ? "Remixed" : "Remix"}
+                  </Button>
+                  <Button
+                    onClick={onRemixClick}
+                    disabled={isRemixing || isRemixedLoading}
+                    variant="outline"
+                    className="flex-1"
+                  >
+                    <GitFork
+                      className={`mr-2 h-4 w-4 ${isRemixed ? "text-blue-400" : ""}`}
+                    />
+                    {isRemixed ? "Remixed" : "Remix"}
                   </Button>
                 </CardContent>
               </Card>
@@ -260,14 +279,22 @@ export default function PromptDetailPage() {
                     <span className="text-muted-foreground flex items-center gap-2">
                       <Star className="h-4 w-4" /> Stars
                     </span>
-                    <span>{prompt.stars}</span>
+                    <span>
+                      {isStarsLoading || liveStars === undefined
+                        ? prompt.stars
+                        : liveStars}
+                    </span>
                   </div>
                   <Separator />
                   <div className="flex justify-between">
                     <span className="text-muted-foreground flex items-center gap-2">
-                      <GitFork className="h-4 w-4" /> Forks
+                      <GitFork className="h-4 w-4" /> Remixes
                     </span>
-                    <span>{prompt.forks}</span>
+                    <span>
+                      {isRemixedLoading || liveRemixes === undefined
+                        ? prompt.remixes
+                        : liveRemixes}
+                    </span>
                   </div>
                   <Separator />
                   <div className="flex justify-between">

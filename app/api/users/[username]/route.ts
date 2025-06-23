@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
       where: eq(user.username, username),
       with: {
         starredPrompts: true,
-        forkedPrompts: true,
+        remixedPrompts: true,
       },
     });
 
@@ -34,7 +34,7 @@ export async function GET(request: NextRequest) {
       username: foundUser.username,
       image: foundUser.image,
       stars: foundUser.starredPrompts.length,
-      forks: foundUser.forkedPrompts.length,
+      remixes: foundUser.remixedPrompts.length,
     };
 
     return NextResponse.json({ user: userWithStats, prompts });

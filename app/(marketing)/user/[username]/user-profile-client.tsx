@@ -30,7 +30,7 @@ export function UserProfileClient({ username }: { username: string }) {
 
   const stats = [
     { name: "Prompts", value: prompts.length },
-    { name: "Forks", value: user.forks },
+    { name: "Remixes", value: user.remixes },
     { name: "Stars", value: user.stars },
   ];
 

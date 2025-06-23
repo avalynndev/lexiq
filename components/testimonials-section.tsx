@@ -22,7 +22,7 @@ const testimonials = [
     avatar:
       "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
     content:
-      "As a developer, I love how easy it is to find and customize prompts for different AI models. The fork feature is brilliant - I can build upon others' work seamlessly.",
+      "As a developer, I love how easy it is to find and customize prompts for different AI models. The remix feature is brilliant - I can build upon others' work seamlessly.",
     rating: 5,
     badge: "Power User",
   },

@@ -14,7 +14,7 @@ export function Footer() {
             </div>
             <span className="sr-only">Lexiq</span>
             <span className="font-normal  text-right">
-              Discover. Fork. Remix AI prompts.
+              Discover. Remix. Edit AI prompts.
             </span>
           </Link>
 

@@ -24,6 +24,8 @@ import { useSession } from "@/lib/auth-client";
 import { formatDistanceToNow } from "date-fns";
 import { CreatePromptModal } from "@/components/create-prompt-modal";
 import { Spinner } from "@/components/ui/spinner";
+import { usePromptStars } from "@/hooks/use-prompt-stars";
+import { usePromptRemixes } from "@/hooks/use-prompt-remixes";
 
 export default function DashboardPage() {
   const { data: session } = useSession();
@@ -52,11 +54,14 @@ export default function DashboardPage() {
   // Calculate stats
   const totalPrompts = userPrompts.length;
   const totalStars = userPrompts.reduce((sum, prompt) => sum + prompt.stars, 0);
-  const totalForks = userPrompts.reduce((sum, prompt) => sum + prompt.forks, 0);
+  const totalForks = userPrompts.reduce(
+    (sum, prompt) => sum + prompt.remixes,
+    0
+  );
   const recentPrompts = userPrompts
     .sort(
       (a, b) =>
-        new Date(b.createdOn).getTime() - new Date(a.createdOn).getTime(),
+        new Date(b.createdOn).getTime() - new Date(a.createdOn).getTime()
     )
     .slice(0, 5);
 
@@ -76,10 +81,10 @@ export default function DashboardPage() {
       color: "text-yellow-500",
     },
     {
-      title: "Total Forks",
+      title: "Total Remixes",
       value: totalForks,
       icon: GitFork,
-      description: "Times forked",
+      description: "Times Remixed",
       color: "text-green-500",
     },
     {
@@ -163,31 +168,46 @@ export default function DashboardPage() {
                 <CardContent>
                   {recentPrompts.length > 0 ? (
                     <div className="space-y-4">
-                      {recentPrompts.map((prompt) => (
-                        <div
-                          key={prompt.id}
-                          className="flex items-center justify-between p-3 rounded-lg border"
-                        >
-                          <div className="flex-1">
-                            <h4 className="font-medium">{prompt.title}</h4>
-                            <p className="text-sm text-muted-foreground">
-                              {formatDistanceToNow(new Date(prompt.createdOn), {
-                                addSuffix: true,
-                              })}
-                            </p>
+                      {recentPrompts.map((prompt) => {
+                        const { stars: liveStars, isLoading: isStarsLoading } =
+                          usePromptStars(prompt.id);
+                        const {
+                          remixes: liveRemixes,
+                          isLoading: isRemixesLoading,
+                        } = usePromptRemixes(prompt.id);
+                        return (
+                          <div
+                            key={prompt.id}
+                            className="flex items-center justify-between p-3 rounded-lg border"
+                          >
+                            <div className="flex-1">
+                              <h4 className="font-medium">{prompt.title}</h4>
+                              <p className="text-sm text-muted-foreground">
+                                {formatDistanceToNow(
+                                  new Date(prompt.createdOn),
+                                  {
+                                    addSuffix: true,
+                                  }
+                                )}
+                              </p>
+                            </div>
+                            <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                              <span className="flex items-center gap-1">
+                                <Star className="h-4 w-4" />
+                                {isStarsLoading || liveStars === undefined
+                                  ? prompt.stars
+                                  : liveStars}
+                              </span>
+                              <span className="flex items-center gap-1">
+                                <GitFork className="h-4 w-4" />
+                                {isRemixesLoading || liveRemixes === undefined
+                                  ? prompt.remixes
+                                  : liveRemixes}
+                              </span>
+                            </div>
                           </div>
-                          <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                            <span className="flex items-center gap-1">
-                              <Star className="h-4 w-4" />
-                              {prompt.stars}
-                            </span>
-                            <span className="flex items-center gap-1">
-                              <GitFork className="h-4 w-4" />
-                              {prompt.forks}
-                            </span>
-                          </div>
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   ) : (
                     <div className="text-center py-8">

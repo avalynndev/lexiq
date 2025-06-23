@@ -1,5 +1,5 @@
 import { db } from "@/db";
-import { prompt, user, starredPrompts, forkedPrompts } from "@/schema";
+import { prompt, user, starredPrompts, remixedPrompts } from "@/schema";
 import { eq, desc, asc, and } from "drizzle-orm";
 import { unstable_cache } from "next/cache";
 
@@ -16,7 +16,7 @@ export type PromptWithAuthor = {
   model: string;
   category: string;
   stars: number;
-  forks: number;
+  remixes: number;
   views: number;
   isPublic: boolean;
   lastUpdated: Date;
@@ -43,7 +43,7 @@ export const getAllPrompts = unstable_cache(
         model: prompt.model,
         category: prompt.category,
         stars: prompt.stars,
-        forks: prompt.forks,
+        remixes: prompt.remixes,
         views: prompt.views,
         isPublic: prompt.isPublic,
         lastUpdated: prompt.lastUpdated,
@@ -92,7 +92,7 @@ export const getPromptById = unstable_cache(
         model: prompt.model,
         category: prompt.category,
         stars: prompt.stars,
-        forks: prompt.forks,
+        remixes: prompt.remixes,
         views: prompt.views,
         isPublic: prompt.isPublic,
         lastUpdated: prompt.lastUpdated,
@@ -143,7 +143,7 @@ export const getTrendingPrompts = unstable_cache(
         model: prompt.model,
         category: prompt.category,
         stars: prompt.stars,
-        forks: prompt.forks,
+        remixes: prompt.remixes,
         views: prompt.views,
         isPublic: prompt.isPublic,
         lastUpdated: prompt.lastUpdated,
@@ -160,7 +160,7 @@ export const getTrendingPrompts = unstable_cache(
       .from(prompt)
       .leftJoin(user, eq(prompt.authorId, user.id))
       .where(eq(prompt.isPublic, true))
-      .orderBy(desc(prompt.stars), desc(prompt.forks))
+      .orderBy(desc(prompt.stars), desc(prompt.remixes))
       .limit(6);
 
     return prompts.map((p) => ({
@@ -191,7 +191,7 @@ export const getUserPrompts = unstable_cache(
         model: prompt.model,
         category: prompt.category,
         stars: prompt.stars,
-        forks: prompt.forks,
+        remixes: prompt.remixes,
         views: prompt.views,
         isPublic: prompt.isPublic,
         lastUpdated: prompt.lastUpdated,
@@ -226,6 +226,56 @@ export const getUserPrompts = unstable_cache(
   }
 );
 
+// Cached version of getRemixedPrompts with 10 second revalidation
+export const getRemixedPrompts = unstable_cache(
+  async (userId: string): Promise<PromptWithAuthor[]> => {
+    const results = await db
+      .select({
+        id: prompt.id,
+        title: prompt.title,
+        description: prompt.description,
+        prompt: prompt.prompt,
+        model: prompt.model,
+        category: prompt.category,
+        stars: prompt.stars,
+        remixes: prompt.remixes,
+        views: prompt.views,
+        isPublic: prompt.isPublic,
+        lastUpdated: prompt.lastUpdated,
+        createdOn: prompt.createdOn,
+        tags: prompt.tags,
+        solves: prompt.solves,
+        models: prompt.models,
+        author: {
+          username: user.username,
+          displayUsername: user.displayUsername,
+          image: user.image,
+        },
+      })
+      .from(remixedPrompts)
+      .leftJoin(prompt, eq(remixedPrompts.promptId, prompt.id))
+      .leftJoin(user, eq(prompt.authorId, user.id))
+      .where(eq(remixedPrompts.userId, userId))
+      .orderBy(desc(prompt.remixes));
+
+    return results
+      .filter((p) => p.id)
+      .map((p) => ({
+        ...p,
+        author: p.author ?? {
+          username: null,
+          displayUsername: null,
+          image: null,
+        },
+      })) as PromptWithAuthor[];
+  },
+  ["remixed-prompts"],
+  {
+    revalidate: 10,
+    tags: ["prompts", "remixed"],
+  }
+);
+
 // Cached version of getStarredPrompts with 10 second revalidation
 export const getStarredPrompts = unstable_cache(
   async (userId: string): Promise<PromptWithAuthor[]> => {
@@ -238,7 +288,7 @@ export const getStarredPrompts = unstable_cache(
         model: prompt.model,
         category: prompt.category,
         stars: prompt.stars,
-        forks: prompt.forks,
+        remixes: prompt.remixes,
         views: prompt.views,
         isPublic: prompt.isPublic,
         lastUpdated: prompt.lastUpdated,
@@ -259,7 +309,7 @@ export const getStarredPrompts = unstable_cache(
       .orderBy(desc(prompt.stars));
 
     return results
-      .filter((p) => p.id) // Filter out any potential null prompts from a broken join
+      .filter((p) => p.id)
       .map((p) => ({
         ...p,
         author: p.author ?? {
@@ -271,62 +321,24 @@ export const getStarredPrompts = unstable_cache(
   },
   ["starred-prompts"],
   {
-    revalidate: 10, // 10 seconds
+    revalidate: 10,
     tags: ["prompts", "starred"],
   }
 );
 
-// Cached version of getForkedPrompts with 10 second revalidation
-export const getForkedPrompts = unstable_cache(
-  async (userId: string): Promise<PromptWithAuthor[]> => {
-    const results = await db
-      .select({
-        id: prompt.id,
-        title: prompt.title,
-        description: prompt.description,
-        prompt: prompt.prompt,
-        model: prompt.model,
-        category: prompt.category,
-        stars: prompt.stars,
-        forks: prompt.forks,
-        views: prompt.views,
-        isPublic: prompt.isPublic,
-        lastUpdated: prompt.lastUpdated,
-        createdOn: prompt.createdOn,
-        tags: prompt.tags,
-        solves: prompt.solves,
-        models: prompt.models,
-        author: {
-          username: user.username,
-          displayUsername: user.displayUsername,
-          image: user.image,
-        },
-      })
-      .from(forkedPrompts)
-      .leftJoin(prompt, eq(forkedPrompts.promptId, prompt.id))
-      .leftJoin(user, eq(prompt.authorId, user.id))
-      .where(eq(forkedPrompts.userId, userId))
-      .orderBy(desc(prompt.forks));
+export async function hasUserRemixedPrompt(
+  userId: string,
+  promptId: string
+): Promise<boolean> {
+  const result = await db.query.remixedPrompts.findFirst({
+    where: and(
+      eq(remixedPrompts.userId, userId),
+      eq(remixedPrompts.promptId, promptId)
+    ),
+  });
+  return !!result;
+}
 
-    return results
-      .filter((p) => p.id) // Filter out any potential null prompts from a broken join
-      .map((p) => ({
-        ...p,
-        author: p.author ?? {
-          username: null,
-          displayUsername: null,
-          image: null,
-        },
-      })) as PromptWithAuthor[];
-  },
-  ["forked-prompts"],
-  {
-    revalidate: 10, // 10 seconds
-    tags: ["prompts", "forked"],
-  }
-);
-
-// Non-cached functions for real-time data
 export async function hasUserStarredPrompt(
   userId: string,
   promptId: string
@@ -335,19 +347,6 @@ export async function hasUserStarredPrompt(
     where: and(
       eq(starredPrompts.userId, userId),
       eq(starredPrompts.promptId, promptId)
-    ),
-  });
-  return !!result;
-}
-
-export async function hasUserForkedPrompt(
-  userId: string,
-  promptId: string
-): Promise<boolean> {
-  const result = await db.query.forkedPrompts.findFirst({
-    where: and(
-      eq(forkedPrompts.userId, userId),
-      eq(forkedPrompts.promptId, promptId)
     ),
   });
   return !!result;
