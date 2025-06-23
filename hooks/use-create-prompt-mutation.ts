@@ -5,7 +5,7 @@ interface PromptData {
   title: string;
   description: string;
   prompt: string;
-  model: string;
+  model?: string;
   category: string;
   tags?: string[];
   solves?: string;

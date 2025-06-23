@@ -18,6 +18,8 @@ import {
   Sparkles,
   BookOpen,
   Clock,
+  Shield,
+  FileText,
 } from "lucide-react";
 import { fetchUserPrompts, type PromptWithAuthor } from "@/lib/actions";
 import { useSession } from "@/lib/auth-client";
@@ -27,6 +29,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { usePromptStars } from "@/hooks/use-prompt-stars";
 import { usePromptRemixes } from "@/hooks/use-prompt-remixes";
 import type { FC } from "react";
+import Link from "next/link";
 
 // New component for recent prompts activity
 interface RecentPromptsActivityProps {
@@ -123,13 +126,6 @@ export default function DashboardPage() {
       description: "Times Remixed",
       color: "text-green-500",
     },
-    {
-      title: "Total Views",
-      value: 0, // Placeholder since views property doesn't exist
-      icon: Eye,
-      description: "Profile views",
-      color: "text-purple-500",
-    },
   ];
 
   return (
@@ -165,7 +161,7 @@ export default function DashboardPage() {
             </div>
 
             {/* Stats Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
               {stats.map((stat) => {
                 const IconComponent = stat.icon;
                 return (
@@ -238,46 +234,66 @@ export default function DashboardPage() {
                     Quick Actions
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-3">
-                  <CreatePromptModal>
-                    <Button className="w-full justify-start" variant="outline">
-                      <Plus className="h-4 w-4 mr-2" />
-                      Create New Prompt
-                    </Button>
-                  </CreatePromptModal>
-                  <Button className="w-full justify-start" variant="outline">
-                    <BookOpen className="h-4 w-4 mr-2" />
-                    View All Prompts
-                  </Button>
-                  <Button className="w-full justify-start" variant="outline">
-                    <Star className="h-4 w-4 mr-2" />
-                    My Stars
-                  </Button>
-                  <Button className="w-full justify-start" variant="outline">
-                    <Users className="h-4 w-4 mr-2" />
-                    Community
-                  </Button>
+                <CardContent>
+                  <div className="flex flex-col gap-3">
+                    <CreatePromptModal>
+                      <Button
+                        className="w-full justify-start"
+                        variant="outline"
+                      >
+                        <Plus className="h-4 w-4 mr-2" />
+                        Create New Prompt
+                      </Button>
+                    </CreatePromptModal>
+                    <Link href="/learn">
+                      <Button
+                        className="w-full justify-start"
+                        variant="outline"
+                      >
+                        <BookOpen className="h-4 w-4 mr-2" />
+                        Learn
+                      </Button>
+                    </Link>
+                    <Link href="/stars">
+                      <Button
+                        className="w-full justify-start"
+                        variant="outline"
+                      >
+                        <Star className="h-4 w-4 mr-2" />
+                        My Stars
+                      </Button>
+                    </Link>
+                    <Link href="/community">
+                      <Button
+                        className="w-full justify-start"
+                        variant="outline"
+                      >
+                        <Users className="h-4 w-4 mr-2" />
+                        Community
+                      </Button>
+                    </Link>
+                    <Link href="/privacy-policy">
+                      <Button
+                        className="w-full justify-start"
+                        variant="outline"
+                      >
+                        <Shield className="h-4 w-4 mr-2" />
+                        Privacy Policy
+                      </Button>
+                    </Link>
+                    <Link href="/terms-conditions">
+                      <Button
+                        className="w-full justify-start"
+                        variant="outline"
+                      >
+                        <FileText className="h-4 w-4 mr-2" />
+                        Terms & Conditions
+                      </Button>
+                    </Link>
+                  </div>
                 </CardContent>
               </Card>
             </div>
-
-            {/* Performance Chart Placeholder */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <TrendingUp className="h-5 w-5" />
-                  Performance Overview
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="h-64 flex items-center justify-center text-muted-foreground">
-                  <div className="text-center">
-                    <TrendingUp className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                    <p>Performance charts coming soon</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
           </div>
         )}
       </ScrollArea>

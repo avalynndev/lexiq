@@ -56,6 +56,20 @@ import Link from "next/link";
 import { CreatePromptModal } from "@/components/create-prompt-modal";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { format, formatDistanceToNow } from "date-fns";
+import { usePathname, useRouter } from "next/navigation";
+import { copyToClipboardWithMeta } from "@/components/docs/copy-button";
+import { toast } from "sonner";
+import {
+  AlertDialog,
+  AlertDialogTrigger,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogFooter,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogAction,
+  AlertDialogCancel,
+} from "@/components/ui/alert-dialog";
 
 import {
   Sidebar,
@@ -94,6 +108,9 @@ export function AppSidebar({ className }: { className?: string }) {
   const [userPrompts, setUserPrompts] = React.useState<PromptWithAuthor[]>([]);
   const [loading, setLoading] = React.useState(true);
   const isMobile = useIsMobile();
+  const pathname = usePathname();
+  const router = useRouter();
+  const [deleting, setDeleting] = React.useState(false);
 
   React.useEffect(() => {
     const loadUserPrompts = async () => {
@@ -154,7 +171,16 @@ export function AppSidebar({ className }: { className?: string }) {
             <SidebarMenu>
               {data.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton tooltip={item.title} asChild>
+                  <SidebarMenuButton
+                    tooltip={item.title}
+                    asChild
+                    isActive={pathname === item.url}
+                    className={
+                      pathname === item.url
+                        ? "bg-neutral-200 dark:bg-neutral-800"
+                        : undefined
+                    }
+                  >
                     <Link href={item.url}>
                       {item.icon && <item.icon />}
                       <span>{item.title}</span>
@@ -179,7 +205,7 @@ export function AppSidebar({ className }: { className?: string }) {
                 </SidebarMenuItem>
               </SidebarMenu>
             ) : filteredPrompts.length > 0 ? (
-              <ScrollArea className="h-[calc(100vh-15rem)]">
+              <ScrollArea className="h-[calc(100vh-20rem)]">
                 <SidebarMenu>
                   {(() => {
                     // Group prompts by date modified
@@ -230,49 +256,143 @@ export function AppSidebar({ className }: { className?: string }) {
                           <SidebarGroupLabel className="text-xs text-muted-foreground px-2 py-1">
                             {groupKey}
                           </SidebarGroupLabel>
-                          {prompts.map((prompt) => (
-                            <SidebarMenuItem key={prompt.id}>
-                              <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                  <SidebarMenuButton asChild>
-                                    <Link href={`/prompt/${prompt.id}`}>
-                                      <IconFileDescription />
-                                      <span className="truncate">
-                                        {prompt.title}
-                                      </span>
-                                    </Link>
-                                  </SidebarMenuButton>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent
-                                  className="w-24 rounded-lg"
-                                  side={isMobile ? "bottom" : "right"}
-                                  align={isMobile ? "end" : "start"}
-                                >
-                                  <DropdownMenuItem asChild>
-                                    <Link href={`/prompt/${prompt.id}`}>
-                                      <IconBook />
-                                      <span>View</span>
-                                    </Link>
-                                  </DropdownMenuItem>
-                                  <DropdownMenuItem asChild>
-                                    <Link href={`/prompt/${prompt.id}/edit`}>
-                                      <IconFileDescription />
-                                      <span>Edit</span>
-                                    </Link>
-                                  </DropdownMenuItem>
-                                  <DropdownMenuItem>
-                                    <IconShare3 />
-                                    <span>Share</span>
-                                  </DropdownMenuItem>
-                                  <DropdownMenuSeparator />
-                                  <DropdownMenuItem variant="destructive">
-                                    <IconTrash />
-                                    <span>Delete</span>
-                                  </DropdownMenuItem>
-                                </DropdownMenuContent>
-                              </DropdownMenu>
-                            </SidebarMenuItem>
-                          ))}
+                          {prompts.map((prompt) => {
+                            const promptUrl = `/prompt/${prompt.id}`;
+                            return (
+                              <SidebarMenuItem
+                                key={prompt.id}
+                                className="max-w-50"
+                              >
+                                <DropdownMenu>
+                                  <DropdownMenuTrigger asChild>
+                                    <SidebarMenuButton
+                                      asChild
+                                      isActive={pathname === promptUrl}
+                                      className={
+                                        pathname === promptUrl
+                                          ? "bg-neutral-200 dark:bg-neutral-800"
+                                          : undefined
+                                      }
+                                    >
+                                      <Link href={promptUrl}>
+                                        <IconFileDescription />
+                                        <span className="truncate">
+                                          {prompt.title}
+                                        </span>
+                                      </Link>
+                                    </SidebarMenuButton>
+                                  </DropdownMenuTrigger>
+                                  <DropdownMenuContent
+                                    className="w-32 rounded-lg"
+                                    side={isMobile ? "bottom" : "right"}
+                                    align={isMobile ? "end" : "start"}
+                                  >
+                                    <DropdownMenuItem asChild>
+                                      <Link href={promptUrl}>
+                                        <IconBook />
+                                        <span>View</span>
+                                      </Link>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem asChild>
+                                      <Link href={`${promptUrl}/edit`}>
+                                        <IconFileDescription />
+                                        <span>Edit</span>
+                                      </Link>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem
+                                      onClick={async () => {
+                                        copyToClipboardWithMeta(
+                                          `${window.location.origin}${promptUrl}`
+                                        );
+                                        toast.message(
+                                          "Prompt URL copied to clipboard.",
+                                          {
+                                            description:
+                                              "You can now share this link.",
+                                          }
+                                        );
+                                      }}
+                                    >
+                                      <IconShare3 />
+                                      <span>Share</span>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuSeparator />
+                                    <AlertDialog>
+                                      <AlertDialogTrigger asChild>
+                                        <DropdownMenuItem variant="destructive">
+                                          <IconTrash />
+                                          <span>Delete</span>
+                                        </DropdownMenuItem>
+                                      </AlertDialogTrigger>
+                                      <AlertDialogContent>
+                                        <AlertDialogHeader>
+                                          <AlertDialogTitle>
+                                            Delete Prompt
+                                          </AlertDialogTitle>
+                                          <AlertDialogDescription>
+                                            Are you sure you want to delete this
+                                            prompt? This action cannot be
+                                            undone.
+                                          </AlertDialogDescription>
+                                        </AlertDialogHeader>
+                                        <AlertDialogFooter>
+                                          <AlertDialogCancel
+                                            disabled={deleting}
+                                          >
+                                            Cancel
+                                          </AlertDialogCancel>
+                                          <AlertDialogAction
+                                            disabled={deleting}
+                                            onClick={async () => {
+                                              setDeleting(true);
+                                              try {
+                                                const res = await fetch(
+                                                  `/api/prompts/${prompt.id}`,
+                                                  {
+                                                    method: "DELETE",
+                                                  }
+                                                );
+                                                if (res.ok) {
+                                                  setUserPrompts((prev) =>
+                                                    prev.filter(
+                                                      (p) => p.id !== prompt.id
+                                                    )
+                                                  );
+                                                  toast.success(
+                                                    "Prompt deleted successfully"
+                                                  );
+                                                  router.refresh();
+                                                } else {
+                                                  const data = await res.json();
+                                                  toast.error(
+                                                    "Failed to delete prompt.",
+                                                    {
+                                                      description:
+                                                        data.error || undefined,
+                                                    }
+                                                  );
+                                                }
+                                              } catch (err) {
+                                                toast.error(
+                                                  "Failed to delete prompt."
+                                                );
+                                              } finally {
+                                                setDeleting(false);
+                                              }
+                                            }}
+                                          >
+                                            {deleting
+                                              ? "Deleting..."
+                                              : "Delete"}
+                                          </AlertDialogAction>
+                                        </AlertDialogFooter>
+                                      </AlertDialogContent>
+                                    </AlertDialog>
+                                  </DropdownMenuContent>
+                                </DropdownMenu>
+                              </SidebarMenuItem>
+                            );
+                          })}
                         </div>
                       );
                     });

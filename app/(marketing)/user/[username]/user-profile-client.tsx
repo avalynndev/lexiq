@@ -37,7 +37,7 @@ export function UserProfileClient({ username }: { username: string }) {
   return (
     <div className="container mx-auto max-w-5xl py-8 px-4">
       <Card className="mb-8 overflow-hidden">
-        <CardHeader className="bg-muted/40 p-6">
+        <CardHeader className="px-6">
           <div className="flex items-center space-x-6">
             <Avatar className="h-24 w-24 border-4 border-background">
               <AvatarImage src={user.image ?? ""} alt={user.name ?? ""} />
@@ -106,7 +106,7 @@ export function UserProfileClient({ username }: { username: string }) {
 const UserProfileSkeleton = () => (
   <div className="container mx-auto max-w-5xl py-8 px-4">
     <Card className="mb-8 overflow-hidden">
-      <CardHeader className="bg-muted/40 p-6">
+      <CardHeader className="px-6">
         <div className="flex items-center space-x-6">
           <Skeleton className="h-24 w-24 rounded-full" />
           <div className="flex-1 space-y-2">

@@ -16,13 +16,11 @@ export default function Navbar() {
 
   const navItems = [
     { label: "Explore", href: "/explore" },
-    { label: "Categories", href: "/categories" },
-  ];
-
-  const mobileLinks = [
-    { text: "Documentation", href: "/docs" },
-    { text: "Explore Prompts", href: "/explore" },
-    { text: "Categories", href: "/categories" },
+    { label: "Dashboard", href: "/dashboard" },
+    { label: "Learn", href: "/docs" },
+    { label: "Privacy", href: "/privacy-policy" },
+    { label: "Terms", href: "/terms-conditions" },
+    { label: "Contact", href: "/contact" },
   ];
 
   const additionalLinks = session?.user?.username
@@ -59,14 +57,14 @@ export default function Navbar() {
                     <LexiqLogo className="h-8 w-8" />
                     <span className="text-xl font-bold">Lexiq</span>
                   </div>
-                  {mobileLinks.map((link, index) => (
+                  {navItems.map((link, index) => (
                     <Link
                       key={index}
                       href={link.href}
                       className="flex items-center space-x-3 p-3 rounded-lg hover:bg-accent transition-colors text-base font-medium"
                       onClick={() => setIsOpen(false)}
                     >
-                      <span>{link.text}</span>
+                      <span>{link.label}</span>
                     </Link>
                   ))}
                   <div className="pt-4 border-t">

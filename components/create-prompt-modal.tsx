@@ -22,12 +22,49 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Plus, X, Sparkles } from "lucide-react";
 import { useSession } from "@/lib/auth-client";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { Spinner } from "@/components/ui/spinner";
 import { Switch } from "@/components/ui/switch";
 import { useCreatePromptMutation } from "@/hooks/use-create-prompt-mutation";
+import {
+  OpenAILogo,
+  ClaudeLogo,
+  GeminiLogo,
+  MetaIconOutline,
+  OllamaLogo,
+  MidjourneyLogo,
+  MistralLogo,
+  MicrosoftCopilotLogo,
+  GemmaLogo,
+  PerplexityLogo,
+  DalleLogo,
+  FluxLogo,
+  GrokLogo,
+  QwenLogo,
+  DeepSeekLogo,
+  NotebookLmlogo,
+  GithubCopilotLogo,
+} from "@/components/logos";
 
-const models = ["GPT-4", "Claude", "Gemini", "Llama"];
+const models = [
+  { name: "GPT-4", icon: OpenAILogo },
+  { name: "Claude", icon: ClaudeLogo },
+  { name: "Gemini", icon: GeminiLogo },
+  { name: "Llama", icon: MetaIconOutline },
+  { name: "Ollama", icon: OllamaLogo },
+  { name: "Midjourney", icon: MidjourneyLogo },
+  { name: "Mistral", icon: MistralLogo },
+  { name: "Microsoft Copilot", icon: MicrosoftCopilotLogo },
+  { name: "Gemma (Google)", icon: GemmaLogo },
+  { name: "Perplexity", icon: PerplexityLogo },
+  { name: "DALL·E (OpenAI)", icon: DalleLogo },
+  { name: "Flux", icon: FluxLogo },
+  { name: "Grok", icon: GrokLogo },
+  { name: "Qwen", icon: QwenLogo },
+  { name: "DeepSeek", icon: DeepSeekLogo },
+  { name: "Notebook LM", icon: NotebookLmlogo },
+  { name: "GitHub Copilot", icon: GithubCopilotLogo },
+];
 const categories = [
   "Writing",
   "Development",
@@ -49,7 +86,6 @@ interface CreatePromptModalProps {
 
 export function CreatePromptModal({ children }: CreatePromptModalProps) {
   const { data: session } = useSession();
-  const { toast } = useToast();
   const [open, setOpen] = useState(false);
   const { handleCreatePrompt, isCreating, error } = useCreatePromptMutation();
   const [formData, setFormData] = useState({
@@ -57,6 +93,7 @@ export function CreatePromptModal({ children }: CreatePromptModalProps) {
     description: "",
     prompt: "",
     model: "",
+    models: [] as string[],
     category: "",
     tags: [] as string[],
     solves: "",
@@ -68,10 +105,8 @@ export function CreatePromptModal({ children }: CreatePromptModalProps) {
     e.preventDefault();
 
     if (!session?.user?.id) {
-      toast({
-        title: "Authentication required",
+      toast.error("Authentication required", {
         description: "Please sign in to create a prompt.",
-        variant: "destructive",
       });
       return;
     }
@@ -84,22 +119,20 @@ export function CreatePromptModal({ children }: CreatePromptModalProps) {
       !formData.model ||
       !formData.category
     ) {
-      toast({
-        title: "Missing required fields",
+      toast.error("Missing required fields", {
         description: "Please fill in all required fields.",
-        variant: "destructive",
       });
       return;
     }
 
     const newPrompt = await handleCreatePrompt({
       ...formData,
+      models: formData.models.filter((m) => m !== formData.model),
       authorId: session.user.id,
     });
 
     if (newPrompt) {
-      toast({
-        title: "Prompt created successfully!",
+      toast.success("Prompt created successfully!", {
         description: "Your prompt has been published.",
       });
 
@@ -109,6 +142,7 @@ export function CreatePromptModal({ children }: CreatePromptModalProps) {
         description: "",
         prompt: "",
         model: "",
+        models: [],
         category: "",
         tags: [],
         solves: "",
@@ -117,10 +151,8 @@ export function CreatePromptModal({ children }: CreatePromptModalProps) {
       setTagInput("");
       setOpen(false);
     } else {
-      toast({
-        title: "Error creating prompt",
+      toast.error("Error creating prompt", {
         description: error || "Something went wrong. Please try again.",
-        variant: "destructive",
       });
     }
   };
@@ -147,6 +179,11 @@ export function CreatePromptModal({ children }: CreatePromptModalProps) {
       e.preventDefault();
       addTag();
     }
+  };
+
+  const getModelIconByName = (name: string) => {
+    const found = models.find((m) => m.name === name);
+    return found ? found.icon : undefined;
   };
 
   return (
@@ -209,49 +246,130 @@ export function CreatePromptModal({ children }: CreatePromptModalProps) {
             />
           </div>
 
-          {/* Model and Category */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="model">Primary Model *</Label>
-              <Select
-                value={formData.model}
-                onValueChange={(value) =>
-                  setFormData((prev) => ({ ...prev, model: value }))
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select a model" />
-                </SelectTrigger>
-                <SelectContent>
-                  {models.map((model) => (
-                    <SelectItem key={model} value={model}>
-                      {model}
+          {/* Primary Model */}
+          <div className="space-y-2">
+            <Label htmlFor="model">Primary Model *</Label>
+            <Select
+              value={formData.model}
+              onValueChange={(value) => {
+                setFormData((prev) => ({
+                  ...prev,
+                  model: value,
+                  models: prev.models.filter((m) => m !== value),
+                }));
+              }}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select a primary model" />
+              </SelectTrigger>
+              <SelectContent>
+                {models.map((model) => {
+                  const Icon = getModelIconByName(model.name);
+                  return (
+                    <SelectItem key={model.name} value={model.name}>
+                      <span className="flex items-center gap-2">
+                        {Icon && <Icon className="h-4 w-4" />}
+                        {model.name}
+                      </span>
                     </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+                  );
+                })}
+              </SelectContent>
+            </Select>
+          </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="category">Category *</Label>
-              <Select
-                value={formData.category}
-                onValueChange={(value) =>
-                  setFormData((prev) => ({ ...prev, category: value }))
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select a category" />
-                </SelectTrigger>
-                <SelectContent>
-                  {categories.map((category) => (
-                    <SelectItem key={category} value={category}>
-                      {category}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+          {/* Additional AI Models */}
+          <div className="space-y-2">
+            <Label htmlFor="models">Additional AI Models</Label>
+            <div className="flex flex-wrap gap-2">
+              {models
+                .filter((model) => model.name !== formData.model)
+                .map((model) => {
+                  const Icon = getModelIconByName(model.name);
+                  return (
+                    <Button
+                      key={model.name}
+                      type="button"
+                      variant={
+                        formData.models.includes(model.name)
+                          ? "default"
+                          : "outline"
+                      }
+                      onClick={() => {
+                        setFormData((prev) => {
+                          if (prev.models.includes(model.name)) {
+                            return {
+                              ...prev,
+                              models: prev.models.filter(
+                                (m) => m !== model.name
+                              ),
+                            };
+                          } else {
+                            return {
+                              ...prev,
+                              models: [...prev.models, model.name],
+                            };
+                          }
+                        });
+                      }}
+                    >
+                      <span className="flex items-center gap-2">
+                        {Icon && <Icon className="h-4 w-4" />}
+                        {model.name}
+                      </span>
+                    </Button>
+                  );
+                })}
             </div>
+            {formData.models.length > 0 && (
+              <div className="flex flex-wrap gap-2 mt-2">
+                {formData.models.map((model) => {
+                  const Icon = getModelIconByName(model);
+                  return (
+                    <Badge key={model} variant="secondary" className="gap-1">
+                      <span className="flex items-center gap-2">
+                        {Icon && <Icon className="h-4 w-4" />}
+                        {model}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setFormData((prev) => ({
+                            ...prev,
+                            models: prev.models.filter((m) => m !== model),
+                          }))
+                        }
+                        className="ml-1 hover:text-destructive"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </Badge>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+
+          {/* Category */}
+          <div className="space-y-2">
+            <Label htmlFor="category">Category *</Label>
+            <Select
+              value={formData.category}
+              onValueChange={(value) =>
+                setFormData((prev) => ({ ...prev, category: value }))
+              }
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select a category" />
+              </SelectTrigger>
+              <SelectContent>
+                {categories.map((category) => (
+                  <SelectItem key={category} value={category}>
+                    {category}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           {/* Tags */}
@@ -273,7 +391,7 @@ export function CreatePromptModal({ children }: CreatePromptModalProps) {
               <div className="flex flex-wrap gap-2 mt-2">
                 {formData.tags.map((tag) => (
                   <Badge key={tag} variant="secondary" className="gap-1">
-                    {tag}
+                    <span className="flex items-center gap-2">{tag}</span>
                     <button
                       type="button"
                       onClick={() => removeTag(tag)}
@@ -299,31 +417,6 @@ export function CreatePromptModal({ children }: CreatePromptModalProps) {
               }
               rows={2}
             />
-          </div>
-
-          {/*- Visibility --*/}
-          <div className="space-y-2 !mt-4 flex items-center justify-between rounded-lg border p-4">
-            <div className="space-y-0.5">
-              <Label htmlFor="is-public" className="text-base">
-                Public
-              </Label>
-              <p className="text-sm text-muted-foreground">
-                Anyone on the internet can see this prompt.
-              </p>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Switch
-                id="public-switch"
-                checked={formData.isPublic}
-                onCheckedChange={(checked) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    isPublic: checked === true,
-                  }))
-                }
-              />
-              <Label htmlFor="public-switch">Public</Label>
-            </div>
           </div>
 
           {/* Submit Button */}

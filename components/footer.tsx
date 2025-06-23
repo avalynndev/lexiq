@@ -23,6 +23,26 @@ export function Footer() {
           </div>
         </div>
       </div>
+      <div className="container mx-auto pb-8">
+        <div className="text-center text-sm text-muted-foreground">
+          <div>
+            Contact us:{" "}
+            <a
+              href="mailto:contact@lexiq.ai"
+              className="underline hover:text-primary"
+            >
+              contact@lexiq.ai
+            </a>
+          </div>
+          <div>
+            For support or inquiries, visit our{" "}
+            <a href="/contact" className="underline hover:text-primary">
+              Contact Page
+            </a>
+            .
+          </div>
+        </div>
+      </div>
     </footer>
   );
 }

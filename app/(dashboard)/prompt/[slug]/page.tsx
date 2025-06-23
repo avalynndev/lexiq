@@ -1,6 +1,6 @@
 "use client";
 
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -25,7 +25,7 @@ import { format, formatDistanceToNow } from "date-fns";
 import Link from "next/link";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useSession } from "@/lib/auth-client";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { usePrompt } from "@/hooks/use-prompt";
@@ -40,8 +40,8 @@ import { usePromptRemixes } from "@/hooks/use-prompt-remixes";
 export default function PromptDetailPage() {
   const params = useParams<{ slug: string }>();
   const { data: session } = useSession();
-  const { toast } = useToast();
   const [copied, setCopied] = useState(false);
+  const router = useRouter();
 
   // Data fetching hooks
   const { prompt, isLoading: isPromptLoading } = usePrompt(params.slug);
@@ -63,18 +63,15 @@ export default function PromptDetailPage() {
     navigator.clipboard.writeText(text);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
-    toast({
-      title: "Copied!",
-      description: "Prompt copied to clipboard.",
+    toast.message("Prompt copied to clipboard.", {
+      description: "You can now paste it anywhere.",
     });
   };
 
   const onStarClick = async () => {
     if (!session) {
-      toast({
-        title: "Please sign in",
+      toast.error("Please sign in", {
         description: "You need to be signed in to star a prompt.",
-        variant: "destructive",
       });
       return;
     }
@@ -82,14 +79,15 @@ export default function PromptDetailPage() {
   };
   const onRemixClick = async () => {
     if (!session) {
-      toast({
-        title: "Please sign in",
+      toast.error("Please sign in", {
         description: "You need to be signed in to remix a prompt.",
-        variant: "destructive",
       });
       return;
     }
-    await handleRemix();
+    const newPromptId = await handleRemix();
+    if (newPromptId) {
+      router.push(`/prompt/${newPromptId}`);
+    }
   };
 
   if (isPromptLoading) {
@@ -213,19 +211,6 @@ export default function PromptDetailPage() {
                       }`}
                     />
                     {isStarred ? "Starred" : "Star"}
-                  </Button>
-                  <Button
-                    onClick={onRemixClick}
-                    disabled={isRemixed || isRemixedLoading}
-                    variant="outline"
-                    className="flex-1"
-                  >
-                    <GitFork
-                      className={`mr-2 h-4 w-4 ${
-                        isRemixed ? "text-blue-400" : ""
-                      }`}
-                    />
-                    {isRemixed ? "Remixed" : "Remix"}
                   </Button>
                   <Button
                     onClick={onRemixClick}

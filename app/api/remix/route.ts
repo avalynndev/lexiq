@@ -7,7 +7,7 @@ import { revalidateTag } from "next/cache";
 import { getPromptById, createPrompt } from "@/lib/queries";
 
 export async function POST(request: NextRequest) {
-  const { promptId } = await request.json();
+  const { promptId, model, models } = await request.json();
   const session = await getSession(request);
 
   if (!session) {
@@ -63,11 +63,14 @@ export async function POST(request: NextRequest) {
         title: originalPrompt.title,
         description: originalPrompt.description,
         prompt: originalPrompt.prompt,
-        model: originalPrompt.model,
+        model: model || originalPrompt.model,
         category: originalPrompt.category,
         tags: originalPrompt.tags || [],
         solves: originalPrompt.solves || undefined,
-        models: originalPrompt.models || [originalPrompt.model],
+        models:
+          Array.isArray(models) && models.length > 0
+            ? models
+            : originalPrompt.models || [originalPrompt.model],
         authorId: userId,
         isPublic: true,
       });

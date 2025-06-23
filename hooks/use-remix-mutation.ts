@@ -6,7 +6,7 @@ export function useRemixMutation(promptId?: string) {
   const [isRemixing, setIsRemixing] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleRemix = async () => {
+  const handleRemix = async (model?: string, models?: string[]) => {
     if (!promptId) {
       setError("Prompt ID is required");
       return;
@@ -21,7 +21,7 @@ export function useRemixMutation(promptId?: string) {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ promptId }),
+        body: JSON.stringify({ promptId, model, models }),
       });
 
       if (!res.ok) {
@@ -31,8 +31,13 @@ export function useRemixMutation(promptId?: string) {
 
       // Revalidate the check-remixed hook
       mutate(`/api/check-remixed?promptId=${promptId}`);
+
+      // Return the new prompt id if available
+      const data = await res.json();
+      return data.newPromptId;
     } catch (e: any) {
       setError(e.message);
+      return undefined;
     } finally {
       setIsRemixing(false);
     }

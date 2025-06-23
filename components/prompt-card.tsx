@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useSession } from "@/lib/auth-client";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import {
   ClaudeLogo,
   OpenAILogo,
@@ -19,6 +19,7 @@ import { usePromptStars } from "@/hooks/use-prompt-stars";
 import { useCheckRemixed } from "@/hooks/use-check-remixed";
 import { useRemixMutation } from "@/hooks/use-remix-mutation";
 import { usePromptRemixes } from "@/hooks/use-prompt-remixes";
+import { useRouter } from "next/navigation";
 
 interface PromptCardProps {
   prompt: {
@@ -43,7 +44,7 @@ interface PromptCardProps {
 
 export function PromptCard({ prompt }: PromptCardProps) {
   const { data: session } = useSession();
-  const { toast } = useToast();
+  const router = useRouter();
 
   // SWR hooks for live data and mutations
   const { isStarred, isLoading: isStarredLoading } = useCheckStarred(prompt.id);
@@ -60,10 +61,8 @@ export function PromptCard({ prompt }: PromptCardProps) {
     e.preventDefault();
     e.stopPropagation();
     if (!session) {
-      toast({
-        title: "Please sign in",
+      toast.error("Please sign in", {
         description: "You need to be signed in to star a prompt.",
-        variant: "destructive",
       });
       return;
     }
@@ -74,14 +73,15 @@ export function PromptCard({ prompt }: PromptCardProps) {
     e.preventDefault();
     e.stopPropagation();
     if (!session) {
-      toast({
-        title: "Please sign in",
+      toast.error("Please sign in", {
         description: "You need to be signed in to remix a prompt.",
-        variant: "destructive",
       });
       return;
     }
-    await handleRemix();
+    const newPromptId = await handleRemix();
+    if (newPromptId) {
+      router.push(`/prompt/${newPromptId}`);
+    }
   };
 
   // Check if the prompt is new (created within the last 24 hours)

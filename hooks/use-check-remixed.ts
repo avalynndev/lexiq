@@ -1,27 +1,26 @@
 import useSWR from "swr";
+import { useMemo } from "react";
 
 interface CheckRemixedResponse {
   isRemixed: boolean;
 }
 
 // Safe fetcher with error handling
-const fetcher = async (url: string): Promise<CheckRemixedResponse> => {
-  const res = await fetch(url);
-  if (!res.ok) {
-    throw new Error(`Fetch failed with status ${res.status}`);
-  }
-  return res.json();
-};
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
-export function useCheckRemixed(promptId?: string, session?: any) {
+export function useCheckRemixed(promptId?: string, session?: { user?: any }) {
   const shouldFetch = !!promptId && !!session?.user;
 
-  const key = shouldFetch
-    ? `/api/check-remixed?promptId=${encodeURIComponent(promptId!)}`
-    : null;
+  const url = useMemo(
+    () =>
+      shouldFetch
+        ? `/api/check-remixed?promptId=${encodeURIComponent(promptId!)}`
+        : null,
+    [shouldFetch, promptId]
+  );
 
   const { data, error, isLoading } = useSWR<CheckRemixedResponse>(
-    key,
+    url,
     fetcher,
     {
       refreshInterval: 5 * 60 * 1000,
