@@ -28,8 +28,8 @@ export function DocsSidebar({
       collapsible="none"
       {...props}
     >
-      <SidebarContent className="scrollbar-none  px-2 pt-4">
-        <ScrollArea className=" overflow-y-scroll h-[calc(100vh-8.5rem)]">
+      <SidebarContent className="no-scrollbar px-2 pt-4">
+        <ScrollArea className="no-scrollbar overflow-y-scroll h-[calc(100vh-8.5rem)]">
           {tree.children.map((item) => (
             <SidebarGroup key={item.$id}>
               <SidebarGroupLabel className="text-muted-foreground font-medium">

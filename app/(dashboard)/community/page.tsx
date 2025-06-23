@@ -39,8 +39,6 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Spinner } from "@/components/ui/spinner";
 import { useSession } from "@/lib/auth-client";
-import { usePromptStars } from "@/hooks/use-prompt-stars";
-import { usePromptRemixes } from "@/hooks/use-prompt-remixes";
 
 const models = ["All Models", "GPT-4", "Claude", "Gemini", "Llama"];
 const categories = [
@@ -504,13 +502,6 @@ export default function ExplorePage() {
                         }
                       >
                         {sortedPrompts.map((prompt) => {
-                          const {
-                            stars: liveStars,
-                            isLoading: isStarsLoading,
-                          } = usePromptStars(prompt.id);
-                          const { remixes: liveRemixes } = usePromptRemixes(
-                            prompt.id
-                          );
                           return (
                             <PromptCard
                               key={prompt.id}

@@ -26,6 +26,42 @@ import { CreatePromptModal } from "@/components/create-prompt-modal";
 import { Spinner } from "@/components/ui/spinner";
 import { usePromptStars } from "@/hooks/use-prompt-stars";
 import { usePromptRemixes } from "@/hooks/use-prompt-remixes";
+import type { FC } from "react";
+
+// New component for recent prompts activity
+interface RecentPromptsActivityProps {
+  prompt: PromptWithAuthor;
+}
+
+const RecentPromptsActivity: FC<RecentPromptsActivityProps> = ({ prompt }) => {
+  const { stars: liveStars, isLoading: isStarsLoading } = usePromptStars(
+    prompt.id
+  );
+  const { remixes: liveRemixes, isLoading: isRemixesLoading } =
+    usePromptRemixes(prompt.id);
+  return (
+    <div className="flex items-center justify-between p-3 rounded-lg border">
+      <div className="flex-1">
+        <h4 className="font-medium">{prompt.title}</h4>
+        <p className="text-sm text-muted-foreground">
+          {formatDistanceToNow(new Date(prompt.createdOn), { addSuffix: true })}
+        </p>
+      </div>
+      <div className="flex items-center gap-4 text-sm text-muted-foreground">
+        <span className="flex items-center gap-1">
+          <Star className="h-4 w-4" />
+          {isStarsLoading || liveStars === undefined ? prompt.stars : liveStars}
+        </span>
+        <span className="flex items-center gap-1">
+          <GitFork className="h-4 w-4" />
+          {isRemixesLoading || liveRemixes === undefined
+            ? prompt.remixes
+            : liveRemixes}
+        </span>
+      </div>
+    </div>
+  );
+};
 
 export default function DashboardPage() {
   const { data: session } = useSession();
@@ -168,46 +204,12 @@ export default function DashboardPage() {
                 <CardContent>
                   {recentPrompts.length > 0 ? (
                     <div className="space-y-4">
-                      {recentPrompts.map((prompt) => {
-                        const { stars: liveStars, isLoading: isStarsLoading } =
-                          usePromptStars(prompt.id);
-                        const {
-                          remixes: liveRemixes,
-                          isLoading: isRemixesLoading,
-                        } = usePromptRemixes(prompt.id);
-                        return (
-                          <div
-                            key={prompt.id}
-                            className="flex items-center justify-between p-3 rounded-lg border"
-                          >
-                            <div className="flex-1">
-                              <h4 className="font-medium">{prompt.title}</h4>
-                              <p className="text-sm text-muted-foreground">
-                                {formatDistanceToNow(
-                                  new Date(prompt.createdOn),
-                                  {
-                                    addSuffix: true,
-                                  }
-                                )}
-                              </p>
-                            </div>
-                            <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                              <span className="flex items-center gap-1">
-                                <Star className="h-4 w-4" />
-                                {isStarsLoading || liveStars === undefined
-                                  ? prompt.stars
-                                  : liveStars}
-                              </span>
-                              <span className="flex items-center gap-1">
-                                <GitFork className="h-4 w-4" />
-                                {isRemixesLoading || liveRemixes === undefined
-                                  ? prompt.remixes
-                                  : liveRemixes}
-                              </span>
-                            </div>
-                          </div>
-                        );
-                      })}
+                      {recentPrompts.map((prompt) => (
+                        <RecentPromptsActivity
+                          prompt={prompt}
+                          key={prompt.id}
+                        />
+                      ))}
                     </div>
                   ) : (
                     <div className="text-center py-8">
