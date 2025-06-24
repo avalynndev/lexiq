@@ -51,7 +51,7 @@ export default function ExplorePage() {
   });
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen relative overflow-hidden">
       <Spotlight />
       <section className="pt-24 pb-12">
         <div className="container mx-auto px-4 overflow-hidden">

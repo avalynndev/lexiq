@@ -9,7 +9,7 @@ import Glow from "@/components/ui/hero-glow";
 
 export default function Home() {
   return (
-    <div className="min-h-screen overflow-x-hidden">
+    <div className="min-h-screen overflow-hidden relative">
       <Hero />{" "}
       <Glow
         variant="top"
