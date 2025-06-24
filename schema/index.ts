@@ -4,6 +4,7 @@ import {
   timestamp,
   boolean,
   integer,
+  serial,
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 
@@ -191,6 +192,19 @@ export const remixedPromptsRelations = relations(remixedPrompts, ({ one }) => ({
     references: [prompt.id],
   }),
 }));
+
+export const feedback = pgTable("feedback", {
+  id: text("id").primaryKey(),
+  type: text("type").notNull(),
+  name: text("name"),
+  url: text("url"),
+  issue: text("issue"),
+  reason: text("reason"),
+  logs: text("logs"),
+  message: text("message"),
+  email: text("email"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
 
 export const schema = {
   user,

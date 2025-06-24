@@ -6,8 +6,10 @@
 
 @theme {
   --background-image-gradient-radial: radial-gradient(var(--tw-gradient-stops));
-  --background-image-gradient-conic: conic-gradient(from 180deg at 50% 50%,
-      var(--tw-gradient-stops));
+  --background-image-gradient-conic: conic-gradient(
+    from 180deg at 50% 50%,
+    var(--tw-gradient-stops)
+  );
 
   --radius-lg: var(--radius);
   --radius-md: calc(var(--radius) - 2px);
@@ -96,7 +98,6 @@
   color utility to any element that depends on these defaults.
 */
 @layer base {
-
   *,
   ::after,
   ::before,
@@ -190,7 +191,6 @@
 }
 
 @layer utilities {
-
   /* Custom utility for fade effect */
   .fade-bottom {
     position: relative;
@@ -203,10 +203,12 @@
     left: 0;
     right: 0;
     height: 1px;
-    background: linear-gradient(90deg,
-        transparent,
-        hsl(var(--border)),
-        transparent);
+    background: linear-gradient(
+      90deg,
+      transparent,
+      hsl(var(--border)),
+      transparent
+    );
   }
 
   /* Container max-width utilities */
@@ -287,16 +289,20 @@
 }
 
 .dark .dotted-bg {
-  background-image: radial-gradient(circle at 1px 1px,
-      #232323 1px,
-      transparent 0);
+  background-image: radial-gradient(
+    circle at 1px 1px,
+    #232323 1px,
+    transparent 0
+  );
   background-size: 8px 8px;
 }
 
 .light .dotted-bg {
-  background-image: radial-gradient(circle at 1px 1px,
-      #e7e7e7 1px,
-      transparent 0);
+  background-image: radial-gradient(
+    circle at 1px 1px,
+    #e7e7e7 1px,
+    transparent 0
+  );
   background-size: 8px 8px;
 }
 
@@ -319,18 +325,22 @@
 }
 
 .dark .text-dotted {
-  background-image: radial-gradient(circle at 0.4px 0.2px,
-      #fff 1px,
-      transparent 0);
+  background-image: radial-gradient(
+    circle at 0.4px 0.2px,
+    #fff 1px,
+    transparent 0
+  );
   background-size: 5px 5px;
   background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .text-dotted {
-  background-image: radial-gradient(circle at 0.4px 0.2px,
-      #000 1px,
-      transparent 0);
+  background-image: radial-gradient(
+    circle at 0.4px 0.2px,
+    #000 1px,
+    transparent 0
+  );
   background-size: 5px 5px;
   background-clip: text;
   -webkit-text-fill-color: transparent;

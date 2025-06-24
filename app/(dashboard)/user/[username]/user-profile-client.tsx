@@ -35,43 +35,43 @@ export function UserProfileClient({ username }: { username: string }) {
   ];
 
   return (
-    <div className="container mx-auto max-w-5xl py-8 px-4">
-      <Card className="mb-8 overflow-hidden">
-        <CardHeader className="px-6">
-          <div className="flex items-center space-x-6">
-            <Avatar className="h-24 w-24 border-4 border-background">
-              <AvatarImage src={user.image ?? ""} alt={user.name ?? ""} />
-              <AvatarFallback>
-                {user.name
-                  ? user.name
-                      .split(" ")
-                      .map((n) => n[0])
-                      .join("")
-                  : "?"}
-              </AvatarFallback>
-            </Avatar>
-            <div className="flex-1">
-              <h1 className="text-xl md:text-3xl font-bold">{user.name}</h1>
-              <p className="text-muted-foreground">@{user.username}</p>
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent className="p-6">
-          <div className="grid grid-cols-3 divide-x">
-            {stats.map((stat, index) => (
-              <div key={index} className="px-4 text-center">
-                <p className="text-2xl font-bold">{stat.value}</p>
-                <p className="text-sm text-muted-foreground">{stat.name}</p>
+    <>
+      <div className="container mx-auto py-8 px-4">
+        <Card className="mb-8 overflow-hidden">
+          <CardHeader className="px-6">
+            <div className="flex items-center space-x-6">
+              <Avatar className="h-24 w-24 border-4 border-background">
+                <AvatarImage src={user.image ?? ""} alt={user.name ?? ""} />
+                <AvatarFallback>
+                  {user.name
+                    ? user.name
+                        .split(" ")
+                        .map((n) => n[0])
+                        .join("")
+                    : "?"}
+                </AvatarFallback>
+              </Avatar>
+              <div className="flex-1">
+                <h1 className="text-xl md:text-3xl font-bold">{user.name}</h1>
+                <p className="text-muted-foreground">@{user.username}</p>
               </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+            </div>
+          </CardHeader>
+          <CardContent className="p-6">
+            <div className="grid grid-cols-3 divide-x">
+              {stats.map((stat, index) => (
+                <div key={index} className="px-4 text-center">
+                  <p className="text-2xl font-bold">{stat.value}</p>
+                  <p className="text-sm text-muted-foreground">{stat.name}</p>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
 
-      <Separator className="my-8" />
-
-      <div>
-        <h2 className="text-2xl font-bold mb-6">Public Prompts</h2>
+        <Separator className="mt-8" />
+      </div>
+      <div className="container mx-auto pb-8 px-4">
         {prompts.filter((prompt) => prompt.isPublic !== false).length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {prompts
@@ -99,7 +99,7 @@ export function UserProfileClient({ username }: { username: string }) {
           </div>
         )}
       </div>
-    </div>
+    </>
   );
 }
 

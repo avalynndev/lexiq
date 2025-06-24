@@ -408,7 +408,7 @@ function EditPromptModal({
                                 ...prev,
                                 models: prev.models.filter((m) => m !== model),
                               }
-                            : { ...prev, models: [...prev.models, model] }
+                            : { ...prev, models: [...prev.models, model] },
                         )
                       }
                     >
@@ -565,7 +565,7 @@ export function AppSidebar({ className }: { className?: string }) {
   }, [session]);
 
   const filteredPrompts = userPrompts.filter(
-    (prompt) => prompt.isPublic !== false
+    (prompt) => prompt.isPublic !== false,
   );
 
   const handlePromptUpdated = async (updatedPrompt: PromptWithAuthor) => {
@@ -668,7 +668,7 @@ export function AppSidebar({ className }: { className?: string }) {
                         groups[groupKey].push(prompt);
                         return groups;
                       },
-                      {} as Record<string, PromptWithAuthor[]>
+                      {} as Record<string, PromptWithAuthor[]>,
                     );
 
                     // Sort groups in desired order
@@ -737,14 +737,14 @@ export function AppSidebar({ className }: { className?: string }) {
                                     <DropdownMenuItem
                                       onClick={async () => {
                                         copyToClipboardWithMeta(
-                                          `${window.location.origin}${promptUrl}`
+                                          `${window.location.origin}${promptUrl}`,
                                         );
                                         toast.message(
                                           "Prompt URL copied to clipboard.",
                                           {
                                             description:
                                               "You can now share this link.",
-                                          }
+                                          },
                                         );
                                       }}
                                     >
@@ -785,16 +785,16 @@ export function AppSidebar({ className }: { className?: string }) {
                                                   `/api/prompts/${prompt.id}`,
                                                   {
                                                     method: "DELETE",
-                                                  }
+                                                  },
                                                 );
                                                 if (res.ok) {
                                                   setUserPrompts((prev) =>
                                                     prev.filter(
-                                                      (p) => p.id !== prompt.id
-                                                    )
+                                                      (p) => p.id !== prompt.id,
+                                                    ),
                                                   );
                                                   toast.success(
-                                                    "Prompt deleted successfully"
+                                                    "Prompt deleted successfully",
                                                   );
                                                   router.refresh();
                                                 } else {
@@ -804,12 +804,12 @@ export function AppSidebar({ className }: { className?: string }) {
                                                     {
                                                       description:
                                                         data.error || undefined,
-                                                    }
+                                                    },
                                                   );
                                                 }
                                               } catch (err) {
                                                 toast.error(
-                                                  "Failed to delete prompt."
+                                                  "Failed to delete prompt.",
                                                 );
                                               } finally {
                                                 setDeleting(false);

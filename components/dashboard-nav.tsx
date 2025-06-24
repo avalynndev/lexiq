@@ -1,12 +1,11 @@
 "use client";
 import { User } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import LexiqLogo from "@/components/logo";
 import Link from "next/link";
-import { Badge } from "./ui/badge";
 import { UserButton } from "@daveyplate/better-auth-ui";
 import { ThemeToggle } from "./theme-toggle";
 import { useSession } from "@/lib/auth-client";
+import FeedbackBadge from "./feedback";
 
 export default function Navbar() {
   const { data: session } = useSession();
@@ -42,13 +41,7 @@ export default function Navbar() {
       </div>
 
       <div className="flex flex-1 items-center justify-end gap-2">
-        <Button
-          variant="outline"
-          size="sm"
-          className="rounded-md hidden h-7 sm:flex"
-        >
-          Feedback
-        </Button>
+        <FeedbackBadge />
         <ThemeToggle />
 
         <div className="flex items-center gap-2">

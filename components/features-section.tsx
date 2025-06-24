@@ -1,29 +1,22 @@
 "use client";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
-  Search,
   GitFork,
+  Globe,
+  Palette,
+  Search,
+  Shield,
+  Sparkles,
   Star,
+  TrendingUp,
   Users,
   Zap,
-  Shield,
-  Palette,
-  Globe,
-  Code,
-  BookOpen,
-  TrendingUp,
-  Sparkles,
 } from "lucide-react";
 import Link from "next/link";
 import { Button } from "./ui/button";
+import { Item, ItemDescription, ItemIcon, ItemTitle } from "./ui/item";
+import { Section } from "./ui/section";
 
 const features = [
   {
@@ -86,7 +79,7 @@ const features = [
 
 export function FeaturesSection() {
   return (
-    <section className="py-24 px-4">
+    <Section className="py-24 px-4">
       <div className="container mx-auto">
         <div className="text-center mb-16">
           <Badge variant="secondary" className="mb-4">
@@ -106,31 +99,27 @@ export function FeaturesSection() {
           {features.map((feature, index) => {
             const IconComponent = feature.icon;
             return (
-              <Card
+              <Item
                 key={index}
-                className="group relative overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-2 broder"
+                className="group relative overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border rounded-lg"
               >
-                <CardHeader className="pb-4">
-                  <div className="flex items-center justify-between mb-2">
+                <ItemTitle className="flex items-center gap-3">
+                  <ItemIcon>
                     <div
-                      className={`p-3 rounded-xl bg-gradient-to-br ${feature.gradient}`}
+                      className={`p-2 rounded-lg bg-gradient-to-br ${feature.gradient}`}
                     >
-                      <IconComponent className="h-6 w-6 text-white" />
+                      <IconComponent className="h-5 w-5 text-white" />
                     </div>
-                  </div>
-                  <CardTitle className="text-lg">{feature.title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription className="text-sm leading-relaxed">
-                    {feature.description}
-                  </CardDescription>
-                </CardContent>
+                  </ItemIcon>
+                  {feature.title}
+                </ItemTitle>
+                <ItemDescription>{feature.description}</ItemDescription>
 
                 {/* Hover effect */}
                 <div
                   className={`absolute inset-0 bg-gradient-to-br ${feature.gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-300`}
                 />
-              </Card>
+              </Item>
             );
           })}
         </div>
@@ -139,12 +128,12 @@ export function FeaturesSection() {
         <div className="text-center mt-16">
           <Link href="/auth/sign-in">
             <Button>
-              <TrendingUp className="h-4 w-4" />
+              <TrendingUp className="h-4 w-4 mr-2" />
               Join 50,000+ creators already using Lexiq
             </Button>
           </Link>
         </div>
       </div>
-    </section>
+    </Section>
   );
 }

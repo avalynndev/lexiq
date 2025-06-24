@@ -29,15 +29,6 @@ export default function Navbar({
   const { data: session } = useSession();
   const [open, setOpen] = useState(false);
 
-  const navItems = [
-    { label: "Explore", href: "/explore" },
-    { label: "Dashboard", href: "/dashboard" },
-    { label: "Learn", href: "/docs" },
-    { label: "Privacy", href: "/privacy-policy" },
-    { label: "Terms", href: "/terms-conditions" },
-    { label: "Contact", href: "/contact" },
-  ];
-
   const additionalLinks = session?.user?.username
     ? [
         {
@@ -59,7 +50,7 @@ export default function Navbar({
                   variant="ghost"
                   className={cn(
                     "extend-touch-target h-8 touch-manipulation items-center justify-start gap-2.5 !p-0 hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 active:bg-transparent dark:hover:bg-transparent",
-                    className
+                    className,
                   )}
                 >
                   <div className="relative flex h-8 w-4 items-center justify-center">
@@ -67,13 +58,13 @@ export default function Navbar({
                       <span
                         className={cn(
                           "bg-foreground absolute left-0 block h-0.5 w-4 transition-all duration-100",
-                          open ? "top-[0.4rem] -rotate-45" : "top-1"
+                          open ? "top-[0.4rem] -rotate-45" : "top-1",
                         )}
                       />
                       <span
                         className={cn(
                           "bg-foreground absolute left-0 block h-0.5 w-4 transition-all duration-100",
-                          open ? "top-[0.4rem] rotate-45" : "top-2.5"
+                          open ? "top-[0.4rem] rotate-45" : "top-2.5",
                         )}
                       />
                     </div>
@@ -154,7 +145,7 @@ export default function Navbar({
 
               {/* Desktop Navigation */}
               <div className="text-muted-foreground hidden items-center gap-6 text-base font-medium md:flex">
-                {navItems.map((item) => (
+                {items.map((item) => (
                   <Link
                     key={item.label}
                     className="flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors text-base font-medium"
