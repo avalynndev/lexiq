@@ -9,12 +9,14 @@ export const metadata = {
 };
 
 type TagsPageProps = {
-  searchParams: {
-    [key: string]: string | string[] | undefined;
-  };
+  params: { [key: string]: string | undefined };
+  searchParams: { [key: string]: string | string[] | undefined };
 };
 
-export default async function TagsPage({ searchParams }: TagsPageProps) {
+export default async function TagsPage({
+  params,
+  searchParams,
+}: TagsPageProps) {
   const selectedTags = Array.isArray(searchParams.tags)
     ? searchParams.tags
     : searchParams.tags
