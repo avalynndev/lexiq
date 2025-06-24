@@ -12,13 +12,17 @@ export default async function TagsPage({
   params,
   searchParams,
 }: {
-  params: { [key: string]: string | undefined };
-  searchParams: { [key: string]: string | string[] | undefined };
+  params: Promise<{ [key: string]: string | undefined }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-  const selectedTags = Array.isArray(searchParams.tags)
-    ? searchParams.tags
-    : searchParams.tags
-      ? [searchParams.tags]
+  // Await the promises
+  const resolvedParams = await params;
+  const resolvedSearchParams = await searchParams;
+
+  const selectedTags = Array.isArray(resolvedSearchParams.tags)
+    ? resolvedSearchParams.tags
+    : resolvedSearchParams.tags
+      ? [resolvedSearchParams.tags]
       : [];
 
   const allTags = await getAllTags();
@@ -26,7 +30,7 @@ export default async function TagsPage({
 
   return (
     <>
-      <header className="flex h-(--header-height) bg-sidebar shrink-0 rounded-t-xl border-t border-x items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height)">
+      <header className="flex h-[var(--header-height)] bg-sidebar shrink-0 rounded-t-xl border-t border-x items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-[var(--header-height)]">
         <div className="flex w-full pt-5 p-5">
           <div className="flex flex-col flex-1 border-alpha-200 border-t sm:border-t-0">
             <div className="flex items-center gap-3 pl-4 pr-3 sm:pl-3 sm:pr-2 h-12 border-b border-alpha-200 sm:mx-0 shrink-0">
@@ -45,7 +49,7 @@ export default async function TagsPage({
           allTags={allTags}
           selectedTags={selectedTags}
           initialPrompts={prompts}
-        />{" "}
+        />
       </ScrollArea>
     </>
   );
