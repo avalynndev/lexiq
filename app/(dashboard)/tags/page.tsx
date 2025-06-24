@@ -8,15 +8,13 @@ export const metadata = {
   description: "Explore prompts by tags.",
 };
 
-type TagsPageProps = {
-  params: { [key: string]: string | undefined };
-  searchParams: { [key: string]: string | string[] | undefined };
-};
-
 export default async function TagsPage({
   params,
   searchParams,
-}: TagsPageProps) {
+}: {
+  params: { [key: string]: string | undefined };
+  searchParams: { [key: string]: string | string[] | undefined };
+}) {
   const selectedTags = Array.isArray(searchParams.tags)
     ? searchParams.tags
     : searchParams.tags
