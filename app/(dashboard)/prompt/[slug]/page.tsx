@@ -20,6 +20,7 @@ import {
   Eye,
   Sparkles,
   Check,
+  Cpu,
 } from "lucide-react";
 import { format, formatDistanceToNow } from "date-fns";
 import Link from "next/link";
@@ -36,37 +37,91 @@ import { usePromptStars } from "@/hooks/use-prompt-stars";
 import { useCheckRemixed } from "@/hooks/use-check-remixed";
 import { useRemixMutation } from "@/hooks/use-remix-mutation";
 import { usePromptRemixes } from "@/hooks/use-prompt-remixes";
+import { CopyButton } from "@/components/docs/copy-button";
+
+// Import model logos
+import {
+  OpenAILogo,
+  ClaudeLogo,
+  GeminiLogo,
+  MetaIconOutline,
+  OllamaLogo,
+  MidjourneyLogo,
+  MistralLogo,
+  MicrosoftCopilotLogo,
+  GemmaLogo,
+  PerplexityLogo,
+  DalleLogo,
+  FluxLogo,
+  GrokLogo,
+  QwenLogo,
+  DeepSeekLogo,
+  NotebookLmlogo,
+  GithubCopilotLogo,
+} from "@/components/logos";
+
+// Helper to get the icon component by model name
+const getModelIconByName = (name: string) => {
+  switch (name) {
+    case "GPT-4":
+      return OpenAILogo;
+    case "Claude":
+      return ClaudeLogo;
+    case "Gemini":
+      return GeminiLogo;
+    case "Llama":
+      return MetaIconOutline;
+    case "Ollama":
+      return OllamaLogo;
+    case "Midjourney":
+      return MidjourneyLogo;
+    case "Mistral":
+      return MistralLogo;
+    case "Microsoft Copilot":
+      return MicrosoftCopilotLogo;
+    case "Gemma (Google)":
+      return GemmaLogo;
+    case "Perplexity":
+      return PerplexityLogo;
+    case "DALL·E (OpenAI)":
+      return DalleLogo;
+    case "Flux":
+      return FluxLogo;
+    case "Grok":
+      return GrokLogo;
+    case "Qwen":
+      return QwenLogo;
+    case "DeepSeek":
+      return DeepSeekLogo;
+    case "Notebook LM":
+      return NotebookLmlogo;
+    case "GitHub Copilot":
+      return GithubCopilotLogo;
+    default:
+      return undefined;
+  }
+};
 
 export default function PromptDetailPage() {
   const params = useParams<{ slug: string }>();
   const { data: session } = useSession();
-  const [copied, setCopied] = useState(false);
   const router = useRouter();
 
   // Data fetching hooks
   const { prompt, isLoading: isPromptLoading } = usePrompt(params.slug);
   const { isStarred, isLoading: isStarredLoading } = useCheckStarred(
-    prompt?.id,
+    prompt?.id
   );
   const { handleStar, isStaring } = useStarMutation(prompt?.id);
   const { stars: liveStars, isLoading: isStarsLoading } = usePromptStars(
-    prompt?.id,
+    prompt?.id
   );
   const { isRemixed, isLoading: isRemixedLoading } = useCheckRemixed(
-    prompt?.id,
+    prompt?.id
   );
   const { handleRemix, isRemixing } = useRemixMutation(prompt?.id);
   const { remixes: liveRemixes, isLoading: isRemixesLoading } =
     usePromptRemixes(prompt?.id);
-
-  const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-    toast.message("Prompt copied to clipboard.", {
-      description: "You can now paste it anywhere.",
-    });
-  };
 
   const onStarClick = async () => {
     if (!session) {
@@ -161,18 +216,10 @@ export default function PromptDetailPage() {
                     <pre className="text-sm whitespace-pre-wrap font-mono">
                       {prompt.prompt}
                     </pre>
-                    <Button
-                      size="icon"
-                      variant="ghost"
-                      className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
-                      onClick={() => copyToClipboard(prompt.prompt)}
-                    >
-                      {copied ? (
-                        <Check className="h-4 w-4 text-green-500" />
-                      ) : (
-                        <Copy className="h-4 w-4" />
-                      )}
-                    </Button>
+                    <CopyButton
+                      value={prompt.prompt}
+                      className="absolute top-2 right-2"
+                    />
                   </div>
                 </CardContent>
               </Card>
@@ -196,9 +243,6 @@ export default function PromptDetailPage() {
 
             <div className="space-y-6">
               <Card>
-                <CardHeader>
-                  <CardTitle>Actions</CardTitle>
-                </CardHeader>
                 <CardContent className="flex gap-2">
                   <Button
                     onClick={onStarClick}
@@ -223,6 +267,46 @@ export default function PromptDetailPage() {
                     />
                     {isRemixed ? "Remixed" : "Remix"}
                   </Button>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Cpu className="h-5 w-5" />
+                    Supported Models
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="font-semibold flex items-center gap-2">
+                      {(() => {
+                        const Icon = getModelIconByName(prompt.model);
+                        return Icon ? <Icon className="h-5 w-5" /> : null;
+                      })()}
+                      {prompt.model}
+                    </span>
+                    <Badge>Primary</Badge>
+                  </div>
+                  {prompt.models && prompt.models.length > 0 && (
+                    <>
+                      <Separator />
+                      <div className="grid grid-cols-2 gap-3">
+                        {prompt.models.map((modelName) => {
+                          const Icon = getModelIconByName(modelName);
+                          return (
+                            <div
+                              key={modelName}
+                              className="flex items-center gap-2 text-sm"
+                            >
+                              {Icon && <Icon className="h-4 w-4" />}
+                              <span>{modelName}</span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </>
+                  )}
                 </CardContent>
               </Card>
 
@@ -367,6 +451,25 @@ const PromptPageSkeleton = () => (
               <CardContent className="flex gap-2">
                 <Skeleton className="h-10 w-full" />
                 <Skeleton className="h-10 w-full" />
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle>
+                  <Skeleton className="h-6 w-40" />
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="flex justify-between">
+                  <Skeleton className="h-5 w-1/3" />
+                  <Skeleton className="h-5 w-1/4" />
+                </div>
+                <Separator />
+                <div className="grid grid-cols-2 gap-3">
+                  <Skeleton className="h-5 w-full" />
+                  <Skeleton className="h-5 w-full" />
+                  <Skeleton className="h-5 w-full" />
+                </div>
               </CardContent>
             </Card>
             <Card>

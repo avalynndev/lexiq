@@ -8,4 +8,12 @@ export const siteConfig = {
     github: "https://github.com/lexiq",
     twitter: "https://twitter.com/lexiq",
   },
+  navItems: [
+    { label: "Explore", href: "/explore" },
+    { label: "Dashboard", href: "/dashboard" },
+    { label: "Learn", href: "/docs" },
+    { label: "Privacy", href: "/privacy-policy" },
+    { label: "Terms", href: "/terms-conditions" },
+    { label: "Contact", href: "/contact" },
+  ],
 };

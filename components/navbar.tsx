@@ -4,15 +4,30 @@ import { useState } from "react";
 import { Menu, Github, Twitter, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import LexiqLogo from "@/components/logo";
-import Link from "next/link";
 import { UserButton } from "@daveyplate/better-auth-ui";
 import { useSession } from "@/lib/auth-client";
+import Link, { LinkProps } from "next/link";
+import { useRouter } from "next/navigation";
+import { source } from "@/lib/source";
+import { cn } from "@/lib/utils";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
-export default function Navbar() {
-  const [isOpen, setIsOpen] = useState(false);
+export default function Navbar({
+  tree,
+  items,
+  className,
+}: {
+  tree: typeof source.pageTree;
+  items: { href: string; label: string }[];
+  className?: string;
+}) {
   const { data: session } = useSession();
+  const [open, setOpen] = useState(false);
 
   const navItems = [
     { label: "Explore", href: "/explore" },
@@ -37,47 +52,93 @@ export default function Navbar() {
     <header className="sticky top-0 z-50 -mb-4 pb-4">
       <nav className="fade-bottom bg-background/95 fixed top-0 z-50 h-16 w-full backdrop-blur-sm supports-backdrop-filter:bg-background/60">
         <div className="max-w-container-lg mx-auto flex h-full items-center justify-between px-4 md:gap-2">
-          {/* Left Side */}
           <div className="flex items-center gap-3">
-            {/* Mobile Menu Button */}
-            <Sheet open={isOpen} onOpenChange={setIsOpen}>
-              <SheetTrigger asChild>
+            <Popover open={open} onOpenChange={setOpen}>
+              <PopoverTrigger asChild>
                 <Button
                   variant="ghost"
-                  size="icon"
-                  className="text-muted-foreground md:hidden"
+                  className={cn(
+                    "extend-touch-target h-8 touch-manipulation items-center justify-start gap-2.5 !p-0 hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 active:bg-transparent dark:hover:bg-transparent",
+                    className
+                  )}
                 >
-                  <Menu className="h-5 w-5" />
-                  <span className="sr-only">Toggle navigation menu</span>
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="left" className="w-80">
-                <div className="flex flex-col space-y-2 mt-8">
-                  <div className="flex items-center space-x-2 mb-6">
-                    <LexiqLogo className="h-8 w-8" />
-                    <span className="text-xl font-bold">Lexiq</span>
+                  <div className="relative flex h-8 w-4 items-center justify-center">
+                    <div className="relative size-4">
+                      <span
+                        className={cn(
+                          "bg-foreground absolute left-0 block h-0.5 w-4 transition-all duration-100",
+                          open ? "top-[0.4rem] -rotate-45" : "top-1"
+                        )}
+                      />
+                      <span
+                        className={cn(
+                          "bg-foreground absolute left-0 block h-0.5 w-4 transition-all duration-100",
+                          open ? "top-[0.4rem] rotate-45" : "top-2.5"
+                        )}
+                      />
+                    </div>
+                    <span className="sr-only">Toggle Menu</span>
                   </div>
-                  {navItems.map((link, index) => (
-                    <Link
-                      key={index}
-                      href={link.href}
-                      className="flex items-center space-x-3 p-3 rounded-lg hover:bg-accent transition-colors text-base font-medium"
-                      onClick={() => setIsOpen(false)}
-                    >
-                      <span>{link.label}</span>
-                    </Link>
-                  ))}
-                  <div className="pt-4 border-t">
-                    <Button
-                      variant="ghost"
-                      className="w-full justify-start mb-2"
-                    >
-                      Sign In
-                    </Button>
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent
+                className="bg-background/90 no-scrollbar h-(--radix-popper-available-height) w-(--radix-popper-available-width) overflow-y-auto rounded-none border-none p-0 shadow-none backdrop-blur duration-100"
+                align="start"
+                side="bottom"
+                alignOffset={-16}
+                sideOffset={14}
+              >
+                <div className="flex flex-col gap-12 overflow-auto px-6 py-6">
+                  <div className="flex flex-col gap-4">
+                    <div className="text-muted-foreground text-sm font-medium">
+                      Menu
+                    </div>
+                    <div className="flex flex-col gap-3">
+                      <MobileLink href="/" onOpenChange={setOpen}>
+                        Home
+                      </MobileLink>
+                      {items.map((item, index) => (
+                        <MobileLink
+                          key={index}
+                          href={item.href}
+                          onOpenChange={setOpen}
+                        >
+                          {item.label}
+                        </MobileLink>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-8">
+                    {tree?.children?.map((group, index) => {
+                      if (group.type === "folder") {
+                        return (
+                          <div key={index} className="flex flex-col gap-4">
+                            <div className="text-muted-foreground text-sm font-medium">
+                              {group.name}
+                            </div>
+                            <div className="flex flex-col gap-3">
+                              {group.children.map((item) => {
+                                if (item.type === "page") {
+                                  return (
+                                    <MobileLink
+                                      key={`${item.url}-${index}`}
+                                      href={item.url}
+                                      onOpenChange={setOpen}
+                                    >
+                                      {item.name}
+                                    </MobileLink>
+                                  );
+                                }
+                              })}
+                            </div>
+                          </div>
+                        );
+                      }
+                    })}
                   </div>
                 </div>
-              </SheetContent>
-            </Sheet>
+              </PopoverContent>
+            </Popover>
 
             {/* Logo and Navigation */}
             <div className="flex items-center gap-6">
@@ -117,41 +178,52 @@ export default function Navbar() {
                 asChild
               >
                 <a
-                  href="https://github.com/lexiq"
+                  href="https://github.com/avalynndev"
                   aria-label="GitHub"
                   className="hover:text-foreground focus:outline-hidden focus-visible:ring-2 focus-visible:ring-ring"
                 >
                   <Github className="h-5 w-5" />
                 </a>
               </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-10 w-10 rounded-xl"
-                asChild
-              >
-                <a
-                  href="https://twitter.com/lexiq"
-                  aria-label="Twitter"
-                  className="hover:text-foreground focus:outline-hidden focus-visible:ring-2 focus-visible:ring-ring rounded-full"
-                >
-                  <Twitter className="h-5 w-5" />
-                </a>
-              </Button>
             </div>
 
-            {/* Theme Toggle (Visible only on md+) */}
-            <div className="hidden md:flex items-center justify-center pr-2">
+            <div className="items-center justify-center pr-2">
               <ThemeToggle />
             </div>
 
-            {/* Auth Buttons (Hidden on mobile) */}
-            <div className="hidden md:flex items-center">
+            <div className="items-center">
               <UserButton size="icon" additionalLinks={additionalLinks} />
             </div>
           </div>
         </div>
       </nav>
     </header>
+  );
+}
+
+function MobileLink({
+  href,
+  onOpenChange,
+  className,
+  children,
+  ...props
+}: LinkProps & {
+  onOpenChange?: (open: boolean) => void;
+  children: React.ReactNode;
+  className?: string;
+}) {
+  const router = useRouter();
+  return (
+    <Link
+      href={href}
+      onClick={() => {
+        router.push(href.toString());
+        onOpenChange?.(false);
+      }}
+      className={cn("text-2xl font-medium", className)}
+      {...props}
+    >
+      {children}
+    </Link>
   );
 }

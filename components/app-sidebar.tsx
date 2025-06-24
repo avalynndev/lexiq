@@ -84,6 +84,7 @@ import {
   SidebarMenuItem,
   SidebarMenuAction,
   SidebarGroupLabel,
+  SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { useUpdatePromptMutation } from "@/hooks/use-update-prompt-mutation";
 import {
@@ -105,6 +106,25 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { usePrompt } from "@/hooks/use-prompt";
+import {
+  OpenAILogo,
+  ClaudeLogo,
+  GeminiLogo,
+  MetaIconOutline,
+  OllamaLogo,
+  MidjourneyLogo,
+  MistralLogo,
+  MicrosoftCopilotLogo,
+  GemmaLogo,
+  PerplexityLogo,
+  DalleLogo,
+  FluxLogo,
+  GrokLogo,
+  QwenLogo,
+  DeepSeekLogo,
+  NotebookLmlogo,
+  GithubCopilotLogo,
+} from "@/components/logos";
 
 const data = [
   {
@@ -248,6 +268,49 @@ function EditPromptModal({
     "Social Media",
     "Academic",
   ];
+
+  // Helper to get the icon component by model name
+  const getModelIconByName = (name: string) => {
+    switch (name) {
+      case "GPT-4":
+        return OpenAILogo;
+      case "Claude":
+        return ClaudeLogo;
+      case "Gemini":
+        return GeminiLogo;
+      case "Llama":
+        return MetaIconOutline;
+      case "Ollama":
+        return OllamaLogo;
+      case "Midjourney":
+        return MidjourneyLogo;
+      case "Mistral":
+        return MistralLogo;
+      case "Microsoft Copilot":
+        return MicrosoftCopilotLogo;
+      case "Gemma (Google)":
+        return GemmaLogo;
+      case "Perplexity":
+        return PerplexityLogo;
+      case "DALL·E (OpenAI)":
+        return DalleLogo;
+      case "Flux":
+        return FluxLogo;
+      case "Grok":
+        return GrokLogo;
+      case "Qwen":
+        return QwenLogo;
+      case "DeepSeek":
+        return DeepSeekLogo;
+      case "Notebook LM":
+        return NotebookLmlogo;
+      case "GitHub Copilot":
+        return GithubCopilotLogo;
+      default:
+        return undefined;
+    }
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
@@ -310,11 +373,17 @@ function EditPromptModal({
                 <SelectValue placeholder="Select a primary model" />
               </SelectTrigger>
               <SelectContent>
-                {models.map((model) => (
-                  <SelectItem key={model} value={model}>
-                    {model}
-                  </SelectItem>
-                ))}
+                {models.map((model) => {
+                  const Icon = getModelIconByName(model);
+                  return (
+                    <SelectItem key={model} value={model}>
+                      <span className="flex items-center gap-2">
+                        {Icon && <Icon className="h-4 w-4" />}
+                        {model}
+                      </span>
+                    </SelectItem>
+                  );
+                })}
               </SelectContent>
             </Select>
           </div>
@@ -323,27 +392,33 @@ function EditPromptModal({
             <div className="flex flex-wrap gap-2">
               {models
                 .filter((model) => model !== formData.model)
-                .map((model) => (
-                  <Button
-                    key={model}
-                    type="button"
-                    variant={
-                      formData.models.includes(model) ? "default" : "outline"
-                    }
-                    onClick={() =>
-                      setFormData((prev) =>
-                        prev.models.includes(model)
-                          ? {
-                              ...prev,
-                              models: prev.models.filter((m) => m !== model),
-                            }
-                          : { ...prev, models: [...prev.models, model] },
-                      )
-                    }
-                  >
-                    {model}
-                  </Button>
-                ))}
+                .map((model) => {
+                  const Icon = getModelIconByName(model);
+                  return (
+                    <Button
+                      key={model}
+                      type="button"
+                      variant={
+                        formData.models.includes(model) ? "default" : "outline"
+                      }
+                      onClick={() =>
+                        setFormData((prev) =>
+                          prev.models.includes(model)
+                            ? {
+                                ...prev,
+                                models: prev.models.filter((m) => m !== model),
+                              }
+                            : { ...prev, models: [...prev.models, model] }
+                        )
+                      }
+                    >
+                      <span className="flex items-center gap-2">
+                        {Icon && <Icon className="h-4 w-4" />}
+                        {model}
+                      </span>
+                    </Button>
+                  );
+                })}
             </div>
             {formData.models.length > 0 && (
               <div className="flex flex-wrap gap-2 mt-2">
@@ -490,7 +565,7 @@ export function AppSidebar({ className }: { className?: string }) {
   }, [session]);
 
   const filteredPrompts = userPrompts.filter(
-    (prompt) => prompt.isPublic !== false,
+    (prompt) => prompt.isPublic !== false
   );
 
   const handlePromptUpdated = async (updatedPrompt: PromptWithAuthor) => {
@@ -522,17 +597,7 @@ export function AppSidebar({ className }: { className?: string }) {
                     <span>Create Prompt</span>
                   </SidebarMenuButton>
                 </CreatePromptModal>
-                <Button
-                  size="icon"
-                  className="size-8 group-data-[collapsible=icon]:opacity-0"
-                  variant="outline"
-                  asChild
-                >
-                  <Link href="/community">
-                    <IconSearch />
-                    <span className="sr-only">Explore</span>
-                  </Link>
-                </Button>
+                <SidebarTrigger className="size-9 flex lg:hidden" />
               </SidebarMenuItem>
             </SidebarMenu>
             <SidebarMenu>
@@ -603,7 +668,7 @@ export function AppSidebar({ className }: { className?: string }) {
                         groups[groupKey].push(prompt);
                         return groups;
                       },
-                      {} as Record<string, PromptWithAuthor[]>,
+                      {} as Record<string, PromptWithAuthor[]>
                     );
 
                     // Sort groups in desired order
@@ -672,14 +737,14 @@ export function AppSidebar({ className }: { className?: string }) {
                                     <DropdownMenuItem
                                       onClick={async () => {
                                         copyToClipboardWithMeta(
-                                          `${window.location.origin}${promptUrl}`,
+                                          `${window.location.origin}${promptUrl}`
                                         );
                                         toast.message(
                                           "Prompt URL copied to clipboard.",
                                           {
                                             description:
                                               "You can now share this link.",
-                                          },
+                                          }
                                         );
                                       }}
                                     >
@@ -720,16 +785,16 @@ export function AppSidebar({ className }: { className?: string }) {
                                                   `/api/prompts/${prompt.id}`,
                                                   {
                                                     method: "DELETE",
-                                                  },
+                                                  }
                                                 );
                                                 if (res.ok) {
                                                   setUserPrompts((prev) =>
                                                     prev.filter(
-                                                      (p) => p.id !== prompt.id,
-                                                    ),
+                                                      (p) => p.id !== prompt.id
+                                                    )
                                                   );
                                                   toast.success(
-                                                    "Prompt deleted successfully",
+                                                    "Prompt deleted successfully"
                                                   );
                                                   router.refresh();
                                                 } else {
@@ -739,12 +804,12 @@ export function AppSidebar({ className }: { className?: string }) {
                                                     {
                                                       description:
                                                         data.error || undefined,
-                                                    },
+                                                    }
                                                   );
                                                 }
                                               } catch (err) {
                                                 toast.error(
-                                                  "Failed to delete prompt.",
+                                                  "Failed to delete prompt."
                                                 );
                                               } finally {
                                                 setDeleting(false);

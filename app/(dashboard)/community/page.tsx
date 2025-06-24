@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { PromptCard } from "@/components/prompt-card";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import {
@@ -12,7 +12,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Sheet,
   SheetContent,
@@ -21,6 +20,15 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
+import {
   Search,
   Filter,
   TrendingUp,
@@ -28,17 +36,18 @@ import {
   Star,
   Grid3X3,
   List,
-  Sparkles,
-  Zap,
   Users,
   BookOpen,
   X,
+  ArrowUp,
 } from "lucide-react";
 import { fetchAllPrompts, type PromptWithAuthor } from "@/lib/actions";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Spinner } from "@/components/ui/spinner";
 import { useSession } from "@/lib/auth-client";
+import UserProvidedElement from "@/components/user-provided-element";
+import { Slider } from "@/components/ui/slider";
 
 const models = ["All Models", "GPT-4", "Claude", "Gemini", "Llama"];
 const categories = [
@@ -66,19 +75,11 @@ const useCases = [
   "Academic",
 ];
 
-const sortOptions = [
-  { label: "Most Popular", value: "popular", icon: Star },
-  { label: "Trending", value: "trending", icon: TrendingUp },
-  { label: "Recently Updated", value: "recent", icon: Clock },
-  { label: "Most Remixed", value: "remixes", icon: Users },
-];
-
 export default function ExplorePage() {
   const [selectedModel, setSelectedModel] = useState("All Models");
   const [selectedCategory, setSelectedCategory] = useState("All Categories");
   const [selectedDifficulty, setSelectedDifficulty] = useState("All Levels");
   const [selectedUseCase, setSelectedUseCase] = useState("All Use Cases");
-  const [selectedSort, setSelectedSort] = useState("popular");
   const [searchQuery, setSearchQuery] = useState("");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [activeTab, setActiveTab] = useState("all");
@@ -86,6 +87,10 @@ export default function ExplorePage() {
   const [prompts, setPrompts] = useState<PromptWithAuthor[]>([]);
   const [loading, setLoading] = useState(true);
   const { data: session } = useSession();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [promptsPerPage, setPromptsPerPage] = useState(6);
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const [showScrollTop, setShowScrollTop] = useState(false);
 
   useEffect(() => {
     const loadPrompts = async () => {
@@ -121,7 +126,7 @@ export default function ExplorePage() {
       prompt.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
       (prompt.tags &&
         prompt.tags.some((tag) =>
-          tag.toLowerCase().includes(searchQuery.toLowerCase()),
+          tag.toLowerCase().includes(searchQuery.toLowerCase())
         ));
 
     let tabMatch = true;
@@ -150,14 +155,20 @@ export default function ExplorePage() {
     );
   });
 
-  const sortedPrompts = [...filteredPrompts].sort((a, b) => {
-    switch (selectedSort) {
-      case "popular":
-        return b.stars - a.stars;
-      default:
-        return 0;
+  const sortedPrompts = [...filteredPrompts].sort((a, b) => b.stars - a.stars);
+
+  const totalPages = Math.ceil(sortedPrompts.length / promptsPerPage);
+  const paginatedPrompts = sortedPrompts.slice(
+    (currentPage - 1) * promptsPerPage,
+    currentPage * promptsPerPage
+  );
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    if (scrollAreaRef.current) {
+      scrollAreaRef.current.scrollTo({ top: 0, behavior: "smooth" });
     }
-  });
+  };
 
   const clearFilters = () => {
     setSelectedModel("All Models");
@@ -165,6 +176,8 @@ export default function ExplorePage() {
     setSelectedDifficulty("All Levels");
     setSelectedUseCase("All Use Cases");
     setSearchQuery("");
+    setCurrentPage(1);
+    setPromptsPerPage(6);
   };
 
   const hasActiveFilters =
@@ -172,7 +185,32 @@ export default function ExplorePage() {
     selectedCategory !== "All Categories" ||
     selectedDifficulty !== "All Levels" ||
     selectedUseCase !== "All Use Cases" ||
-    searchQuery !== "";
+    searchQuery !== "" ||
+    promptsPerPage !== 6;
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [
+    selectedModel,
+    selectedCategory,
+    selectedDifficulty,
+    selectedUseCase,
+    searchQuery,
+    activeTab,
+    viewMode,
+    promptsPerPage,
+  ]);
+
+  const handleScroll = (event: React.UIEvent<HTMLDivElement>) => {
+    const { scrollTop } = event.currentTarget;
+    setShowScrollTop(scrollTop > 300);
+  };
+
+  const scrollToTop = () => {
+    if (scrollAreaRef.current) {
+      scrollAreaRef.current.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
 
   return (
     <>
@@ -184,49 +222,89 @@ export default function ExplorePage() {
               <h1 className="hidden truncate text-base font-medium sm:inline sm:tracking-tight">
                 Community
               </h1>
-              <div className="flex items-center gap-2 ml-4">
-                <Button
-                  variant={activeTab === "all" ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setActiveTab("all")}
-                  className="flex items-center gap-2"
-                >
-                  <BookOpen className="h-4 w-4" />
-                  All Prompts
-                </Button>
-                <Button
-                  variant={activeTab === "trending" ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setActiveTab("trending")}
-                  className="flex items-center gap-2"
-                >
-                  <TrendingUp className="h-4 w-4" />
-                  Trending
-                </Button>
-                <Button
-                  variant={activeTab === "recent" ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setActiveTab("recent")}
-                  className="flex items-center gap-2"
-                >
-                  <Clock className="h-4 w-4" />
-                  Recent
-                </Button>
-                <Button
-                  variant={activeTab === "remixes" ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setActiveTab("remixes")}
-                  className="flex items-center gap-2"
-                >
-                  <Users className="h-4 w-4" />
-                  Most Remixed
-                </Button>
+              <div className="flex items-center ml-4">
+                {/* Show tab buttons on sm+ screens, select menu on mobile */}
+                <div className="hidden sm:flex items-center gap-2">
+                  <Button
+                    variant={activeTab === "all" ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setActiveTab("all")}
+                    className="flex items-center gap-2"
+                  >
+                    <BookOpen className="h-4 w-4" />
+                    All Prompts
+                  </Button>
+                  <Button
+                    variant={activeTab === "trending" ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setActiveTab("trending")}
+                    className="flex items-center gap-2"
+                  >
+                    <TrendingUp className="h-4 w-4" />
+                    Trending
+                  </Button>
+                  <Button
+                    variant={activeTab === "recent" ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setActiveTab("recent")}
+                    className="flex items-center gap-2"
+                  >
+                    <Clock className="h-4 w-4" />
+                    Recent
+                  </Button>
+                  <Button
+                    variant={activeTab === "remixes" ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setActiveTab("remixes")}
+                    className="flex items-center gap-2"
+                  >
+                    <Users className="h-4 w-4" />
+                    Most Remixed
+                  </Button>
+                </div>
+                <div className="flex sm:hidden w-44">
+                  <Select value={activeTab} onValueChange={setActiveTab}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">
+                        <span className="flex items-center gap-2">
+                          <BookOpen className="h-4 w-4" />
+                          All Prompts
+                        </span>
+                      </SelectItem>
+                      <SelectItem value="trending">
+                        <span className="flex items-center gap-2">
+                          <TrendingUp className="h-4 w-4" />
+                          Trending
+                        </span>
+                      </SelectItem>
+                      <SelectItem value="recent">
+                        <span className="flex items-center gap-2">
+                          <Clock className="h-4 w-4" />
+                          Recent
+                        </span>
+                      </SelectItem>
+                      <SelectItem value="remixes">
+                        <span className="flex items-center gap-2">
+                          <Users className="h-4 w-4" />
+                          Most Remixed
+                        </span>
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </header>
-      <ScrollArea className="h-[calc(100vh-6.5rem)] px-4 py-2 rounded-b-xl border-b border-x">
+      <ScrollArea
+        ref={scrollAreaRef}
+        className="h-[calc(100vh-6.5rem)] px-4 py-2 rounded-b-xl border-b border-x"
+        onScroll={handleScroll}
+      >
         {loading ? (
           <div className="flex h-[calc(100vh-8rem)] items-center justify-center">
             <Spinner size="large" />
@@ -236,6 +314,7 @@ export default function ExplorePage() {
             <section className="pt-24 pb-12">
               <div className="container mx-auto px-4">
                 <div className="text-center max-w-4xl mx-auto">
+                  <UserProvidedElement />
                   <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-foreground to-muted-foreground bg-clip-text text-transparent">
                     Explore AI Prompts
                   </h1>
@@ -246,7 +325,7 @@ export default function ExplorePage() {
 
                   {/* Search Bar */}
                   <div className="relative max-w-2xl mx-auto mb-8">
-                    <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                    <Search className="absolute left-4 top-1/2 z-10 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                     <Input
                       placeholder="Search prompts, tags, or descriptions..."
                       value={searchQuery}
@@ -274,6 +353,7 @@ export default function ExplorePage() {
                             difficulty: selectedDifficulty !== "All Levels",
                             useCase: selectedUseCase !== "All Use Cases",
                             search: searchQuery !== "",
+                            promptsPerPage: promptsPerPage !== 6,
                           }).filter(Boolean).length
                         }{" "}
                         filters active
@@ -304,6 +384,7 @@ export default function ExplorePage() {
                                     selectedDifficulty !== "All Levels",
                                   useCase: selectedUseCase !== "All Use Cases",
                                   search: searchQuery !== "",
+                                  promptsPerPage: promptsPerPage !== 6,
                                 }).filter(Boolean).length
                               }
                             </Button>
@@ -407,6 +488,22 @@ export default function ExplorePage() {
                             </Select>
                           </div>
 
+                          {/* Prompts per page */}
+                          <div>
+                            <label className="text-sm font-medium mb-3 block">
+                              Prompts per page: {promptsPerPage}
+                            </label>
+                            <Slider
+                              value={[promptsPerPage]}
+                              onValueChange={(value) =>
+                                setPromptsPerPage(value[0])
+                              }
+                              min={3}
+                              max={9}
+                              step={1}
+                            />
+                          </div>
+
                           {/* Clear Filters */}
                           {hasActiveFilters && (
                             <Button
@@ -449,9 +546,8 @@ export default function ExplorePage() {
                   </div>
                 </div>
 
-                {/* Results */}
                 <div className="mt-6">
-                  {sortedPrompts.length === 0 ? (
+                  {paginatedPrompts.length === 0 ? (
                     <div className="text-center py-16">
                       <div className="text-6xl mb-4">🔍</div>
                       <h3 className="text-xl font-semibold mb-2">
@@ -471,7 +567,7 @@ export default function ExplorePage() {
                             : "space-y-4"
                         }
                       >
-                        {sortedPrompts.map((prompt) => {
+                        {paginatedPrompts.map((prompt) => {
                           return (
                             <PromptCard
                               key={prompt.id}
@@ -489,12 +585,71 @@ export default function ExplorePage() {
                           );
                         })}
                       </div>
+
+                      <Pagination className="mt-12">
+                        <PaginationContent>
+                          <PaginationItem>
+                            <PaginationPrevious
+                              onClick={(e) => {
+                                e.preventDefault();
+                                if (currentPage > 1) {
+                                  handlePageChange(currentPage - 1);
+                                }
+                              }}
+                              className={
+                                currentPage === 1
+                                  ? "pointer-events-none opacity-50"
+                                  : ""
+                              }
+                            />
+                          </PaginationItem>
+                          {Array.from({ length: totalPages }, (_, i) => (
+                            <PaginationItem key={i}>
+                              <PaginationLink
+                                isActive={currentPage === i + 1}
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  handlePageChange(i + 1);
+                                }}
+                              >
+                                {i + 1}
+                              </PaginationLink>
+                            </PaginationItem>
+                          ))}
+                          <PaginationItem>
+                            <PaginationNext
+                              onClick={(e) => {
+                                e.preventDefault();
+                                if (currentPage < totalPages) {
+                                  handlePageChange(currentPage + 1);
+                                }
+                              }}
+                              className={
+                                currentPage === totalPages
+                                  ? "pointer-events-none opacity-50"
+                                  : ""
+                              }
+                            />
+                          </PaginationItem>
+                        </PaginationContent>
+                      </Pagination>
                     </>
                   )}
                 </div>
               </div>
             </div>
           </div>
+        )}
+        {showScrollTop && (
+          <Button
+            variant="outline"
+            size="icon"
+            className="fixed bottom-8 right-8 z-50 rounded-full"
+            onClick={scrollToTop}
+          >
+            <ArrowUp className="h-4 w-4" />
+            <span className="sr-only">Scroll to top</span>
+          </Button>
         )}
       </ScrollArea>
     </>

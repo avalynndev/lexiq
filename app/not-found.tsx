@@ -1,11 +1,19 @@
 import Link from "next/link";
 import Navbar from "@/components/navbar";
 import { Footer } from "@/components/footer";
+import { siteConfig } from "@/config/site";
+import { source } from "@/lib/source";
 
 export default function NotFound() {
+  const pageTree = source.pageTree;
+
   return (
     <div>
-      <Navbar />
+      <Navbar
+        tree={pageTree}
+        items={siteConfig.navItems}
+        className="flex lg:hidden"
+      />
       <main className="container mx-auto px-4 md:overflow-visible">
         <div className="min-h-screen flex flex-col items-center justify-center bg-background text-foreground px-4">
           <h1 className="text-6xl font-bold mb-4">404</h1>

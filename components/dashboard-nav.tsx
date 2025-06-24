@@ -22,7 +22,7 @@ export default function Navbar() {
   return (
     <header className="flex h-14 shrink-0 items-center justify-between gap-3 px-3 py-2 sm:h-11 sm:px-2">
       <div className="flex min-w-0 flex-1 items-center">
-        <div className="mr-1 hidden sm:flex">
+        <div className="mr-1 flex">
           <Link
             className="flex items-center gap-1.5 px-1 text-sm size-8 w-auto rounded-md py-1.5 border-0"
             href="/"
@@ -32,13 +32,12 @@ export default function Navbar() {
           </Link>
         </div>
 
-        <span className="text-alpha-400 w-4 min-w-4 select-none text-center text-lg hidden sm:block">
+        <span className="text-alpha-400 w-4 min-w-4 select-none text-center text-lg block">
           /
         </span>
 
         <div className="flex min-w-0 flex-1 items-center truncate text-start text-sm font-medium leading-[20px] pl-4">
           <div className="max-w-64 truncate pr-2">Lexiq</div>
-          <Badge variant="secondary">Free</Badge>
         </div>
       </div>
 

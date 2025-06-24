@@ -7,6 +7,7 @@ import { Spotlight } from "@/components/ui/spotlight";
 import { fetchAllPrompts, type PromptWithAuthor } from "@/lib/actions";
 import Link from "next/link";
 import { useSession } from "@/lib/auth-client";
+import UserProvidedElement from "@/components/user-provided-element";
 
 export default function ExplorePage() {
   const [prompts, setPrompts] = useState<PromptWithAuthor[]>([]);
@@ -55,6 +56,8 @@ export default function ExplorePage() {
       <section className="pt-24 pb-12">
         <div className="container mx-auto px-4 overflow-hidden">
           <div className="text-center max-w-4xl mx-auto">
+            <UserProvidedElement />
+
             <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-foreground to-muted-foreground bg-clip-text text-transparent">
               Explore AI Prompts
             </h1>
