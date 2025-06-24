@@ -59,7 +59,7 @@ export function Hero() {
             Start exploring for free, no account required.
           </p>
 
-          <div className="mt-12 pr-20 lg:hidden justify-center items-center">
+          <div className="mt-12 pr-40 lg:hidden justify-center items-center">
             <FloatingPromptCards />
           </div>
         </div>

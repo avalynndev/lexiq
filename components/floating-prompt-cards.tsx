@@ -11,6 +11,7 @@ import {
   GeminiLogo,
   MetaIconOutline,
 } from "@/components/logos";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const sampleCards = [
   {
@@ -88,6 +89,7 @@ const getModelIcon = (model: string) => {
 
 export function FloatingPromptCards() {
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);
+  const isMobile = useIsMobile();
 
   return (
     <div className="relative w-full h-[450px] lg:h-[500px] md:overflow-hidden">
@@ -113,9 +115,25 @@ export function FloatingPromptCards() {
             ease: "easeOut",
           }}
           style={{
-            left: index === 0 ? "10%" : index === 1 ? "50%" : "20%",
+            left: isMobile
+              ? index === 0
+                ? "10%"
+                : index === 1
+                  ? "50%"
+                  : "20%"
+              : index === 0
+                ? "10%"
+                : index === 1
+                  ? "50%"
+                  : "20%",
             top: index === 0 ? "5%" : index === 1 ? "15%" : "50%",
-            transform: index === 1 ? "translateX(-55%)" : "translateX()",
+            transform: isMobile
+              ? index === 1
+                ? "translateX(-50%)"
+                : "translateX(0)"
+              : index === 1
+                ? "translateX(-55%)"
+                : "translateX(0)",
             zIndex: index === 1 ? 30 : 20,
           }}
           whileHover={{

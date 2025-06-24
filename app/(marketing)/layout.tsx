@@ -16,7 +16,7 @@ export default function RootLayout({
         items={siteConfig.navItems}
         className="flex lg:hidden"
       />
-      <main className="container mx-auto px-4 md:overflow-visible">
+      <main className="container mx-auto px-4 overflow-x-hidden md:overflow-visible">
         {children}
       </main>
       <Footer />
