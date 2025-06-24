@@ -1,6 +1,6 @@
 import { db } from "@/db";
 import { prompt, user, starredPrompts, remixedPrompts } from "@/schema";
-import { eq, desc, asc, and } from "drizzle-orm";
+import { eq, desc, asc, and, sql } from "drizzle-orm";
 import { unstable_cache } from "next/cache";
 
 // Ensure this only runs on the server
@@ -75,7 +75,7 @@ export const getAllPrompts = unstable_cache(
   {
     revalidate: 30, // 30 seconds
     tags: ["prompts"],
-  },
+  }
 );
 
 // Cached version of getPromptById with 30 second revalidation
@@ -128,7 +128,7 @@ export const getPromptById = unstable_cache(
   {
     revalidate: 30, // 30 seconds
     tags: ["prompts"],
-  },
+  }
 );
 
 // Cached version of getTrendingPrompts with 60 second revalidation
@@ -176,7 +176,88 @@ export const getTrendingPrompts = unstable_cache(
   {
     revalidate: 60, // 60 seconds
     tags: ["prompts", "trending"],
+  }
+);
+
+// Cached version of getAllTags with 30 second revalidation
+export const getAllTags = unstable_cache(
+  async (): Promise<string[]> => {
+    const prompts = await db
+      .select({
+        tags: prompt.tags,
+      })
+      .from(prompt)
+      .where(eq(prompt.isPublic, true));
+
+    const allTags = prompts.flatMap((p) => p.tags || []);
+    const uniqueTags = Array.from(new Set(allTags));
+
+    return uniqueTags.sort();
   },
+  ["all-tags"],
+  {
+    revalidate: 30, // 30 seconds
+    tags: ["tags"],
+  }
+);
+
+// Cached version of getPromptsByTags with 30 second revalidation
+export const getPromptsByTags = unstable_cache(
+  async (tags: string[]): Promise<PromptWithAuthor[]> => {
+    if (tags.length === 0) {
+      return getAllPrompts();
+    }
+
+    const prompts = await db
+      .select({
+        id: prompt.id,
+        title: prompt.title,
+        description: prompt.description,
+        prompt: prompt.prompt,
+        model: prompt.model,
+        category: prompt.category,
+        stars: prompt.stars,
+        remixes: prompt.remixes,
+        views: prompt.views,
+        isPublic: prompt.isPublic,
+        lastUpdated: prompt.lastUpdated,
+        createdOn: prompt.createdOn,
+        tags: prompt.tags,
+        solves: prompt.solves,
+        models: prompt.models,
+        author: {
+          username: user.username,
+          displayUsername: user.displayUsername,
+          image: user.image,
+        },
+      })
+      .from(prompt)
+      .leftJoin(user, eq(prompt.authorId, user.id))
+      .where(
+        and(
+          eq(prompt.isPublic, true),
+          sql`${prompt.tags} @> ARRAY[${sql.join(
+            tags.map((t) => sql.param(t)),
+            sql`, `
+          )}]`
+        )
+      )
+      .orderBy(desc(prompt.createdOn));
+
+    return prompts.map((p) => ({
+      ...p,
+      author: p.author ?? {
+        username: null,
+        displayUsername: null,
+        image: null,
+      },
+    }));
+  },
+  ["prompts-by-tags"],
+  {
+    revalidate: 30, // 30 seconds
+    tags: ["prompts"],
+  }
 );
 
 // Cached version of getUserPrompts with 10 second revalidation
@@ -223,7 +304,7 @@ export const getUserPrompts = unstable_cache(
   {
     revalidate: 10, // 10 seconds
     tags: ["prompts", "user"],
-  },
+  }
 );
 
 // Cached version of getRemixedPrompts with 10 second revalidation
@@ -273,7 +354,7 @@ export const getRemixedPrompts = unstable_cache(
   {
     revalidate: 10,
     tags: ["prompts", "remixed"],
-  },
+  }
 );
 
 // Cached version of getStarredPrompts with 10 second revalidation
@@ -323,17 +404,17 @@ export const getStarredPrompts = unstable_cache(
   {
     revalidate: 10,
     tags: ["prompts", "starred"],
-  },
+  }
 );
 
 export async function hasUserRemixedPrompt(
   userId: string,
-  promptId: string,
+  promptId: string
 ): Promise<boolean> {
   const result = await db.query.remixedPrompts.findFirst({
     where: and(
       eq(remixedPrompts.userId, userId),
-      eq(remixedPrompts.promptId, promptId),
+      eq(remixedPrompts.promptId, promptId)
     ),
   });
   return !!result;
@@ -341,12 +422,12 @@ export async function hasUserRemixedPrompt(
 
 export async function hasUserStarredPrompt(
   userId: string,
-  promptId: string,
+  promptId: string
 ): Promise<boolean> {
   const result = await db.query.starredPrompts.findFirst({
     where: and(
       eq(starredPrompts.userId, userId),
-      eq(starredPrompts.promptId, promptId),
+      eq(starredPrompts.promptId, promptId)
     ),
   });
   return !!result;
