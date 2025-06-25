@@ -111,6 +111,7 @@ export default function PromptDetailPage() {
   const { prompt, isLoading: isPromptLoading } = usePrompt(params.slug);
   const { isStarred, isLoading: isStarredLoading } = useCheckStarred(
     prompt?.id,
+    session ?? undefined,
   );
   const { handleStar, isStaring } = useStarMutation(prompt?.id);
   const { stars: liveStars, isLoading: isStarsLoading } = usePromptStars(
@@ -118,6 +119,7 @@ export default function PromptDetailPage() {
   );
   const { isRemixed, isLoading: isRemixedLoading } = useCheckRemixed(
     prompt?.id,
+    session ?? undefined,
   );
   const { handleRemix, isRemixing } = useRemixMutation(prompt?.id);
   const { remixes: liveRemixes, isLoading: isRemixesLoading } =

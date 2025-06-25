@@ -47,12 +47,18 @@ export function PromptCard({ prompt }: PromptCardProps) {
   const router = useRouter();
 
   // SWR hooks for live data and mutations
-  const { isStarred, isLoading: isStarredLoading } = useCheckStarred(prompt.id);
+  const { isStarred, isLoading: isStarredLoading } = useCheckStarred(
+    prompt.id,
+    session ?? undefined,
+  );
   const { handleStar, isStaring } = useStarMutation(prompt.id);
   const { stars: liveStars, isLoading: isStarsLoading } = usePromptStars(
     prompt.id,
   );
-  const { isRemixed, isLoading: isRemixedLoading } = useCheckRemixed(prompt.id);
+  const { isRemixed, isLoading: isRemixedLoading } = useCheckRemixed(
+    prompt.id,
+    session ?? undefined,
+  );
   const { handleRemix, isRemixing } = useRemixMutation(prompt.id);
   const { remixes: liveRemixes, isLoading: isRemixesLoading } =
     usePromptRemixes(prompt.id);

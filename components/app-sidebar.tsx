@@ -573,10 +573,6 @@ export function AppSidebar({ className }: { className?: string }) {
     };
   }, [session]);
 
-  const filteredPrompts = userPrompts.filter(
-    (prompt) => prompt.isPublic !== false,
-  );
-
   const handlePromptUpdated = async (updatedPrompt: PromptWithAuthor) => {
     setEditModalOpen(false);
     setEditingPrompt(null);
@@ -645,12 +641,12 @@ export function AppSidebar({ className }: { className?: string }) {
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               </SidebarMenu>
-            ) : filteredPrompts.length > 0 ? (
+            ) : userPrompts.length > 0 ? (
               <ScrollArea className="h-[calc(100vh-20rem)]">
                 <SidebarMenu>
                   {(() => {
                     // Group prompts by date modified
-                    const groupedPrompts = filteredPrompts.reduce(
+                    const groupedPrompts = userPrompts.reduce(
                       (groups, prompt) => {
                         const date = new Date(prompt.lastUpdated);
                         const today = new Date();
