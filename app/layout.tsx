@@ -92,7 +92,23 @@ export default function RootLayout({
             speed={200}
             shadow="0 0 10px #2299DD,0 0 5px #2299DD"
           />
-          <Providers>{children}</Providers>
+          <Providers>
+            <div className="fixed bottom-4 right-4 z-50">
+              <a
+                href="https://bolt.new"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block transition-all duration-300 hover:shadow-2xl"
+              >
+                <img
+                  src="https://storage.bolt.army/white_circle_360x360.png" 
+                  alt="Built with Bolt.new badge"
+                  className="w-20 h-20 md:w-28 md:h-28 rounded-full shadow-lg  "
+                />
+              </a>
+            </div>
+            {children}
+          </Providers>
           <Toaster richColors />
           <TailwindIndicator />
         </ThemeProvider>
