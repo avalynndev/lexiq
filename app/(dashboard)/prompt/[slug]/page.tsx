@@ -1,6 +1,6 @@
 "use client";
 
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, notFound } from "next/navigation";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -110,14 +110,14 @@ export default function PromptDetailPage() {
   // Data fetching hooks
   const { prompt, isLoading: isPromptLoading } = usePrompt(params.slug);
   const { isStarred, isLoading: isStarredLoading } = useCheckStarred(
-    prompt?.id,
+    prompt?.id
   );
   const { handleStar, isStaring } = useStarMutation(prompt?.id);
   const { stars: liveStars, isLoading: isStarsLoading } = usePromptStars(
-    prompt?.id,
+    prompt?.id
   );
   const { isRemixed, isLoading: isRemixedLoading } = useCheckRemixed(
-    prompt?.id,
+    prompt?.id
   );
   const { handleRemix, isRemixing } = useRemixMutation(prompt?.id);
   const { remixes: liveRemixes, isLoading: isRemixesLoading } =
@@ -151,19 +151,46 @@ export default function PromptDetailPage() {
 
   if (!prompt) {
     return (
-      <div className="flex items-center justify-center h-full">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold mb-4">Prompt Not Found</h1>
-          <Link href="/explore">
-            <Button>
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Explore
-            </Button>
-          </Link>
-        </div>
-      </div>
+      <>
+        <header className="flex h-(--header-height) bg-sidebar shrink-0 rounded-t-xl border-t border-x items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height)">
+          <div className="flex w-full pt-5 p-5">
+            <div className="flex flex-col flex-1 border-alpha-200 border-t sm:border-t-0">
+              <div className="flex items-center gap-3 pl-4 pr-3 sm:pl-3 sm:pr-2 h-12 border-b border-alpha-200 sm:mx-0 shrink-0">
+                <SidebarTrigger className="-ml-1" />
+              </div>
+            </div>
+          </div>
+        </header>
+        <ScrollArea className="h-[calc(100vh-6.5rem)] px-4 py-2 rounded-b-xl border-b border-x">
+          <div className="flex flex-col items-center justify-center min-h-[60vh] w-full px-4">
+            <div className="flex flex-col items-center gap-4">
+              <span className="text-7xl">🔍</span>
+              <h1 className="text-3xl font-bold mb-2">Prompt Not Found</h1>
+              <p className="text-muted-foreground mb-4 text-center max-w-md">
+                Sorry, the prompt you are looking for does not exist or has been
+                deleted.
+              </p>
+              <Link href="/explore">
+                <Button variant="default" size="lg">
+                  Back to Explore
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </ScrollArea>
+      </>
     );
   }
+
+  // Defensive fallback for stats
+  const safeStars =
+    isStarsLoading || liveStars === undefined || liveStars === null
+      ? (prompt?.stars ?? 0)
+      : liveStars;
+  const safeRemixes =
+    isRemixesLoading || liveRemixes === undefined || liveRemixes === null
+      ? (prompt?.remixes ?? 0)
+      : liveRemixes;
 
   return (
     <>
@@ -350,22 +377,14 @@ export default function PromptDetailPage() {
                     <span className="text-muted-foreground flex items-center gap-2">
                       <Star className="h-4 w-4" /> Stars
                     </span>
-                    <span>
-                      {isStarsLoading || liveStars === undefined
-                        ? prompt.stars
-                        : liveStars}
-                    </span>
+                    <span>{safeStars}</span>
                   </div>
                   <Separator />
                   <div className="flex justify-between">
                     <span className="text-muted-foreground flex items-center gap-2">
                       <GitFork className="h-4 w-4" /> Remixes
                     </span>
-                    <span>
-                      {isRemixedLoading || liveRemixes === undefined
-                        ? prompt.remixes
-                        : liveRemixes}
-                    </span>
+                    <span>{safeRemixes}</span>
                   </div>
                   <Separator />
                   <div className="flex justify-between">

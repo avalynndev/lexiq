@@ -11,21 +11,21 @@ export function useCheckStarred(promptId?: string, session?: { user?: any }) {
       shouldFetch
         ? `/api/check-starred?promptId=${encodeURIComponent(promptId!)}`
         : null,
-    [shouldFetch, promptId],
+    [shouldFetch, promptId]
   );
 
-  const { data, error, isLoading } = useSWR<{ isStarred: boolean }>(
-    url,
-    fetcher,
-    {
-      refreshInterval: 3 * 60 * 1000,
-      revalidateOnFocus: false,
-      dedupingInterval: 60 * 1000,
-    },
-  );
+  const { data, error, isLoading } = useSWR<
+    { isStarred: boolean } | { error: string }
+  >(url, fetcher, {
+    refreshInterval: 3 * 60 * 1000,
+    revalidateOnFocus: false,
+    dedupingInterval: 60 * 1000,
+  });
+
+  const isErrorObject = data && typeof data === "object" && "error" in data;
 
   return {
-    isStarred: data?.isStarred ?? false,
+    isStarred: isErrorObject ? false : (data?.isStarred ?? false),
     isLoading: shouldFetch ? isLoading : false,
     error: shouldFetch ? error : null,
   };

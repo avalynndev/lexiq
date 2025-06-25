@@ -11,17 +11,21 @@ export function usePromptRemixes(promptId?: string) {
       shouldFetch
         ? `/api/prompt-remixes?promptId=${encodeURIComponent(promptId!)}`
         : null,
-    [shouldFetch, promptId],
+    [shouldFetch, promptId]
   );
 
-  const { data, error, isLoading } = useSWR<{ remixes: number }>(url, fetcher, {
+  const { data, error, isLoading } = useSWR<
+    { remixes: number } | { error: string }
+  >(url, fetcher, {
     refreshInterval: 50000,
     dedupingInterval: 40000,
     revalidateOnFocus: false,
   });
 
+  const isErrorObject = data && typeof data === "object" && "error" in data;
+
   return {
-    remixes: data?.remixes ?? 0,
+    remixes: isErrorObject ? null : (data?.remixes ?? 0),
     isLoading: shouldFetch ? isLoading : false,
     error: shouldFetch ? error : null,
   };

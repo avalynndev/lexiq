@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import {
   GitFork,
   Globe,
+  MoveRight,
   Palette,
   Search,
   Shield,
@@ -79,7 +80,7 @@ const features = [
 
 export function FeaturesSection() {
   return (
-    <Section className="py-24 px-4">
+    <Section className="pt-24 pb-16 px-4">
       <div className="container mx-auto">
         <div className="text-center mb-16">
           <Badge variant="secondary" className="mb-4">
@@ -122,16 +123,6 @@ export function FeaturesSection() {
               </Item>
             );
           })}
-        </div>
-
-        {/* Call to action */}
-        <div className="text-center mt-16">
-          <Link href="/auth/sign-in">
-            <Button>
-              <TrendingUp className="h-4 w-4 mr-2" />
-              Join 50,000+ creators already using Lexiq
-            </Button>
-          </Link>
         </div>
       </div>
     </Section>

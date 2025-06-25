@@ -16,21 +16,21 @@ export function useCheckRemixed(promptId?: string, session?: { user?: any }) {
       shouldFetch
         ? `/api/check-remixed?promptId=${encodeURIComponent(promptId!)}`
         : null,
-    [shouldFetch, promptId],
+    [shouldFetch, promptId]
   );
 
-  const { data, error, isLoading } = useSWR<CheckRemixedResponse>(
-    url,
-    fetcher,
-    {
-      refreshInterval: 5 * 60 * 1000,
-      revalidateOnFocus: true,
-      dedupingInterval: 60 * 1000,
-    },
-  );
+  const { data, error, isLoading } = useSWR<
+    CheckRemixedResponse | { error: string }
+  >(url, fetcher, {
+    refreshInterval: 5 * 60 * 1000,
+    revalidateOnFocus: true,
+    dedupingInterval: 60 * 1000,
+  });
+
+  const isErrorObject = data && typeof data === "object" && "error" in data;
 
   return {
-    isRemixed: data?.isRemixed ?? false,
+    isRemixed: isErrorObject ? false : (data?.isRemixed ?? false),
     isLoading: shouldFetch ? isLoading : false,
     error: shouldFetch ? error : null,
   };

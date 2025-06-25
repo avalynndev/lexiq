@@ -9,13 +9,18 @@ export function usePrompt(promptId?: string) {
 
   const url = useMemo(
     () => (shouldFetch ? `/api/prompts/${promptId}` : null),
-    [shouldFetch, promptId],
+    [shouldFetch, promptId]
   );
 
-  const { data, error, isLoading } = useSWR<PromptWithAuthor>(url, fetcher);
+  const { data, error, isLoading } = useSWR<
+    PromptWithAuthor | { error: string }
+  >(url, fetcher);
+
+  // If the API returns an error, treat as not found
+  const isErrorObject = data && typeof data === "object" && "error" in data;
 
   return {
-    prompt: data,
+    prompt: isErrorObject ? null : data,
     isLoading: shouldFetch ? isLoading : false,
     error: shouldFetch ? error : null,
   };

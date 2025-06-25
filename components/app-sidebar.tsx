@@ -545,6 +545,9 @@ export function AppSidebar({ className }: { className?: string }) {
   const [editModalOpen, setEditModalOpen] = React.useState(false);
   const [editingPrompt, setEditingPrompt] =
     React.useState<PromptWithAuthor | null>(null);
+  const [deleteDialogOpenFor, setDeleteDialogOpenFor] = React.useState<
+    string | null
+  >(null);
 
   React.useEffect(() => {
     let interval: NodeJS.Timeout | undefined;
@@ -696,6 +699,8 @@ export function AppSidebar({ className }: { className?: string }) {
                           </SidebarGroupLabel>
                           {prompts.map((prompt) => {
                             const promptUrl = `/prompt/${prompt.id}`;
+                            const isOnPromptPage =
+                              pathname === `/prompt/${prompt.id}`;
                             return (
                               <SidebarMenuItem
                                 key={prompt.id}
@@ -758,77 +763,58 @@ export function AppSidebar({ className }: { className?: string }) {
                                       <span>Share</span>
                                     </DropdownMenuItem>
                                     <DropdownMenuSeparator />
-                                    <AlertDialog>
-                                      <AlertDialogTrigger asChild>
-                                        <DropdownMenuItem variant="destructive">
-                                          <IconTrash />
-                                          <span>Delete</span>
-                                        </DropdownMenuItem>
-                                      </AlertDialogTrigger>
-                                      <AlertDialogContent>
-                                        <AlertDialogHeader>
-                                          <AlertDialogTitle>
-                                            Delete Prompt
-                                          </AlertDialogTitle>
-                                          <AlertDialogDescription>
-                                            Are you sure you want to delete this
-                                            prompt? This action cannot be
-                                            undone.
-                                          </AlertDialogDescription>
-                                        </AlertDialogHeader>
-                                        <AlertDialogFooter>
-                                          <AlertDialogCancel
-                                            disabled={deleting}
-                                          >
-                                            Cancel
-                                          </AlertDialogCancel>
-                                          <AlertDialogAction
-                                            disabled={deleting}
-                                            onClick={async () => {
-                                              setDeleting(true);
-                                              try {
-                                                const res = await fetch(
-                                                  `/api/prompts/${prompt.id}`,
-                                                  {
-                                                    method: "DELETE",
-                                                  }
-                                                );
-                                                if (res.ok) {
-                                                  setUserPrompts((prev) =>
-                                                    prev.filter(
-                                                      (p) => p.id !== prompt.id
-                                                    )
-                                                  );
-                                                  toast.success(
-                                                    "Prompt deleted successfully"
-                                                  );
-                                                  router.refresh();
-                                                } else {
-                                                  const data = await res.json();
-                                                  toast.error(
-                                                    "Failed to delete prompt.",
-                                                    {
-                                                      description:
-                                                        data.error || undefined,
-                                                    }
-                                                  );
-                                                }
-                                              } catch (err) {
-                                                toast.error(
-                                                  "Failed to delete prompt."
-                                                );
-                                              } finally {
-                                                setDeleting(false);
+                                    <DropdownMenuItem
+                                      variant="destructive"
+                                      disabled={deleting}
+                                      onClick={async () => {
+                                        setDeleting(true);
+                                        try {
+                                          const res = await fetch(
+                                            `/api/prompts/${prompt.id}`,
+                                            {
+                                              method: "DELETE",
+                                            }
+                                          );
+                                          if (res.ok) {
+                                            setUserPrompts((prev) =>
+                                              prev.filter(
+                                                (p) => p.id !== prompt.id
+                                              )
+                                            );
+                                            toast.success(
+                                              "Prompt deleted successfully"
+                                            );
+                                            if (isOnPromptPage) {
+                                              router.push("/dashboard");
+                                            } else {
+                                              router.refresh();
+                                            }
+                                          } else {
+                                            const data = await res.json();
+                                            toast.error(
+                                              "Failed to delete prompt.",
+                                              {
+                                                description:
+                                                  data.error || undefined,
                                               }
-                                            }}
-                                          >
-                                            {deleting
-                                              ? "Deleting..."
-                                              : "Delete"}
-                                          </AlertDialogAction>
-                                        </AlertDialogFooter>
-                                      </AlertDialogContent>
-                                    </AlertDialog>
+                                            );
+                                          }
+                                        } catch (err) {
+                                          console.error(
+                                            "Error deleting prompt:",
+                                            err
+                                          );
+                                          toast.error(
+                                            "Failed to delete prompt."
+                                          );
+                                        } finally {
+                                          setDeleting(false);
+                                        }
+                                      }}
+                                    >
+                                      <IconTrash />
+                                      <span>Delete</span>
+                                    </DropdownMenuItem>
                                   </DropdownMenuContent>
                                 </DropdownMenu>
                               </SidebarMenuItem>

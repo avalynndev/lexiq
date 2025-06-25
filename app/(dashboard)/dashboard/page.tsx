@@ -37,10 +37,18 @@ interface RecentPromptsActivityProps {
 
 const RecentPromptsActivity: FC<RecentPromptsActivityProps> = ({ prompt }) => {
   const { stars: liveStars, isLoading: isStarsLoading } = usePromptStars(
-    prompt.id,
+    prompt.id
   );
   const { remixes: liveRemixes, isLoading: isRemixesLoading } =
     usePromptRemixes(prompt.id);
+  const safeStars =
+    isStarsLoading || liveStars === undefined || liveStars === null
+      ? prompt.stars
+      : liveStars;
+  const safeRemixes =
+    isRemixesLoading || liveRemixes === undefined || liveRemixes === null
+      ? prompt.remixes
+      : liveRemixes;
   return (
     <Link href={`/prompt/${prompt.id}`}>
       <div className="flex items-center justify-between p-3 rounded-lg border mb-4">
@@ -55,15 +63,11 @@ const RecentPromptsActivity: FC<RecentPromptsActivityProps> = ({ prompt }) => {
         <div className="flex items-center gap-4 text-sm text-muted-foreground">
           <span className="flex items-center gap-1">
             <Star className="h-4 w-4" />
-            {isStarsLoading || liveStars === undefined
-              ? prompt.stars
-              : liveStars}
+            {safeStars}
           </span>
           <span className="flex items-center gap-1">
             <GitFork className="h-4 w-4" />
-            {isRemixesLoading || liveRemixes === undefined
-              ? prompt.remixes
-              : liveRemixes}
+            {safeRemixes}
           </span>
         </div>
       </div>
@@ -100,12 +104,12 @@ export default function DashboardPage() {
   const totalStars = userPrompts.reduce((sum, prompt) => sum + prompt.stars, 0);
   const totalForks = userPrompts.reduce(
     (sum, prompt) => sum + prompt.remixes,
-    0,
+    0
   );
   const recentPrompts = userPrompts
     .sort(
       (a, b) =>
-        new Date(b.createdOn).getTime() - new Date(a.createdOn).getTime(),
+        new Date(b.createdOn).getTime() - new Date(a.createdOn).getTime()
     )
     .slice(0, 5);
 

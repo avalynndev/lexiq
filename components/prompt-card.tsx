@@ -50,7 +50,7 @@ export function PromptCard({ prompt }: PromptCardProps) {
   const { isStarred, isLoading: isStarredLoading } = useCheckStarred(prompt.id);
   const { handleStar, isStaring } = useStarMutation(prompt.id);
   const { stars: liveStars, isLoading: isStarsLoading } = usePromptStars(
-    prompt.id,
+    prompt.id
   );
   const { isRemixed, isLoading: isRemixedLoading } = useCheckRemixed(prompt.id);
   const { handleRemix, isRemixing } = useRemixMutation(prompt.id);
@@ -201,12 +201,14 @@ export function PromptCard({ prompt }: PromptCardProps) {
               size="sm"
               className="h-8 px-2 text-xs"
               onClick={onStarClick}
-              disabled={!session || isStaring || isStarredLoading}
+              disabled={
+                !session || isStaring || isStarredLoading || liveStars === null
+              }
             >
               <Star
                 className={`h-3 w-3 mr-1 ${isStarred ? "text-yellow-400 fill-yellow-400" : ""}`}
               />
-              {isStarsLoading || liveStars === undefined
+              {isStarsLoading || liveStars === undefined || liveStars === null
                 ? prompt.stars
                 : liveStars}
             </Button>
@@ -215,12 +217,19 @@ export function PromptCard({ prompt }: PromptCardProps) {
               size="sm"
               className="h-8 px-2 text-xs"
               onClick={onRemixClick}
-              disabled={!session || isRemixing || isRemixedLoading}
+              disabled={
+                !session ||
+                isRemixing ||
+                isRemixedLoading ||
+                liveRemixes === null
+              }
             >
               <GitFork
                 className={`h-3 w-3 mr-1 ${isRemixed ? "text-yellow-400 fill-yellow-400" : ""}`}
               />
-              {isRemixesLoading || liveRemixes === undefined
+              {isRemixesLoading ||
+              liveRemixes === undefined ||
+              liveRemixes === null
                 ? prompt.remixes
                 : liveRemixes}
             </Button>

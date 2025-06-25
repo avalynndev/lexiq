@@ -23,13 +23,17 @@ export function useUserProfile(username?: string) {
 
   const url = useMemo(
     () => (shouldFetch ? `/api/users/${username}` : null),
-    [shouldFetch, username],
+    [shouldFetch, username]
   );
 
-  const { data, error, isLoading } = useSWR<UserProfileData>(url, fetcher);
+  const { data, error, isLoading } = useSWR<
+    UserProfileData | { error: string }
+  >(url, fetcher);
+
+  const isErrorObject = data && typeof data === "object" && "error" in data;
 
   return {
-    data,
+    data: isErrorObject ? null : data,
     isLoading: shouldFetch ? isLoading : false,
     error: shouldFetch ? error : null,
   };
