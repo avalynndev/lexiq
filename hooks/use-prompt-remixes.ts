@@ -11,7 +11,7 @@ export function usePromptRemixes(promptId?: string) {
       shouldFetch
         ? `/api/prompt-remixes?promptId=${encodeURIComponent(promptId!)}`
         : null,
-    [shouldFetch, promptId]
+    [shouldFetch, promptId],
   );
 
   const { data, error, isLoading } = useSWR<

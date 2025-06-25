@@ -16,7 +16,7 @@ export function useCheckRemixed(promptId?: string, session?: { user?: any }) {
       shouldFetch
         ? `/api/check-remixed?promptId=${encodeURIComponent(promptId!)}`
         : null,
-    [shouldFetch, promptId]
+    [shouldFetch, promptId],
   );
 
   const { data, error, isLoading } = useSWR<

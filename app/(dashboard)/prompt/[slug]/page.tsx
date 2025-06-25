@@ -110,14 +110,14 @@ export default function PromptDetailPage() {
   // Data fetching hooks
   const { prompt, isLoading: isPromptLoading } = usePrompt(params.slug);
   const { isStarred, isLoading: isStarredLoading } = useCheckStarred(
-    prompt?.id
+    prompt?.id,
   );
   const { handleStar, isStaring } = useStarMutation(prompt?.id);
   const { stars: liveStars, isLoading: isStarsLoading } = usePromptStars(
-    prompt?.id
+    prompt?.id,
   );
   const { isRemixed, isLoading: isRemixedLoading } = useCheckRemixed(
-    prompt?.id
+    prompt?.id,
   );
   const { handleRemix, isRemixing } = useRemixMutation(prompt?.id);
   const { remixes: liveRemixes, isLoading: isRemixesLoading } =

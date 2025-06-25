@@ -37,7 +37,7 @@ interface RecentPromptsActivityProps {
 
 const RecentPromptsActivity: FC<RecentPromptsActivityProps> = ({ prompt }) => {
   const { stars: liveStars, isLoading: isStarsLoading } = usePromptStars(
-    prompt.id
+    prompt.id,
   );
   const { remixes: liveRemixes, isLoading: isRemixesLoading } =
     usePromptRemixes(prompt.id);
@@ -104,12 +104,12 @@ export default function DashboardPage() {
   const totalStars = userPrompts.reduce((sum, prompt) => sum + prompt.stars, 0);
   const totalForks = userPrompts.reduce(
     (sum, prompt) => sum + prompt.remixes,
-    0
+    0,
   );
   const recentPrompts = userPrompts
     .sort(
       (a, b) =>
-        new Date(b.createdOn).getTime() - new Date(a.createdOn).getTime()
+        new Date(b.createdOn).getTime() - new Date(a.createdOn).getTime(),
     )
     .slice(0, 5);
 

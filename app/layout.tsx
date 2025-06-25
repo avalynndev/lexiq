@@ -101,7 +101,7 @@ export default function RootLayout({
                 className="block transition-all duration-300 hover:shadow-2xl"
               >
                 <img
-                  src="https://storage.bolt.army/white_circle_360x360.png" 
+                  src="https://storage.bolt.army/white_circle_360x360.png"
                   alt="Built with Bolt.new badge"
                   className="w-20 h-20 md:w-28 md:h-28 rounded-full shadow-lg  "
                 />

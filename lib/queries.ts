@@ -75,7 +75,7 @@ export const getAllPrompts = unstable_cache(
   {
     revalidate: 30, // 30 seconds
     tags: ["prompts"],
-  }
+  },
 );
 
 // Cached version of getPromptById with 30 second revalidation
@@ -128,7 +128,7 @@ export const getPromptById = unstable_cache(
   {
     revalidate: 30, // 30 seconds
     tags: ["prompts"],
-  }
+  },
 );
 
 // Cached version of getTrendingPrompts with 60 second revalidation
@@ -176,7 +176,7 @@ export const getTrendingPrompts = unstable_cache(
   {
     revalidate: 60, // 60 seconds
     tags: ["prompts", "trending"],
-  }
+  },
 );
 
 // Cached version of getAllTags with 30 second revalidation
@@ -198,7 +198,7 @@ export const getAllTags = unstable_cache(
   {
     revalidate: 30, // 30 seconds
     tags: ["tags"],
-  }
+  },
 );
 
 // Cached version of getPromptsByTags with 30 second revalidation
@@ -238,9 +238,9 @@ export const getPromptsByTags = unstable_cache(
           eq(prompt.isPublic, true),
           sql`${prompt.tags} @> ARRAY[${sql.join(
             tags.map((t) => sql.param(t)),
-            sql`, `
-          )}]`
-        )
+            sql`, `,
+          )}]`,
+        ),
       )
       .orderBy(desc(prompt.createdOn));
 
@@ -257,7 +257,7 @@ export const getPromptsByTags = unstable_cache(
   {
     revalidate: 30, // 30 seconds
     tags: ["prompts"],
-  }
+  },
 );
 
 // Cached version of getUserPrompts with 10 second revalidation
@@ -304,7 +304,7 @@ export const getUserPrompts = unstable_cache(
   {
     revalidate: 10, // 10 seconds
     tags: ["prompts", "user"],
-  }
+  },
 );
 
 // Cached version of getRemixedPrompts with 10 second revalidation
@@ -354,7 +354,7 @@ export const getRemixedPrompts = unstable_cache(
   {
     revalidate: 10,
     tags: ["prompts", "remixed"],
-  }
+  },
 );
 
 // Cached version of getStarredPrompts with 10 second revalidation
@@ -404,17 +404,17 @@ export const getStarredPrompts = unstable_cache(
   {
     revalidate: 10,
     tags: ["prompts", "starred"],
-  }
+  },
 );
 
 export async function hasUserRemixedPrompt(
   userId: string,
-  promptId: string
+  promptId: string,
 ): Promise<boolean> {
   const result = await db.query.remixedPrompts.findFirst({
     where: and(
       eq(remixedPrompts.userId, userId),
-      eq(remixedPrompts.promptId, promptId)
+      eq(remixedPrompts.promptId, promptId),
     ),
   });
   return !!result;
@@ -422,12 +422,12 @@ export async function hasUserRemixedPrompt(
 
 export async function hasUserStarredPrompt(
   userId: string,
-  promptId: string
+  promptId: string,
 ): Promise<boolean> {
   const result = await db.query.starredPrompts.findFirst({
     where: and(
       eq(starredPrompts.userId, userId),
-      eq(starredPrompts.promptId, promptId)
+      eq(starredPrompts.promptId, promptId),
     ),
   });
   return !!result;

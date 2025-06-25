@@ -23,7 +23,7 @@ export function useUserProfile(username?: string) {
 
   const url = useMemo(
     () => (shouldFetch ? `/api/users/${username}` : null),
-    [shouldFetch, username]
+    [shouldFetch, username],
   );
 
   const { data, error, isLoading } = useSWR<
