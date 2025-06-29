@@ -9,7 +9,6 @@ import {
   OpenAILogo,
   ClaudeLogo,
   GeminiLogo,
-  MetaIconOutline,
 } from "@/components/logos";
 import { useIsMobile } from "@/hooks/use-mobile";
 
@@ -62,11 +61,8 @@ const getModelIcon = (model: string) => {
       return <OpenAILogo className="h-4 w-4" />;
     case "claude":
       return <ClaudeLogo className="h-4 w-4" />;
-    case "gemini":
-      return <GeminiLogo className="h-4 w-4" />;
-    case "llama":
     case "meta":
-      return <MetaIconOutline className="h-4 w-4" />;
+      return <GeminiLogo className="h-4 w-4" />;
     default:
       return (
         <svg

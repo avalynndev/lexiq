@@ -5,6 +5,7 @@ Lexiq is an open-source platform dedicated to the art and science of prompt engi
 # 📝 Note:
 
 All the components are written using AI. Some Components like the floating hero images etc, were taken as a reference from other sources.
+Most of the data in the site is Mock data. Please don't take it seriously.
 
 ## 📚 Table of Contents
 
