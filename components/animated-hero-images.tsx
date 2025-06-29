@@ -79,7 +79,7 @@ export function AnimatedHeroImages() {
               <Image
                 alt={`Floating hero image 3 ${isDark ? "dark" : "light"}`}
                 loading="lazy"
-                width={2213}
+                width={12002}
                 height={7265}
                 decoding="async"
                 src={isDark ? "/3-dark.png" : "/3-light.png"}
