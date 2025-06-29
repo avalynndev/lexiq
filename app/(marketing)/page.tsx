@@ -11,13 +11,9 @@ import { FloatingElements } from "@/components/floating-elements";
 export default function Home() {
   return (
     <div className="min-h-screen overflow-hidden relative">
-      {/* Glowing gradient background */}
       <GlowingBackground />
-
-      {/* Floating animated elements */}
       <FloatingElements />
 
-      {/* Main content with enhanced animations */}
       <div className="relative z-10">
         <div className="animate-fade-in-up">
           <Hero />

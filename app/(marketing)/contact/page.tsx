@@ -2,6 +2,8 @@
 import { Github, Mail, Twitter } from "lucide-react";
 import Link from "next/link";
 import { Card } from "@/components/contact-card";
+import { GlowingBackground } from "@/components/glowing-background";
+import { FloatingElements } from "@/components/floating-elements";
 
 const socials = [
   {
@@ -27,6 +29,8 @@ const socials = [
 export default function Contact() {
   return (
     <div>
+      <GlowingBackground />
+      <FloatingElements />
       <div className="container flex items-center justify-center min-h-screen px-4 mx-auto">
         <div className="grid w-full grid-cols-1 gap-8 mx-auto sm:mt-0 sm:grid-cols-3 lg:gap-16">
           {socials.map((s) => (

@@ -23,7 +23,7 @@ export default function StarredPromptsPage() {
           setStarredPrompts(prompts);
         })
         .catch((err: any) =>
-          console.error("Failed to fetch starred prompts:", err),
+          console.error("Failed to fetch starred prompts:", err)
         )
         .finally(() => setLoading(false));
     } else if (session === null) {

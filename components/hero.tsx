@@ -10,7 +10,7 @@ export function Hero() {
     <section className="mt-[60px] lg:mt-[180px] min-h-[530px] relative lg:h-[calc(100vh-300px)]">
       <div className="flex flex-col lg:flex-row lg:items-start lg:gap-12">
         <div className="flex flex-col lg:w-1/2 lg:max-w-[580px]">
-          <div className="animate-fade-in-up">
+          <div className="">
             <Link href="/docs">
               <Button
                 variant="outline"
@@ -33,14 +33,14 @@ export function Hero() {
             </Link>
           </div>
 
-          <div className="animate-fade-in-up delay-200">
+          <div>
             <h2 className="mt-6 md:mt-10 text-[#878787] leading-tight text-[24px] md:text-[36px] font-medium">
               Discover, remix, and evolve powerful AI prompts — built for{" "}
               <WordAnimation />
             </h2>
           </div>
 
-          <div className="mt-8 md:mt-10 animate-fade-in-up delay-400">
+          <div className="mt-8 md:mt-10">
             <div className="flex items-center space-x-4">
               <Link
                 href="/auth/signup"
@@ -63,23 +63,23 @@ export function Hero() {
             </div>
           </div>
 
-          <div className="animate-fade-in-up delay-600">
+          <div>
             <p className="text-xs text-[#707070] mt-4 font-mono">
               Start exploring for free, no account required.
             </p>
           </div>
 
-          <div className="mt-12 pr-40 lg:hidden justify-center items-center animate-fade-in-up delay-800">
+          <div className="mt-12 pr-40 lg:hidden justify-center items-center">
             <FloatingPromptCards />
           </div>
         </div>
 
-        <div className="hidden lg:block lg:w-1/2 lg:flex-1 animate-fade-in-up delay-600">
+        <div className="hidden lg:block lg:w-1/2 lg:flex-1">
           <FloatingPromptCards />
         </div>
       </div>
 
-      <div className="animate-fade-in-up delay-1000">
+      <div>
         <Metrics />
       </div>
     </section>

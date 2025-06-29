@@ -8,6 +8,8 @@ import { fetchAllPrompts, type PromptWithAuthor } from "@/lib/actions";
 import Link from "next/link";
 import { useSession } from "@/lib/auth-client";
 import UserProvidedElement from "@/components/user-provided-element";
+import { GlowingBackground } from "@/components/glowing-background";
+import { FloatingElements } from "@/components/floating-elements";
 
 export default function ExplorePage() {
   const [prompts, setPrompts] = useState<PromptWithAuthor[]>([]);
@@ -52,6 +54,8 @@ export default function ExplorePage() {
 
   return (
     <div className="min-h-screen relative overflow-hidden">
+      <GlowingBackground />
+      <FloatingElements />
       <Spotlight />
       <section className="pt-24 pb-12">
         <div className="container mx-auto px-4 overflow-hidden">

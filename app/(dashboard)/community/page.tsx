@@ -126,7 +126,7 @@ export default function ExplorePage() {
       prompt.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
       (prompt.tags &&
         prompt.tags.some((tag) =>
-          tag.toLowerCase().includes(searchQuery.toLowerCase()),
+          tag.toLowerCase().includes(searchQuery.toLowerCase())
         ));
 
     let tabMatch = true;
@@ -160,7 +160,7 @@ export default function ExplorePage() {
   const totalPages = Math.ceil(sortedPrompts.length / promptsPerPage);
   const paginatedPrompts = sortedPrompts.slice(
     (currentPage - 1) * promptsPerPage,
-    currentPage * promptsPerPage,
+    currentPage * promptsPerPage
   );
 
   const handlePageChange = (page: number) => {
