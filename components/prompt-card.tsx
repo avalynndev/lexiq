@@ -137,9 +137,12 @@ export function PromptCard({ prompt }: PromptCardProps) {
   const tags = prompt.tags || [prompt.category.toLowerCase(), "ai"];
 
   return (
-    <Card className="h-full overflow-hidden transition-all border shadow-lg p-0 group-hover:shadow-xl group-hover:shadow-purple-500/10">
-      <div className="flex h-full flex-col pt-6">
-        <div className="flex-1 px-6">
+    <Card className="h-full overflow-hidden transition-all border shadow-lg p-0 group hover-glow card-glow border-gradient">
+      <div className="flex h-full flex-col pt-6 relative">
+        {/* Gradient overlay */}
+        <div className="absolute inset-0 gradient-purple-blue opacity-0 group-hover:opacity-5 transition-opacity duration-300 rounded-lg" />
+        
+        <div className="flex-1 px-6 relative z-10">
           <div className="flex items-start justify-between">
             <div className="flex items-center gap-1">
               <h3 className="font-semibold tracking-tight text-lg">
@@ -147,7 +150,7 @@ export function PromptCard({ prompt }: PromptCardProps) {
               </h3>
             </div>
             {isNew() && (
-              <div className="inline-flex items-center border px-2.5 py-0.5 font-semibold transition-colors focus:outline-hidden focus:ring-2 focus:ring-ring focus:ring-offset-2 text-foreground mr-1 rounded-full text-[10px]">
+              <div className="inline-flex items-center border px-2.5 py-0.5 font-semibold transition-colors focus:outline-hidden focus:ring-2 focus:ring-ring focus:ring-offset-2 text-foreground mr-1 rounded-full text-[10px] gradient-purple-pink text-white glow-effect">
                 New
               </div>
             )}
@@ -161,7 +164,7 @@ export function PromptCard({ prompt }: PromptCardProps) {
             {tags.slice(0, 3).map((tag, index) => (
               <div
                 key={index}
-                className="text-xs text-muted-foreground bg-muted/50 rounded-full px-2 py-1 shadow-xs"
+                className="text-xs text-muted-foreground bg-muted/50 rounded-full px-2 py-1 shadow-xs border-gradient"
               >
                 {tag}
               </div>
@@ -176,7 +179,7 @@ export function PromptCard({ prompt }: PromptCardProps) {
           )}
         </div>
 
-        <div className="mt-4 flex items-center justify-between gap-4 border-t border-t-border/50 py-4 px-6 group-hover:bg-muted/50">
+        <div className="mt-4 flex items-center justify-between gap-4 border-t border-t-border/50 py-4 px-6 group-hover:bg-muted/50 relative z-10">
           <div className="flex items-center gap-2 text-xs text-muted-foreground">
             <span>{prompt.author.username}</span>
           </div>
@@ -185,7 +188,7 @@ export function PromptCard({ prompt }: PromptCardProps) {
             {supportedModels.slice(0, 4).map((model, index) => (
               <span
                 key={index}
-                className="text-muted-foreground transition-colors group-hover:text-foreground"
+                className="text-muted-foreground transition-colors group-hover:text-foreground glow-effect"
                 title={getModelTitle(model)}
               >
                 {getModelIcon(model)}
@@ -200,19 +203,19 @@ export function PromptCard({ prompt }: PromptCardProps) {
         </div>
 
         {/* Star and Fork Buttons */}
-        <div className="flex items-center justify-between gap-2 border-t border-t-border/50 py-3 px-6">
+        <div className="flex items-center justify-between gap-2 border-t border-t-border/50 py-3 px-6 relative z-10">
           <div className="flex items-center gap-2">
             <Button
               variant="ghost"
               size="sm"
-              className="h-8 px-2 text-xs"
+              className="h-8 px-2 text-xs hover-glow"
               onClick={onStarClick}
               disabled={
                 !session || isStaring || isStarredLoading || liveStars === null
               }
             >
               <Star
-                className={`h-3 w-3 mr-1 ${isStarred ? "text-yellow-400 fill-yellow-400" : ""}`}
+                className={`h-3 w-3 mr-1 ${isStarred ? "text-yellow-400 fill-yellow-400 glow-effect" : ""}`}
               />
               {isStarsLoading || liveStars === undefined || liveStars === null
                 ? prompt.stars
@@ -221,7 +224,7 @@ export function PromptCard({ prompt }: PromptCardProps) {
             <Button
               variant="ghost"
               size="sm"
-              className="h-8 px-2 text-xs"
+              className="h-8 px-2 text-xs hover-glow"
               onClick={onRemixClick}
               disabled={
                 !session ||
@@ -231,7 +234,7 @@ export function PromptCard({ prompt }: PromptCardProps) {
               }
             >
               <GitFork
-                className={`h-3 w-3 mr-1 ${isRemixed ? "text-yellow-400 fill-yellow-400" : ""}`}
+                className={`h-3 w-3 mr-1 ${isRemixed ? "text-blue-400 fill-blue-400 glow-effect" : ""}`}
               />
               {isRemixesLoading ||
               liveRemixes === undefined ||
@@ -242,7 +245,7 @@ export function PromptCard({ prompt }: PromptCardProps) {
           </div>
           <a
             href={`/prompt/${prompt.id}`}
-            className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+            className="text-xs text-muted-foreground hover:text-foreground transition-colors text-gradient"
           >
             View Details →
           </a>

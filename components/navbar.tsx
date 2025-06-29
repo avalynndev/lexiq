@@ -41,7 +41,7 @@ export default function Navbar({
 
   return (
     <header className="sticky top-0 z-50 -mb-4 pb-4">
-      <nav className="fade-bottom bg-background/95 fixed top-0 z-50 h-16 w-full backdrop-blur-sm supports-backdrop-filter:bg-background/60">
+      <nav className="fade-bottom bg-background/95 fixed top-0 z-50 h-16 w-full backdrop-blur-sm supports-backdrop-filter:bg-background/60 border-b border-gradient">
         <div className="max-w-container-lg mx-auto flex h-full items-center justify-between px-4 md:gap-2">
           <div className="flex items-center gap-3">
             <Popover open={open} onOpenChange={setOpen}>
@@ -49,7 +49,7 @@ export default function Navbar({
                 <Button
                   variant="ghost"
                   className={cn(
-                    "extend-touch-target h-8 touch-manipulation items-center justify-start gap-2.5 !p-0 hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 active:bg-transparent dark:hover:bg-transparent",
+                    "extend-touch-target h-8 touch-manipulation items-center justify-start gap-2.5 !p-0 hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 active:bg-transparent dark:hover:bg-transparent hover-glow",
                     className,
                   )}
                 >
@@ -73,7 +73,7 @@ export default function Navbar({
                 </Button>
               </PopoverTrigger>
               <PopoverContent
-                className="bg-background/90 no-scrollbar h-(--radix-popper-available-height) w-(--radix-popper-available-width) overflow-y-auto rounded-none border-none p-0 shadow-none backdrop-blur duration-100"
+                className="bg-background/90 no-scrollbar h-(--radix-popper-available-height) w-(--radix-popper-available-width) overflow-y-auto rounded-none border-none p-0 shadow-none backdrop-blur duration-100 card-glow"
                 align="start"
                 side="bottom"
                 alignOffset={-16}
@@ -135,11 +135,11 @@ export default function Navbar({
             <div className="flex items-center gap-6">
               <div className="flex items-center gap-2">
                 <Link
-                  className="flex items-center gap-2.5 text-base font-bold"
+                  className="flex items-center gap-2.5 text-base font-bold hover-glow"
                   href="/"
                 >
-                  <LexiqLogo className="h-6 w-6" />
-                  <h2 className="text-md font-bold">Lexiq</h2>
+                  <LexiqLogo className="h-6 w-6 glow-effect" />
+                  <h2 className="text-md font-bold text-gradient">Lexiq</h2>
                 </Link>
               </div>
 
@@ -148,7 +148,7 @@ export default function Navbar({
                 {items.map((item) => (
                   <Link
                     key={item.label}
-                    className="flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors text-base font-medium"
+                    className="flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors text-base font-medium hover-glow"
                     href={item.href}
                   >
                     {item.label}
@@ -165,7 +165,7 @@ export default function Navbar({
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-10 w-10 rounded-xl"
+                className="h-10 w-10 rounded-xl hover-glow"
                 asChild
               >
                 <a
@@ -211,7 +211,7 @@ function MobileLink({
         router.push(href.toString());
         onOpenChange?.(false);
       }}
-      className={cn("text-2xl font-medium", className)}
+      className={cn("text-2xl font-medium hover-glow", className)}
       {...props}
     >
       {children}
