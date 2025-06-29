@@ -49,7 +49,7 @@ export function Hero() {
               >
                 <Button
                   variant="outline"
-                  className="border-transparent h-11 px-6 dark:bg-[#1D1D1D] bg-[#F2F1EF] hover:scale-105 transition-all duration-200 hover:shadow-lg"
+                  className="border-transparent h-11 px-6 dark:bg-[#1D1D1D] bg-[#F2F1EF] hover:shadow-lg"
                 >
                   Sign up
                 </Button>
