@@ -131,19 +131,19 @@
     --card-foreground: 0 0% 3.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 3.9%;
-    --primary: 262 83% 58%;
+    --primary: 0 0% 9%;
     --primary-foreground: 0 0% 98%;
     --secondary: 0 0% 96.1%;
     --secondary-foreground: 0 0% 9%;
     --muted: 0 0% 96.1%;
     --muted-foreground: 0 0% 45.1%;
-    --accent: 262 83% 58%;
-    --accent-foreground: 0 0% 98%;
+    --accent: 0 0% 96.1%;
+    --accent-foreground: 0 0% 9%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
     --border: 0 0% 89.8%;
     --input: 0 0% 89.8%;
-    --ring: 262 83% 58%;
+    --ring: 0 0% 3.9%;
     --chart-1: 12 76% 61%;
     --chart-2: 173 58% 39%;
     --chart-3: 197 37% 24%;
@@ -159,19 +159,19 @@
     --card-foreground: 0 0% 98%;
     --popover: 0 0% 3.9%;
     --popover-foreground: 0 0% 98%;
-    --primary: 262 83% 58%;
-    --primary-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 9%;
     --secondary: 0 0% 14.9%;
     --secondary-foreground: 0 0% 98%;
     --muted: 0 0% 14.9%;
     --muted-foreground: 0 0% 63.9%;
-    --accent: 262 83% 58%;
+    --accent: 0 0% 14.9%;
     --accent-foreground: 0 0% 98%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
     --border: 0 0% 14.9%;
     --input: 0 0% 14.9%;
-    --ring: 262 83% 58%;
+    --ring: 0 0% 83.1%;
     --chart-1: 220 70% 50%;
     --chart-2: 160 60% 45%;
     --chart-3: 30 80% 55%;
@@ -255,81 +255,6 @@
 
   .bg-linear-to-r {
     background: linear-gradient(to right, var(--tw-gradient-stops));
-  }
-
-  /* Bold Aesthetic Gradient Utilities */
-  .gradient-purple-blue {
-    background: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 50%, #06b6d4 100%);
-  }
-
-  .gradient-purple-pink {
-    background: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
-  }
-
-  .gradient-blue-cyan {
-    background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
-  }
-
-  .gradient-glow {
-    position: relative;
-  }
-
-  .gradient-glow::before {
-    content: '';
-    position: absolute;
-    inset: -2px;
-    background: linear-gradient(135deg, #8b5cf6, #3b82f6, #06b6d4);
-    border-radius: inherit;
-    z-index: -1;
-    filter: blur(8px);
-    opacity: 0.7;
-  }
-
-  .card-glow {
-    box-shadow: 
-      0 0 20px rgba(139, 92, 246, 0.3),
-      0 0 40px rgba(59, 130, 246, 0.2),
-      0 0 60px rgba(6, 182, 212, 0.1);
-  }
-
-  .text-gradient {
-    background: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 50%, #06b6d4 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  .text-gradient-purple {
-    background: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  .border-gradient {
-    border: 2px solid transparent;
-    background: linear-gradient(white, white) padding-box,
-                linear-gradient(135deg, #8b5cf6, #3b82f6, #06b6d4) border-box;
-  }
-
-  .dark .border-gradient {
-    background: linear-gradient(hsl(var(--background)), hsl(var(--background))) padding-box,
-                linear-gradient(135deg, #8b5cf6, #3b82f6, #06b6d4) border-box;
-  }
-
-  .glow-effect {
-    filter: drop-shadow(0 0 10px rgba(139, 92, 246, 0.5));
-  }
-
-  .hover-glow {
-    transition: all 0.3s ease;
-  }
-
-  .hover-glow:hover {
-    transform: translateY(-2px);
-    box-shadow: 
-      0 10px 25px rgba(139, 92, 246, 0.3),
-      0 20px 40px rgba(59, 130, 246, 0.2);
   }
 }
 
@@ -422,8 +347,8 @@
 }
 
 ::selection {
-  background: #8b5cf637;
-  color: #8b5cf6fd;
+  background: #00cc9937;
+  color: #007763fd;
 }
 
 img::selection {
@@ -442,51 +367,4 @@ img::selection {
 
 @utility no-scrollbar {
   @apply [scrollbar-width:none] [&::-webkit-scrollbar]:hidden;
-}
-
-/* Animated gradient background */
-.animated-gradient {
-  background: linear-gradient(-45deg, #8b5cf6, #3b82f6, #06b6d4, #a855f7);
-  background-size: 400% 400%;
-  animation: gradient 15s ease infinite;
-}
-
-@keyframes gradient {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
-/* Floating animation */
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-}
-
-.float-animation {
-  animation: float 6s ease-in-out infinite;
-}
-
-/* Pulse glow effect */
-@keyframes pulse-glow {
-  0%, 100% {
-    box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
-  }
-  50% {
-    box-shadow: 0 0 40px rgba(139, 92, 246, 0.6);
-  }
-}
-
-.pulse-glow {
-  animation: pulse-glow 2s ease-in-out infinite;
 }

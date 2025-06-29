@@ -6,21 +6,13 @@ import { WordAnimation } from "./word-animation";
 
 export function Hero() {
   return (
-    <section className="mt-[60px] lg:mt-[180px] min-h-[530px] relative lg:h-[calc(100vh-300px)] overflow-hidden">
-      {/* Animated gradient background */}
-      <div className="absolute inset-0 animated-gradient opacity-10 -z-10" />
-      
-      {/* Floating gradient orbs */}
-      <div className="absolute top-20 left-10 w-72 h-72 gradient-purple-blue rounded-full blur-3xl opacity-20 float-animation" />
-      <div className="absolute bottom-20 right-10 w-96 h-96 gradient-purple-pink rounded-full blur-3xl opacity-15 float-animation" style={{ animationDelay: '2s' }} />
-      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 gradient-blue-cyan rounded-full blur-3xl opacity-10 float-animation" style={{ animationDelay: '4s' }} />
-
-      <div className="flex flex-col lg:flex-row lg:items-start lg:gap-12 relative z-10">
+    <section className="mt-[60px] lg:mt-[180px] min-h-[530px] relative lg:h-[calc(100vh-300px)]">
+      <div className="flex flex-col lg:flex-row lg:items-start lg:gap-12">
         <div className="flex flex-col lg:w-1/2 lg:max-w-[580px]">
           <Link href="/docs">
             <Button
               variant="outline"
-              className="rounded-full border-gradient flex space-x-2 items-center w-fit hover-glow"
+              className="rounded-full border-border flex space-x-2 items-center w-fit"
             >
               <span className="font-mono text-xs">Learn Prompting</span>
               <svg
@@ -39,9 +31,7 @@ export function Hero() {
 
           <h2 className="mt-6 md:mt-10 text-[#878787] leading-tight text-[24px] md:text-[36px] font-medium">
             Discover, remix, and evolve powerful AI prompts — built for{" "}
-            <span className="text-gradient font-bold">
-              <WordAnimation />
-            </span>
+            <WordAnimation />
           </h2>
 
           <div className="mt-8 md:mt-10">
@@ -53,16 +43,14 @@ export function Hero() {
               >
                 <Button
                   variant="outline"
-                  className="border-transparent h-11 px-6 dark:bg-[#1D1D1D] bg-[#F2F1EF] hover-glow"
+                  className="border-transparent h-11 px-6 dark:bg-[#1D1D1D] bg-[#F2F1EF]"
                 >
                   Sign up
                 </Button>
               </Link>
 
               <Link href="/explore">
-                <Button className="h-11 px-5 gradient-purple-blue text-white font-semibold hover-glow glow-effect">
-                  Start exploring
-                </Button>
+                <Button className="h-11 px-5">Start exploring</Button>
               </Link>
             </div>
           </div>
